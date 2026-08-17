@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRTech Core - Protótipo de Telas, Personas & Storyboard (LPS)</title>
+  <meta name="description" content="Plataforma Modular de Gestão de RH - Protótipo interativo de 15 telas, 6 personas com mapa de empatia, storyboard de 14 etapas e variabilidade de Linha de Produção de Software (LPS).">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box">
+          <i class="fa-solid fa-layer-group logo-icon"></i>
+          <div>
+            <h1 class="logo-title">HRTech Core</h1>
+            <span class="logo-subtitle">Linha de Produção de RH</span>
+          </div>
+        </div>
+        <!-- Tenant Switcher Badge -->
+        <div class="tenant-selector">
+          <label for="tenantSelect"><i class="fa-solid fa-building"></i> Cliente Atual:</label>
+          <select id="tenantSelect" onchange="switchTenant(this.value)">
+            <option value="tech">Cliente A - Tech Innovators (Tecnologia)</option>
+            <option value="industry">Cliente B - Metalúrgica Sul (Indústria)</option>
+          </select>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- Section: Design Thinking -->
+        <div class="nav-section-title">Design Thinking & Artefatos</div>
+        <a href="#publico-alvo" class="nav-item active" onclick="showScreen('publico-alvo', event)">
+          <i class="fa-solid fa-bullseye"></i> <span>Público-Alvo & LPS</span>
+        </a>
+        <a href="#personas" class="nav-item" onclick="showScreen('personas', event)">
+          <i class="fa-solid fa-users-viewfinder"></i> <span>6 Personas & Empatia</span>
+        </a>
+        <a href="#storyboard" class="nav-item" onclick="showScreen('storyboard', event)">
+          <i class="fa-solid fa-film"></i> <span>Storyboard (14 Etapas)</span>
+        </a>
+
+        <!-- Section: 15 Protótipo de Telas -->
+        <div class="nav-section-title">Protótipo (15 Telas)</div>
+        <a href="#tela-1" class="nav-item" onclick="showScreen('tela-1', event)">
+          <span class="screen-num">01</span> <i class="fa-solid fa-right-to-bracket"></i> <span>Login (Autenticação)</span>
+        </a>
+        <a href="#tela-2" class="nav-item" onclick="showScreen('tela-2', event)">
+          <span class="screen-num">02</span> <i class="fa-solid fa-gauge-high"></i> <span>Dashboard Colaborador</span>
+        </a>
+        <a href="#tela-3" class="nav-item" onclick="showScreen('tela-3', event)">
+          <span class="screen-num">03</span> <i class="fa-solid fa-chart-pie"></i> <span>Dashboard do RH</span>
+        </a>
+        <a href="#tela-4" class="nav-item" onclick="showScreen('tela-4', event)">
+          <span class="screen-num">04</span> <i class="fa-solid fa-users"></i> <span>Lista de Colaboradores</span>
+        </a>
+        <a href="#tela-5" class="nav-item" onclick="showScreen('tela-5', event)">
+          <span class="screen-num">05</span> <i class="fa-solid fa-user-plus"></i> <span>Cadastro / Edição</span>
+        </a>
+        <a href="#tela-6" class="nav-item" onclick="showScreen('tela-6', event)">
+          <span class="screen-num">06</span> <i class="fa-solid fa-id-card"></i> <span>Detalhes do Colaborador</span>
+        </a>
+        <a href="#tela-7" class="nav-item" onclick="showScreen('tela-7', event)">
+          <span class="screen-num">07</span> <i class="fa-solid fa-sitemap"></i> <span>Organograma</span>
+        </a>
+        <a href="#tela-8" class="nav-item" onclick="showScreen('tela-8', event)">
+          <span class="screen-num">08</span> <i class="fa-solid fa-clock"></i> <span>Espelho de Ponto</span>
+        </a>
+        <a href="#tela-9" class="nav-item" onclick="showScreen('tela-9', event)">
+          <span class="screen-num">09</span> <i class="fa-solid fa-file-pen"></i> <span>Ajuste de Ponto</span>
+        </a>
+        <a href="#tela-10" class="nav-item" onclick="showScreen('tela-10', event)">
+          <span class="screen-num">10</span> <i class="fa-solid fa-umbrella-beach"></i> <span>Férias & Calendário</span>
+        </a>
+        <a href="#tela-11" class="nav-item" onclick="showScreen('tela-11', event)">
+          <span class="screen-num">11</span> <i class="fa-solid fa-user-check"></i> <span>Aprovação do Gestor</span>
+        </a>
+        <a href="#tela-12" class="nav-item" onclick="showScreen('tela-12', event)">
+          <span class="screen-num">12</span> <i class="fa-solid fa-gift"></i> <span>Benefícios</span>
+        </a>
+        <a href="#tela-13" class="nav-item" onclick="showScreen('tela-13', event)">
+          <span class="screen-num">13</span> <i class="fa-solid fa-chart-line"></i> <span>Desempenho & OKRs</span>
+        </a>
+        <a href="#tela-14" class="nav-item" onclick="showScreen('tela-14', event)">
+          <span class="screen-num">14</span> <i class="fa-solid fa-helmet-safety"></i> <span>EPIs e Exames (ASO)</span>
+        </a>
+        <a href="#tela-15" class="nav-item" onclick="showScreen('tela-15', event)">
+          <span class="screen-num">15</span> <i class="fa-solid fa-sliders"></i> <span>Configuração da Empresa</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-badge">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Mariana Santos" class="avatar-sm">
+          <div class="user-info">
+            <span class="user-name">Mariana Santos</span>
+            <span class="user-role">Diretora de RH</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Viewport -->
+    <main class="main-content">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <h2 id="currentScreenTitle" class="screen-title">Público-Alvo & Linha de Produção de Software</h2>
+          <span id="tenantTag" class="tenant-tag tech-tag"><i class="fa-solid fa-microchip"></i> Configuração: Empresa de Tecnologia</span>
+        </div>
+        <div class="topbar-right">
+          <div class="lps-status-pill">
+            <i class="fa-solid fa-cubes"></i> 6 Ativos Reutilizáveis Ativos
+          </div>
+          <button class="icon-btn" onclick="toggleTheme()" title="Alternar Tema"><i class="fa-solid fa-moon"></i></button>
+          <button class="icon-btn" onclick="showNotifications()" title="Notificações"><i class="fa-solid fa-bell"></i><span class="badge-dot"></span></button>
+        </div>
+      </header>
+
+      <!-- SCREEN CONTAINER -->
+      <div class="content-viewport">
+
+        <!-- ==================== SCREEN: PUBLICO-ALVO & LPS ==================== -->
+        <section id="publico-alvo" class="screen-view active">
+          <div class="card header-banner-card">
+            <div class="banner-text">
+              <h3><i class="fa-solid fa-bullseye highlight-icon"></i> Público-Alvo e Linha de Produção de Software (LPS)</h3>
+              <p>O <strong>HRTech Core</strong> centraliza o núcleo comum de RH (colaboradores, cargos, departamentos) e provê variabilidades configuráveis para atender empresas com modelos de negócios totalmente distintos.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4 class="card-title"><i class="fa-solid fa-image"></i> Visão Infográfica do Público-Alvo</h4>
+            <div class="image-viewer-container">
+              <img src="assets/publico_alvo_hrtech_core_1786669012493.jpg" alt="Público-Alvo HRTech Core" class="responsive-img rounded-img zoomable">
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card client-card tech-border">
+              <div class="client-header">
+                <i class="fa-solid fa-laptop-code client-icon tech-color"></i>
+                <div>
+                  <h4>Cliente A — Empresa de Tecnologia</h4>
+                  <span class="badge tech-badge">Remoto / Híbrido</span>
+                </div>
+              </div>
+              <ul class="feature-list">
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Jornada:</strong> Banco de horas flexível sem marcação rígida</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Benefícios:</strong> Cartão multibenefícios flexível (Caju/Flash)</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Desempenho:</strong> Avaliação 360° e acompanhamento por OKRs</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Segurança:</strong> Módulo de EPIs desabilitado</li>
+              </ul>
+              <button class="btn btn-outline tech-btn" onclick="switchTenant('tech')">Simular Visão Tech</button>
+            </div>
+
+            <div class="card client-card ind-border">
+              <div class="client-header">
+                <i class="fa-solid fa-industry client-icon ind-color"></i>
+                <div>
+                  <h4>Cliente B — Indústria Metalúrgica</h4>
+                  <span class="badge ind-badge">100% Presencial</span>
+                </div>
+              </div>
+              <ul class="feature-list">
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Jornada:</strong> Escalas rígidas de turnos (ex: 12x36)</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Benefícios:</strong> Benefícios fixos previstos em convenção coletiva</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Desempenho:</strong> Avaliação por função e conformidade legal</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Segurança & Saúde:</strong> Gestão obrigatória de EPIs, ASO e Exames</li>
+              </ul>
+              <button class="btn btn-outline ind-btn" onclick="switchTenant('industry')">Simular Visão Indústria</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN: 6 PERSONAS & EMPATIA ==================== -->
+        <section id="personas" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-users-viewfinder highlight-icon"></i> 6 Personas e Mapas de Empatia</h3>
+            <p>Conheça as seis personas mapeadas no projeto, seus papéis no HRTech Core e os respectivos Mapas de Empatia visualizados.</p>
+          </div>
+
+          <!-- Persona Selector Tabs -->
+          <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchPersonaTab('diretor-rh', this)"><i class="fa-solid fa-user-tie"></i> 1. Diretora de RH</button>
+            <button class="tab-btn" onclick="switchPersonaTab('analista-dp', this)"><i class="fa-solid fa-user-gear"></i> 2. Analista de DP</button>
+            <button class="tab-btn" onclick="switchPersonaTab('gerente-eng', this)"><i class="fa-solid fa-user-gear"></i> 3. Gerente de Engenharia</button>
+            <button class="tab-btn" onclick="switchPersonaTab('dev-remoto', this)"><i class="fa-solid fa-user-ninja"></i> 4. Dev Remoto</button>
+            <button class="tab-btn" onclick="switchPersonaTab('operador-fabrica', this)"><i class="fa-solid fa-hard-hat"></i> 5. Operador de Fábrica</button>
+            <button class="tab-btn" onclick="switchPersonaTab('recrutador', this)"><i class="fa-solid fa-user-magnifying-glass"></i> 6. Recrutadora</button>
+          </div>
+
+          <!-- Persona Tab Contents -->
+          <div id="persona-diretor-rh" class="persona-tab-content active">
+            <div class="grid-2-col">
+              <div class="card">
+                <img src="assets/persona_diretor_rh_1786668938341.jpg" alt="Mariana Santos - Diretora de RH" class="responsive-img rounded-img">
+              </div>
+              <div class="card persona-detail-card">
+                <span class="badge badge-purple">Perfil: Decisor</span>
+                <h3>Mariana Santos — Diretora de RH</h3>
+                <p><strong>Foco:</strong> Gestão estratégica, indicadores consolidados e retenção de talentos.</p>
+                <hr>
+                <div class="empathy-grid">
+                  <div class="empathy-box"><strong><i class="fa-solid fa-brain"></i> Pensa:</strong> Dados confiáveis, eficiência operacional, cultura.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-eye"></i> Vê:</strong> Relatórios desatualizados, processos lentos.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-ear-listen"></i> Ouve:</strong> Líderes reclamando da gestão de equipes.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-comments"></i> Faz:</strong> Aprova orçamentos, toma decisões estratégicas.</div>
+                  <div class="empathy-box pain-box"><strong><i class="fa-solid fa-circle-exclamation"></i> Dores:</strong> Sistemas fragmentados e retrabalho.</div>
+                  <div class="empathy-box gain-box"><strong><i class="fa-solid fa-trophy"></i> Ganhos:</strong> Visão consolidada em tempo real.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="persona-analista-dp" class="persona-tab-content">
+            <div class="grid-2-col">
+              <div class="card">
+                <img src="assets/persona_analista_dp_1786668947406.jpg" alt="Roberto Lima - Analista de DP" class="responsive-img rounded-img">
+              </div>
+              <div class="card persona-detail-card">
+                <span class="badge badge-blue">Perfil: Operacional</span>
+                <h3>Roberto Lima — Analista de DP</h3>
+                <p><strong>Foco:</strong> Operação de folha, ponto, cadastro sem erros e conformidade legal.</p>
+                <hr>
+                <div class="empathy-grid">
+                  <div class="empathy-box"><strong><i class="fa-solid fa-brain"></i> Pensa:</strong> Executar tarefas sem erros e dentro dos prazos.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-eye"></i> Vê:</strong> Muitos registros manuais e divergências de ponto.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-ear-listen"></i> Ouve:</strong> Reclamações de pagamentos e prazos apertados.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-comments"></i> Faz:</strong> Validações, correções e conciliação de ponto.</div>
+                  <div class="empathy-box pain-box"><strong><i class="fa-solid fa-circle-exclamation"></i> Dores:</strong> Retrabalho por dados incorretos.</div>
+                  <div class="empathy-box gain-box"><strong><i class="fa-solid fa-trophy"></i> Ganhos:</strong> Automação de rotinas repetitivas.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="persona-gerente-eng" class="persona-tab-content">
+            <div class="grid-2-col">
+              <div class="card">
+                <img src="assets/persona_gerente_engenharia_1786668955432.jpg" alt="Carlos Eduardo - Gerente de Engenharia" class="responsive-img rounded-img">
+              </div>
+              <div class="card persona-detail-card">
+                <span class="badge badge-green">Perfil: Gestor</span>
+                <h3>Carlos Eduardo — Gerente de Engenharia</h3>
+                <p><strong>Foco:</strong> Produtividade do time de dev, aprovação ágil de férias e acompanhamento de OKRs.</p>
+                <hr>
+                <div class="empathy-grid">
+                  <div class="empathy-box"><strong><i class="fa-solid fa-brain"></i> Pensa:</strong> Cuidar da equipe sem perder produtividade.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-eye"></i> Vê:</strong> Solicitações pendentes e metas de entregas.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-ear-listen"></i> Ouve:</strong> Pedidos de suporte da equipe e demandas do RH.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-comments"></i> Faz:</strong> Aprovação de férias, revisão de código e alinhamento.</div>
+                  <div class="empathy-box pain-box"><strong><i class="fa-solid fa-circle-exclamation"></i> Dores:</strong> Processos manuais burocráticos.</div>
+                  <div class="empathy-box gain-box"><strong><i class="fa-solid fa-trophy"></i> Ganhos:</strong> Rapidez e autonomia de gestão.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="persona-dev-remoto" class="persona-tab-content">
+            <div class="grid-2-col">
+              <div class="card">
+                <img src="assets/persona_desenvolvedor_remoto_1786668981059.jpg" alt="Lucas Silva - Dev Remoto" class="responsive-img rounded-img">
+              </div>
+              <div class="card persona-detail-card">
+                <span class="badge badge-cyan">Perfil: Colaborador Tech</span>
+                <h3>Lucas Silva — Desenvolvedor Remoto</h3>
+                <p><strong>Foco:</strong> Transparência no banco de horas, benefícios flexíveis e solicitação ágil de férias.</p>
+                <hr>
+                <div class="empathy-grid">
+                  <div class="empathy-box"><strong><i class="fa-solid fa-brain"></i> Pensa:</strong> Acompanhar sua jornada com flexibilidade.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-eye"></i> Vê:</strong> Dashboard pessoal e saldo de horas.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-ear-listen"></i> Ouve:</strong> Notificações de Slack e updates do gestor.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-comments"></i> Faz:</strong> Registros flexíveis, solicitações de férias.</div>
+                  <div class="empathy-box pain-box"><strong><i class="fa-solid fa-circle-exclamation"></i> Dores:</strong> Falta de transparência no banco de horas.</div>
+                  <div class="empathy-box gain-box"><strong><i class="fa-solid fa-trophy"></i> Ganhos:</strong> Autonomia na rotina de trabalho.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="persona-operador-fabrica" class="persona-tab-content">
+            <div class="grid-2-col">
+              <div class="card">
+                <img src="assets/persona_operador_fabrica_1786668991478.jpg" alt="João Oliveira - Operador de Fábrica" class="responsive-img rounded-img">
+              </div>
+              <div class="card persona-detail-card">
+                <span class="badge badge-orange">Perfil: Colaborador Indústria</span>
+                <h3>João Oliveira — Operador de Fábrica</h3>
+                <p><strong>Foco:</strong> Registro correto da jornada 12x36, entrega de EPIs e acompanhamento de exames ASO.</p>
+                <hr>
+                <div class="empathy-grid">
+                  <div class="empathy-box"><strong><i class="fa-solid fa-brain"></i> Pensa:</strong> Ter a jornada de turno registrada com exatidão.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-eye"></i> Vê:</strong> Painéis de segurança, espelho de ponto físico/digital.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-ear-listen"></i> Ouve:</strong> Instruções de segurança do supervisor.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-comments"></i> Faz:</strong> Marcações de ponto e retirada de EPIs.</div>
+                  <div class="empathy-box pain-box"><strong><i class="fa-solid fa-circle-exclamation"></i> Dores:</strong> Divergências no registro de turno.</div>
+                  <div class="empathy-box gain-box"><strong><i class="fa-solid fa-trophy"></i> Ganhos:</strong> Clareza no espelho de ponto e segurança.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="persona-recrutador" class="persona-tab-content">
+            <div class="grid-2-col">
+              <div class="card">
+                <img src="assets/persona_recrutador_1786669002453.jpg" alt="Ana Souza - Recrutadora" class="responsive-img rounded-img">
+              </div>
+              <div class="card persona-detail-card">
+                <span class="badge badge-teal">Perfil: Recrutamento RH</span>
+                <h3>Ana Souza — Recrutadora</h3>
+                <p><strong>Foco:</strong> Organização de cargos, departamentos, admissão de novos colaboradores e organograma.</p>
+                <hr>
+                <div class="empathy-grid">
+                  <div class="empathy-box"><strong><i class="fa-solid fa-brain"></i> Pensa:</strong> Encontrar informações de cargos rapidamente.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-eye"></i> Vê:</strong> Planilhas dispersas e estrutura organizacional.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-ear-listen"></i> Ouve:</strong> Gestores solicitando abertura de vagas.</div>
+                  <div class="empathy-box"><strong><i class="fa-solid fa-comments"></i> Faz:</strong> Triagem, cadastro e consulta de estrutura.</div>
+                  <div class="empathy-box pain-box"><strong><i class="fa-solid fa-circle-exclamation"></i> Dores:</strong> Informação espalhada em múltiplos sistemas.</div>
+                  <div class="empathy-box gain-box"><strong><i class="fa-solid fa-trophy"></i> Ganhos:</strong> Centralização da estrutura corporativa.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN: STORYBOARD ==================== -->
+        <section id="storyboard" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-film highlight-icon"></i> Storyboard — Fluxo de Solicitação de Férias (14 Interações)</h3>
+            <p>O storyboard mapeia ponta a ponta a história do usuário desde a entrada no sistema até a aprovação pelo gestor e atualização no dashboard de RH.</p>
+          </div>
+
+          <div class="card">
+            <h4 class="card-title"><i class="fa-solid fa-image"></i> Painel Visual Integrado do Storyboard</h4>
+            <img src="assets/storyboard_solicitacao_ferias_1786668927870.jpg" alt="Storyboard Solicitação de Férias" class="responsive-img rounded-img zoomable">
+          </div>
+
+          <div class="card">
+            <h4><i class="fa-solid fa-list-check"></i> Detalhamento Sequencial das 14 Etapas</h4>
+            <div class="timeline-container">
+              <div class="timeline-step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <h5>Autenticação no Sistema</h5>
+                  <p><strong>História:</strong> Colaborador entra no sistema com suas credenciais.</p>
+                  <p><strong>Interface:</strong> Tela de Login | <strong>Ação:</strong> Autenticação via Usuário/Senha</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <h5>Visualização do Dashboard</h5>
+                  <p><strong>História:</strong> Colaborador observa o resumo das suas informações pessoais e saldo acumulado.</p>
+                  <p><strong>Interface:</strong> Resumo Pessoal | <strong>Ação:</strong> Consulta de Saldo de Férias</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <h5>Acesso ao Módulo de Férias</h5>
+                  <p><strong>História:</strong> O colaborador clica no menu lateral para acessar a área de férias.</p>
+                  <p><strong>Interface:</strong> Menu de Navegação | <strong>Ação:</strong> Seleção do Módulo</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                  <h5>Consulta de Períodos Aquisitivos</h5>
+                  <p><strong>História:</strong> O sistema exibe os períodos aquisitivos disponíveis e os dias acumulados.</p>
+                  <p><strong>Interface:</strong> Lista / Calendário de Períodos | <strong>Ação:</strong> Leitura de Dados</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">5</div>
+                <div class="step-content">
+                  <h5>Seleção das Datas</h5>
+                  <p><strong>História:</strong> O colaborador escolhe a data inicial e final do descanso.</p>
+                  <p><strong>Interface:</strong> Calendário Interativo | <strong>Ação:</strong> Seleção de Intervalo</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">6</div>
+                <div class="step-content">
+                  <h5>Validação de Regras do Cliente</h5>
+                  <p><strong>História:</strong> O sistema valida as regras (ex: antecedência mínima, abono pecuniário).</p>
+                  <p><strong>Interface:</strong> Mensagem de Validação | <strong>Ação:</strong> Validação em Tempo Real</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">7</div>
+                <div class="step-content">
+                  <h5>Envio da Solicitação</h5>
+                  <p><strong>História:</strong> Colaborador revisa as informações e confirma o pedido.</p>
+                  <p><strong>Interface:</strong> Formulário de Solicitação | <strong>Ação:</strong> Envio</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">8</div>
+                <div class="step-content">
+                  <h5>Registro do Pedido Pendente</h5>
+                  <p><strong>História:</strong> O sistema registra a solicitação e coloca o status em "Aguardando Aprovação".</p>
+                  <p><strong>Interface:</strong> Card de Status Pendente | <strong>Ação:</strong> Persistência no Banco</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">9</div>
+                <div class="step-content">
+                  <h5>Notificação ao Gestor</h5>
+                  <p><strong>História:</strong> O gestor da equipe recebe uma notificação instantânea do novo pedido.</p>
+                  <p><strong>Interface:</strong> Central de Notificações / E-mail | <strong>Ação:</strong> Alerta de Solicitação</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">10</div>
+                <div class="step-content">
+                  <h5>Análise de Conflitos de Escala</h5>
+                  <p><strong>História:</strong> O gestor abre os detalhes para verificar sobreposição com outros liderados.</p>
+                  <p><strong>Interface:</strong> Painel de Detalhes da Solicitação | <strong>Ação:</strong> Consulta de Equipe</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">11</div>
+                <div class="step-content">
+                  <h5>Decisão do Gestor</h5>
+                  <p><strong>História:</strong> O gestor clica no botão para aprovar o pedido do colaborador.</p>
+                  <p><strong>Interface:</strong> Botões Aprovar / Recusar | <strong>Ação:</strong> Decisão de Gestão</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">12</div>
+                <div class="step-content">
+                  <h5>Atualização de Histórico e Auditoria</h5>
+                  <p><strong>História:</strong> O sistema atualiza o status para "Aprovado" e grava a trilha de auditoria.</p>
+                  <p><strong>Interface:</strong> Histórico e Trilha de Auditoria | <strong>Ação:</strong> Auditoria Log</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">13</div>
+                <div class="step-content">
+                  <h5>Retorno ao Colaborador</h5>
+                  <p><strong>História:</strong> O colaborador recebe a notificação de aprovação com sucesso.</p>
+                  <p><strong>Interface:</strong> Pop-up / E-mail de Retorno | <strong>Ação:</strong> Confirmação ao Usuário</p>
+                </div>
+              </div>
+              <div class="timeline-step">
+                <div class="step-num">14</div>
+                <div class="step-content">
+                  <h5>Acompanhamento do RH</h5>
+                  <p><strong>História:</strong> O departamento de RH visualiza as férias aprovadas nos indicadores de absenteísmo.</p>
+                  <p><strong>Interface:</strong> Dashboard de Indicadores do RH | <strong>Ação:</strong> Métrica Consolidada</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 1: LOGIN ==================== -->
+        <section id="tela-1" class="screen-view">
+          <div class="login-wrapper">
+            <div class="login-card">
+              <div class="login-brand">
+                <i class="fa-solid fa-layer-group"></i>
+                <h2>HRTech Core</h2>
+                <p class="subtitle">Plataforma Modular de Gestão de RH</p>
+              </div>
+
+              <form onsubmit="handleLoginSim(event)">
+                <div class="form-group">
+                  <label for="loginUser"><i class="fa-solid fa-envelope"></i> E-mail Corporativo</label>
+                  <input type="email" id="loginUser" class="form-control" value="mariana.santos@empresa.com" required>
+                </div>
+                <div class="form-group">
+                  <label for="loginPass"><i class="fa-solid fa-lock"></i> Senha de Acesso</label>
+                  <input type="password" id="loginPass" class="form-control" value="••••••••••••" required>
+                </div>
+
+                <div class="form-row">
+                  <label class="checkbox-label"><input type="checkbox" checked> Lembrar das minhas credenciais</label>
+                  <a href="#" class="forgot-link">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-right-to-bracket"></i> Entrar no Sistema</button>
+              </form>
+
+              <div class="login-footer">
+                <span>Variabilidade Ativa: <strong id="loginTenantLabel">Cliente A - Tecnologia</strong></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 2: DASHBOARD COLABORADOR ==================== -->
+        <section id="tela-2" class="screen-view">
+          <div class="welcome-banner">
+            <div>
+              <h3>Olá, Lucas Silva! 👋</h3>
+              <p>Bem-vindo ao seu painel. Veja o resumo da sua jornada e benefícios.</p>
+            </div>
+            <div class="quick-action-btns">
+              <button class="btn btn-primary" onclick="showScreen('tela-10')"><i class="fa-solid fa-plane-departure"></i> Solicitar Férias</button>
+              <button class="btn btn-outline" onclick="showScreen('tela-9')"><i class="fa-solid fa-clock"></i> Ajustar Ponto</button>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon icon-cyan"><i class="fa-solid fa-umbrella-beach"></i></div>
+              <div class="stat-data">
+                <span class="stat-value">22 dias</span>
+                <span class="stat-label">Saldo de Férias Disponível</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon icon-green"><i class="fa-solid fa-business-time"></i></div>
+              <div class="stat-data">
+                <span class="stat-value" id="bancoHorasVal">+14h 30m</span>
+                <span class="stat-label" id="bancoHorasLabel">Saldo Banco de Horas (Flexível)</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon icon-purple"><i class="fa-solid fa-gift"></i></div>
+              <div class="stat-data">
+                <span class="stat-value" id="benSaldoVal">R$ 1.450,00</span>
+                <span class="stat-label" id="benSaldoLabel">Crédito Benefício Flexível</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon icon-orange"><i class="fa-solid fa-calendar-check"></i></div>
+              <div class="stat-data">
+                <span class="stat-value" id="pontoStatusVal">08:02 (Entrada)</span>
+                <span class="stat-label">Último Registro de Ponto</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card">
+              <h4><i class="fa-solid fa-clock-rotate-left"></i> Minha Jornada Recente</h4>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Entrada</th>
+                    <th>Almoço</th>
+                    <th>Saída</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Hoje (14/08)</td>
+                    <td>08:02</td>
+                    <td>12:00 - 13:00</td>
+                    <td>--:--</td>
+                    <td><span class="status-pill status-active">Em Andamento</span></td>
+                  </tr>
+                  <tr>
+                    <td>Ontem (13/08)</td>
+                    <td>08:00</td>
+                    <td>12:00 - 13:00</td>
+                    <td>17:30</td>
+                    <td><span class="status-pill status-success">+30m Banco</span></td>
+                  </tr>
+                  <tr>
+                    <td>12/08/2026</td>
+                    <td>08:15</td>
+                    <td>12:00 - 13:00</td>
+                    <td>17:15</td>
+                    <td><span class="status-pill status-success">Normal</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card">
+              <h4><i class="fa-solid fa-bullhorn"></i> Comunicados da Empresa</h4>
+              <div class="announcement-list">
+                <div class="announcement-item">
+                  <span class="badge badge-purple">RH</span>
+                  <div>
+                    <strong>Período de Solicitação de Férias 2026/2027</strong>
+                    <p class="text-sm">Lembre-se de agendar suas férias com até 30 dias de antecedência no sistema.</p>
+                  </div>
+                </div>
+                <div class="announcement-item">
+                  <span class="badge badge-green">TI</span>
+                  <div>
+                    <strong>Atualização nos cartões de Benefícios</strong>
+                    <p class="text-sm">Novos créditos de Caju e refeição disponíveis a partir do dia 01.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 3: DASHBOARD DO RH ==================== -->
+        <section id="tela-3" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-chart-pie highlight-icon"></i> Dashboard Executivo de Recursos Humanos</h3>
+            <p>Visão consolidada de indicadores de headcount, absenteísmo, banco de horas e métricas da Linha de Produção (LPS).</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon icon-purple"><i class="fa-solid fa-users"></i></div>
+              <div class="stat-data">
+                <span class="stat-value">148</span>
+                <span class="stat-label">Total de Colaboradores Ativos</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-red"><i class="fa-solid fa-user-slash"></i></div>
+              <div class="stat-data">
+                <span class="stat-value">1.8%</span>
+                <span class="stat-label">Taxa de Absenteísmo (Mensal)</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-green"><i class="fa-solid fa-business-time"></i></div>
+              <div class="stat-data">
+                <span class="stat-value">420h</span>
+                <span class="stat-label">Saldo Total de Horas Extras/Banco</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-cyan"><i class="fa-solid fa-recycle"></i></div>
+              <div class="stat-data">
+                <span class="stat-value">83.3%</span>
+                <span class="stat-label">Métrica de Reuso de Ativos LPS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card">
+              <h4><i class="fa-solid fa-chart-bar"></i> Distribuição por Departamento</h4>
+              <div class="chart-mock-bar">
+                <div class="bar-group">
+                  <span>Engenharia & TI</span>
+                  <div class="bar-fill" style="width: 85%;">85 pessoas (57%)</div>
+                </div>
+                <div class="bar-group">
+                  <span>Operação / Fábrica</span>
+                  <div class="bar-fill" style="width: 40%;">40 pessoas (27%)</div>
+                </div>
+                <div class="bar-group">
+                  <span>Recrutamento & RH</span>
+                  <div class="bar-fill" style="width: 15%;">15 pessoas (10%)</div>
+                </div>
+                <div class="bar-group">
+                  <span>Diretoria / Gestão</span>
+                  <div class="bar-fill" style="width: 8%;">8 pessoas (6%)</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4><i class="fa-solid fa-gauge"></i> Indicadores de Medição de Software</h4>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Métrica / Indicador</th>
+                    <th>Valor Medido</th>
+                    <th>Meta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Tempo médio API Ponto</td>
+                    <td>120 ms</td>
+                    <td>< 200 ms</td>
+                  </tr>
+                  <tr>
+                    <td>Cobertura de testes CRUD</td>
+                    <td>92%</td>
+                    <td>> 85%</td>
+                  </tr>
+                  <tr>
+                    <td>Ativos reutilizados (%)</td>
+                    <td>83.3% (5/6)</td>
+                    <td>> 75%</td>
+                  </tr>
+                  <tr>
+                    <td>Tempo p/ instanciar novo cliente</td>
+                    <td>4 horas</td>
+                    <td>< 8 horas</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 4: LISTA DE COLABORADORES (CRUD) ==================== -->
+        <section id="tela-4" class="screen-view">
+          <div class="card toolbar-card">
+            <div class="toolbar-left">
+              <h3><i class="fa-solid fa-users highlight-icon"></i> Gestão de Colaboradores (CRUD)</h3>
+            </div>
+            <div class="toolbar-right">
+              <input type="text" id="crudSearch" placeholder="Pesquisar por nome ou cargo..." class="form-control inline-search" onkeyup="filterCrudTable()">
+              <button class="btn btn-primary" onclick="showScreen('tela-5')"><i class="fa-solid fa-plus"></i> Novo Colaborador</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <table class="data-table" id="crudTable">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Cargo</th>
+                  <th>Departamento</th>
+                  <th>Modelo de Trabalho</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="crudTableBody">
+                <!-- Javascript will populate rows dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 5: CADASTRO / EDIÇÃO ==================== -->
+        <section id="tela-5" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-user-plus highlight-icon"></i> Form de Cadastro / Edição de Colaborador</h3>
+            <p>Preencha os dados do colaborador. Os campos adaptam-se conforme o perfil do cliente ativado.</p>
+            <hr>
+            <form onsubmit="handleSaveCollaborator(event)">
+              <div class="grid-2-col">
+                <div class="form-group">
+                  <label for="colabNome">Nome Completo *</label>
+                  <input type="text" id="colabNome" class="form-control" placeholder="ex: Ana Souza" required>
+                </div>
+                <div class="form-group">
+                  <label for="colabEmail">E-mail Corporativo *</label>
+                  <input type="email" id="colabEmail" class="form-control" placeholder="ana.souza@empresa.com" required>
+                </div>
+                <div class="form-group">
+                  <label for="colabDepartamento">Departamento *</label>
+                  <select id="colabDepartamento" class="form-control">
+                    <option value="Tecnologia & Engenharia">Tecnologia & Engenharia</option>
+                    <option value="Recursos Humanos">Recursos Humanos</option>
+                    <option value="Operações Industriais">Operações Industriais</option>
+                    <option value="Diretoria">Diretoria</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="colabCargo">Cargo *</label>
+                  <input type="text" id="colabCargo" class="form-control" placeholder="ex: Engenheiro de Software" required>
+                </div>
+                <div class="form-group">
+                  <label for="colabModelo">Modelo de Trabalho (LPS)</label>
+                  <select id="colabModelo" class="form-control">
+                    <option value="Remoto (Banco Flexível)">Remoto (Banco Flexível)</option>
+                    <option value="Híbrido (Flexível)">Híbrido (Flexível)</option>
+                    <option value="Presencial (Escala 12x36)">Presencial (Escala 12x36)</option>
+                    <option value="Presencial (Turnos Fixo)">Presencial (Turnos Fixo)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="colabSalario">Salário Base (R$)</label>
+                  <input type="text" id="colabSalario" class="form-control" placeholder="8.500,00">
+                </div>
+              </div>
+
+              <!-- Módulo Condicional Indústria -->
+              <div class="conditional-box ind-only-box" id="industryFields">
+                <h5><i class="fa-solid fa-industry"></i> Campos Específicos do Módulo Industrial</h5>
+                <div class="grid-2-col">
+                  <div class="form-group">
+                    <label>Tamanho de Kit EPI</label>
+                    <select class="form-control"><option>Tamanho M</option><option>Tamanho G</option><option>Tamanho GG</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label>Validade do ASO (Exame Ocupacional)</label>
+                    <input type="date" class="form-control" value="2027-02-15">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="showScreen('tela-4')">Cancelar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar Colaborador</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 6: DETALHES DO COLABORADOR ==================== -->
+        <section id="tela-6" class="screen-view">
+          <div class="card profile-header-card">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Lucas Silva" class="profile-avatar">
+            <div class="profile-meta">
+              <h3>Lucas Silva <span class="badge status-active">Ativo</span></h3>
+              <p><i class="fa-solid fa-briefcase"></i> Senior Python/React Developer • Departamento de Tecnologia</p>
+              <p><i class="fa-solid fa-envelope"></i> lucas.silva@empresa.com • <i class="fa-solid fa-phone"></i> (41) 99887-6655</p>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card">
+              <h4><i class="fa-solid fa-file-contract"></i> Dados Contratuais & LPS</h4>
+              <ul class="detail-list">
+                <li><strong>Data de Admissão:</strong> 15/03/2023</li>
+                <li><strong>Gestor Direto:</strong> Carlos Eduardo (Gerente de Eng.)</li>
+                <li><strong>Regime:</strong> CLT Flex - Remoto</li>
+                <li><strong>Configuração de Ponto:</strong> Banco de horas flexível</li>
+                <li><strong>Benefício Ativo:</strong> Caju Flex R$ 1.450/mês</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h4><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Férias & Alterações</h4>
+              <ul class="timeline-mini">
+                <li><strong>10/01/2026:</strong> Gozo de 10 dias de férias (Aprovado por Carlos Eduardo)</li>
+                <li><strong>15/03/2025:</strong> Promoção para Senior Developer</li>
+                <li><strong>15/03/2023:</strong> Admissão no sistema HRTech Core</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 7: ORGANOGRAMA ==================== -->
+        <section id="tela-7" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-sitemap highlight-icon"></i> Organograma Interativo (Ativo Reutilizável AR02)</h3>
+            <p>Visualização hierárquica completa da empresa com componente visual reutilizável de front-end.</p>
+          </div>
+
+          <div class="card org-tree-wrapper">
+            <div class="org-tree">
+              <!-- CEO / Diretoria -->
+              <div class="org-node root-node">
+                <img src="assets/persona_diretor_rh_1786668938341.jpg" alt="Mariana Santos">
+                <div class="node-title">Mariana Santos</div>
+                <div class="node-role">Diretora de RH & Operations</div>
+              </div>
+
+              <div class="org-connector"></div>
+
+              <!-- Nível Gerencial -->
+              <div class="org-level">
+                <div class="org-node manager-node">
+                  <img src="assets/persona_gerente_engenharia_1786668955432.jpg" alt="Carlos Eduardo">
+                  <div class="node-title">Carlos Eduardo</div>
+                  <div class="node-role">Gerente de Engenharia</div>
+
+                  <div class="org-subconnector"></div>
+                  <!-- Colaboradores Engenharia -->
+                  <div class="org-level">
+                    <div class="org-node leaf-node">
+                      <img src="assets/persona_desenvolvedor_remoto_1786668981059.jpg" alt="Lucas Silva">
+                      <div class="node-title">Lucas Silva</div>
+                      <div class="node-role">Dev Remoto</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="org-node manager-node">
+                  <img src="assets/persona_analista_dp_1786668947406.jpg" alt="Roberto Lima">
+                  <div class="node-title">Roberto Lima</div>
+                  <div class="node-role">Analista de DP</div>
+
+                  <div class="org-subconnector"></div>
+                  <!-- Colaboradores DP -->
+                  <div class="org-level">
+                    <div class="org-node leaf-node">
+                      <img src="assets/persona_recrutador_1786669002453.jpg" alt="Ana Souza">
+                      <div class="node-title">Ana Souza</div>
+                      <div class="node-role">Recrutadora</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="org-node manager-node ind-node">
+                  <img src="assets/persona_operador_fabrica_1786668991478.jpg" alt="João Oliveira">
+                  <div class="node-title">João Oliveira</div>
+                  <div class="node-role">Líder de Produção (Indústria)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 8: ESPELHO DE PONTO ==================== -->
+        <section id="tela-8" class="screen-view">
+          <div class="card toolbar-card">
+            <div>
+              <h3><i class="fa-solid fa-clock highlight-icon"></i> Espelho de Ponto & Banco de Horas (Ativo AR03)</h3>
+              <p>Mapeamento de batidas diárias. Regra atual: <strong id="pontoRegraLabel">Banco de Horas Flexível (Tech)</strong></p>
+            </div>
+            <button class="btn btn-primary" onclick="showScreen('tela-9')"><i class="fa-solid fa-file-pen"></i> Solicitar Ajuste</button>
+          </div>
+
+          <div class="card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Entrada 1</th>
+                  <th>Saída 1</th>
+                  <th>Entrada 2</th>
+                  <th>Saída 2</th>
+                  <th>Total Trabalhado</th>
+                  <th>Saldo do Dia</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>14/08/2026 (Hoje)</td>
+                  <td>08:02</td>
+                  <td>12:00</td>
+                  <td>13:00</td>
+                  <td>--:--</td>
+                  <td>04h 02m</td>
+                  <td><span class="status-pill status-active">Em Andamento</span></td>
+                </tr>
+                <tr>
+                  <td>13/08/2026</td>
+                  <td>08:00</td>
+                  <td>12:00</td>
+                  <td>13:00</td>
+                  <td>17:30</td>
+                  <td>08h 30m</td>
+                  <td><span class="status-pill status-success">+00h 30m</span></td>
+                </tr>
+                <tr>
+                  <td>12/08/2026</td>
+                  <td>08:00</td>
+                  <td>12:00</td>
+                  <td>13:00</td>
+                  <td>17:00</td>
+                  <td>08h 00m</td>
+                  <td><span class="status-pill status-neutral">00h 00m</span></td>
+                </tr>
+                <tr>
+                  <td>11/08/2026</td>
+                  <td>08:15</td>
+                  <td>12:00</td>
+                  <td>13:00</td>
+                  <td>17:45</td>
+                  <td>08h 30m</td>
+                  <td><span class="status-pill status-success">+00h 30m</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 9: AJUSTE DE PONTO ==================== -->
+        <section id="tela-9" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-file-pen highlight-icon"></i> Solicitação de Ajuste de Ponto (Regra RB05)</h3>
+            <p>Preencha a justificativa e anexe comprovantes para correção de batidas esquecidas ou atestados.</p>
+            <hr>
+            <form onsubmit="handleAdjustmentSubmit(event)">
+              <div class="grid-2-col">
+                <div class="form-group">
+                  <label for="ajusteData">Data do Ajuste *</label>
+                  <input type="date" id="ajusteData" class="form-control" value="2026-08-14" required>
+                </div>
+                <div class="form-group">
+                  <label for="ajusteTipo">Tipo de Correção</label>
+                  <select id="ajusteTipo" class="form-control">
+                    <option value="Esquecimento de Marcação">Esquecimento de Marcação</option>
+                    <option value="Atestado Médico / Consulta">Atestado Médico / Consulta</option>
+                    <option value="Problema Técnico no Relógio">Problema Técnico no Relógio</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="ajusteHora">Horário Correto *</label>
+                  <input type="time" id="ajusteHora" class="form-control" value="17:00" required>
+                </div>
+                <div class="form-group">
+                  <label for="ajusteArquivo">Comprovante / Atestado (PDF/Imagem)</label>
+                  <input type="file" id="ajusteArquivo" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="ajusteJustificativa">Justificativa Detalhada *</label>
+                <textarea id="ajusteJustificativa" class="form-control" rows="4" placeholder="Escreva o motivo da inconsistência..." required>Queda de energia no escritório durante o registro da saída.</textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="showScreen('tela-8')">Voltar</button>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Enviar p/ Aprovação do Gestor</button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 10: FÉRIAS & CALENDÁRIO ==================== -->
+        <section id="tela-10" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-umbrella-beach highlight-icon"></i> Gestão de Férias & Calendário (Regra RB04)</h3>
+            <p>Consulte seu saldo de dias e programe suas férias respeitando as regras do seu contrato.</p>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card">
+              <h4><i class="fa-solid fa-calendar-days"></i> Form de Solicitação de Férias</h4>
+              <form onsubmit="handleVacationSubmit(event)">
+                <div class="form-group">
+                  <label for="feriasInicio">Data Inicial *</label>
+                  <input type="date" id="feriasInicio" class="form-control" value="2026-09-01" required>
+                </div>
+                <div class="form-group">
+                  <label for="feriasDias">Quantidade de Dias *</label>
+                  <select id="feriasDias" class="form-control">
+                    <option value="15">15 dias</option>
+                    <option value="20">20 dias</option>
+                    <option value="30">30 dias</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label><input type="checkbox"> Deseja vender 10 dias (Abono Pecuniário)?</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-check-circle"></i> Confirmar Solicitação de Férias</button>
+              </form>
+            </div>
+
+            <div class="card">
+              <h4><i class="fa-solid fa-history"></i> Minhas Solicitações de Férias</h4>
+              <div class="vacation-history-list">
+                <div class="vacation-item">
+                  <div class="vacation-dates">
+                    <strong>01/09/2026 a 15/09/2026 (15 dias)</strong>
+                    <span class="text-sm">Solicitado em 14/08/2026</span>
+                  </div>
+                  <span class="status-pill status-active">Aguardando Gestor</span>
+                </div>
+                <div class="vacation-item">
+                  <div class="vacation-dates">
+                    <strong>10/01/2026 a 20/01/2026 (10 dias)</strong>
+                    <span class="text-sm">Concluído em 20/01/2026</span>
+                  </div>
+                  <span class="status-pill status-success">Aprovado</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 11: APROVAÇÃO DO GESTOR ==================== -->
+        <section id="tela-11" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-user-check highlight-icon"></i> Central de Aprovações do Gestor (Carlos Eduardo)</h3>
+            <p>Analise e aprove as solicitações pendentes da sua equipe de Engenharia.</p>
+          </div>
+
+          <div class="card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Colaborador</th>
+                  <th>Tipo de Solicitação</th>
+                  <th>Detalhes</th>
+                  <th>Data Pedido</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="approvalsTableBody">
+                <tr>
+                  <td>
+                    <strong>Lucas Silva</strong><br>
+                    <span class="text-sm">Dev Remoto</span>
+                  </td>
+                  <td><span class="badge badge-purple">Férias (15 dias)</span></td>
+                  <td>Período: 01/09/2026 a 15/09/2026</td>
+                  <td>14/08/2026</td>
+                  <td>
+                    <button class="btn btn-sm btn-success" onclick="approveItem(this)"><i class="fa-solid fa-check"></i> Aprovar</button>
+                    <button class="btn btn-sm btn-danger" onclick="rejectItem(this)"><i class="fa-solid fa-xmark"></i> Recusar</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Ana Souza</strong><br>
+                    <span class="text-sm">Recrutadora</span>
+                  </td>
+                  <td><span class="badge badge-blue">Ajuste de Ponto</span></td>
+                  <td>Saída dia 13/08 às 17:30 (Esquecimento)</td>
+                  <td>13/08/2026</td>
+                  <td>
+                    <button class="btn btn-sm btn-success" onclick="approveItem(this)"><i class="fa-solid fa-check"></i> Aprovar</button>
+                    <button class="btn btn-sm btn-danger" onclick="rejectItem(this)"><i class="fa-solid fa-xmark"></i> Recusar</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 12: BENEFÍCIOS ==================== -->
+        <section id="tela-12" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-gift highlight-icon"></i> Gestão de Benefícios (Módulo Variável LPS)</h3>
+            <p>Configuração atual: <strong id="benTenantType">Flexível (Cliente A - Tecnologia)</strong></p>
+          </div>
+
+          <div class="grid-3-col">
+            <div class="card benefit-card">
+              <div class="benefit-icon"><i class="fa-solid fa-utensils"></i></div>
+              <h4>Vale Refeição & Alimentação</h4>
+              <p id="ben1Desc">R$ 950,00 / mês (Flexível Caju)</p>
+              <button class="btn btn-outline btn-block">Ajustar Saldo</button>
+            </div>
+            <div class="card benefit-card">
+              <div class="benefit-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+              <h4>Plano de Saúde & Odonto</h4>
+              <p>Bradesco Saúde Top Nacional (100% Coberto)</p>
+              <button class="btn btn-outline btn-block">Ver Carteira Digital</button>
+            </div>
+            <div class="card benefit-card">
+              <div class="benefit-icon"><i class="fa-solid fa-dumbbell"></i></div>
+              <h4>Gympass / TotalPass</h4>
+              <p id="ben3Desc">Plano Silver Liberado</p>
+              <button class="btn btn-outline btn-block">Ativar Dependente</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 13: DESEMPENHO & OKRs ==================== -->
+        <section id="tela-13" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-chart-line highlight-icon"></i> Avaliação de Desempenho & OKRs (RFV01 / RFV02)</h3>
+            <p>Configuração atual: <strong id="perfTenantType">Avaliação 360° + OKRs (Tecnologia)</strong></p>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card">
+              <h4><i class="fa-solid fa-bullseye"></i> Meus OKRs do Trimestre (Q3)</h4>
+              <div class="okr-item">
+                <div class="okr-header">
+                  <strong>OKR 1: Entregar Ativos Reutilizáveis de Front-end</strong>
+                  <span>80%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 80%;"></div></div>
+              </div>
+              <div class="okr-item">
+                <div class="okr-header">
+                  <strong>OKR 2: Reduzir tempo de resposta da API de Ponto para < 150ms</strong>
+                  <span>100%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4><i class="fa-solid fa-comments"></i> Avaliação 360° Recente</h4>
+              <p>Status: <span class="badge badge-green">Concluída</span></p>
+              <p><strong>Nota Média da Equipe:</strong> 4.8 / 5.0</p>
+              <p class="text-sm">"Lucas demonstra excelente capacidade técnica e liderança em projetos remotos."</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 14: EPIS E EXAMES ==================== -->
+        <section id="tela-14" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-helmet-safety highlight-icon"></i> Módulo Industrial: EPIs & Exames ASO (RFV05 / RFV06)</h3>
+            <p>Este módulo é exclusivo da variabilidade de empresas industriais (Cliente B).</p>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card">
+              <h4><i class="fa-solid fa-shield-halved"></i> Registro de Entrega de EPIs</h4>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Equipamento</th>
+                    <th>Data Entrega</th>
+                    <th>Validade</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Capacete de Segurança Abafador</td>
+                    <td>10/01/2026</td>
+                    <td>10/01/2027</td>
+                    <td><span class="status-pill status-success">Válido</span></td>
+                  </tr>
+                  <tr>
+                    <td>Bota com Biqueira de Aço</td>
+                    <td>15/02/2026</td>
+                    <td>15/08/2026</td>
+                    <td><span class="status-pill status-warning">Vencendo</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card">
+              <h4><i class="fa-solid fa-file-medical"></i> Controle de Exames Médicos (ASO)</h4>
+              <ul class="detail-list">
+                <li><strong>Último ASO Periódico:</strong> 12/02/2026 (Apto)</li>
+                <li><strong>Próximo Exame:</strong> 12/02/2027</li>
+                <li><strong>Audiometria:</strong> Realizada em 12/02/2026</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 15: CONFIGURAÇÃO DA EMPRESA ==================== -->
+        <section id="tela-15" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-sliders highlight-icon"></i> Configuração da Empresa & Variabilidade LPS (UC09)</h3>
+            <p>Gerencie a ativação dos módulos e regras de negócio sem alterar o núcleo do software.</p>
+          </div>
+
+          <div class="card">
+            <h4><i class="fa-solid fa-toggle-on"></i> Módulos Habilitados para este Tenant</h4>
+            <div class="module-toggle-grid">
+              <div class="module-toggle-card">
+                <div>
+                  <strong>Módulo Banco de Horas Flexível</strong>
+                  <p class="text-sm">Permite saldo positivo/negativo sem limites rígidos</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="modBancoFlex" checked onchange="toggleModuleConfig()">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="module-toggle-card">
+                <div>
+                  <strong>Módulo Industrial (EPIs & ASO)</strong>
+                  <p class="text-sm">Ativa gestão de segurança do trabalho e exames</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="modIndustrial" onchange="toggleModuleConfig()">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="module-toggle-card">
+                <div>
+                  <strong>Módulo OKRs & Avaliação 360°</strong>
+                  <p class="text-sm">Ativa acompanhamento por metas e feedbacks cruzados</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="modOKRs" checked onchange="toggleModuleConfig()">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
