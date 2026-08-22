@@ -22,6 +22,7 @@
   --primary-light: rgba(13, 148, 136, 0.15);
   --tech-accent: #6366f1;
   --ind-accent: #f59e0b;
+  --fin-accent: #d4af37;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
@@ -51,6 +52,40 @@ html.light {
   --text-dim: #64748b;
   --border-color: #e2e8f0;
   --border-highlight: #cbd5e1;
+}
+
+/* ==========================================================================
+   Variabilidade LPS por Segmento (3º Tenant: Financeiro/Seguros)
+   A cor primária e os acentos são sobrescritos via variável CSS quando o
+   segmento Financeiro está ativo — o núcleo visual (componentes, layout)
+   permanece o mesmo, apenas o "skin" muda por configuração de tenant.
+   ========================================================================== */
+body.tenant-financial {
+  --primary: #b8860b;
+  --primary-hover: #96700a;
+  --primary-light: rgba(184, 134, 11, 0.15);
+}
+
+/* Visibilidade condicional por SEGMENTO (Tecnologia / Indústria / Financeiro).
+   Ativos ocultos por padrão e exibidos apenas quando o body carrega a classe
+   do tenant correspondente. Mecanismo genérico e reutilizável — evita
+   toggles manuais de estilo repetidos em cada novo item de menu/segmento. */
+a.nav-item.tech-only, a.nav-item.ind-only, a.nav-item.fin-only {
+  display: none;
+}
+body.tenant-tech a.nav-item.tech-only { display: flex; }
+body.tenant-industry a.nav-item.ind-only { display: flex; }
+body.tenant-financial a.nav-item.fin-only { display: flex; }
+
+/* Visibilidade condicional por CLIENTE ESPECÍFICO (não por segmento).
+   Independente do tenant ativo — controlado por um flag próprio
+   (ex: add-on contratado por um único cliente), demonstrando que a
+   variabilidade da LPS ocorre em 3 níveis: Núcleo > Segmento > Cliente. */
+a.nav-item.exclusive-only {
+  display: none;
+}
+body.client-exclusive-active a.nav-item.exclusive-only {
+  display: flex;
 }
 
 * {
@@ -281,6 +316,12 @@ body {
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
+.fin-tag {
+  background: rgba(212, 175, 55, 0.15);
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
 .topbar-right {
   display: flex;
   align-items: center;
@@ -408,6 +449,7 @@ body {
 
 .tech-border { border-top: 4px solid var(--tech-accent); }
 .ind-border { border-top: 4px solid var(--ind-accent); }
+.fin-border { border-top: 4px solid var(--fin-accent); }
 
 .client-header {
   display: flex;
@@ -419,6 +461,7 @@ body {
 .client-icon { font-size: 1.8rem; }
 .tech-color { color: var(--tech-accent); }
 .ind-color { color: var(--ind-accent); }
+.fin-color { color: var(--fin-accent); }
 
 .feature-list {
   list-style: none;
@@ -492,6 +535,20 @@ body {
 
 .tech-badge { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; }
 .ind-badge { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+.fin-badge { background: rgba(212, 175, 55, 0.2); color: #e2c368; }
+
+/* Badge/selo de recurso Exclusivo de Cliente (nível mais granular da LPS) */
+.badge-exclusive {
+  background: linear-gradient(135deg, #d4af37, #b8860b);
+  color: #1a1200;
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-left: 6px;
+}
 
 .badge-purple { background: rgba(139, 92, 246, 0.2); color: #c084fc; }
 .badge-blue { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
@@ -660,6 +717,47 @@ body {
   background-color: rgba(255, 255, 255, 0.02);
 }
 
+/* Gráfico de barras mock (Distribuição por Departamento) — classes que o
+   HTML já usava (chart-mock-bar/bar-group/bar-fill) mas que não tinham
+   nenhuma regra CSS definida no arquivo original. */
+.chart-mock-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bar-group > span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.bar-track {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.bar-fill {
+  min-width: fit-content;
+  background: linear-gradient(90deg, var(--primary), var(--cyan));
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: width 0.4s ease;
+}
+
 /* Forms */
 .form-group {
   margin-bottom: 18px;
@@ -815,6 +913,53 @@ input:checked + .slider:before { transform: translateX(24px); }
   border: 1px solid var(--border-color);
   padding: 16px 20px;
   border-radius: var(--radius-sm);
+}
+
+/* Recurso Exclusivo de Cliente — visualmente separado da segmentação
+   normal (tech/ind/fin) para deixar claro que não é um pacote de
+   segmento, e sim uma customização vinculada a um cliente específico. */
+.config-divider-exclusive {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 28px 0 15px 0;
+  color: var(--fin-accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.config-divider-exclusive::before,
+.config-divider-exclusive::after {
+  content: "";
+  flex: 1;
+  height: 0;
+  border-top: 1px dashed rgba(212, 175, 55, 0.4);
+}
+
+.exclusive-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+.exclusive-banner i {
+  color: var(--fin-accent);
+  font-size: 1.3rem;
+  margin-top: 2px;
+}
+
+.exclusive-banner strong { color: var(--fin-accent); }
+
+.module-toggle-card.exclusive-card {
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(212, 175, 55, 0.04);
 }
 
 /* Responsive Breakpoints */

@@ -3,8 +3,12 @@
  */
 
 // Initial State Data
-let currentTenant = 'tech'; // 'tech' or 'industry'
+let currentTenant = 'tech'; // 'tech', 'industry' or 'financial' (3º tenant/segmento)
 let activeScreen = 'publico-alvo';
+// Flag de CLIENTE ESPECÍFICO — independente do tenant/segmento acima.
+// Representa um add-on contratado apenas pela FinCorp Seguros (Portal do
+// Corretor). Outro cliente do segmento Financeiro não teria este flag ativo.
+let clientExclusiveFeatureEnabled = true;
 
 // Sample CRUD Data for Collaborators
 let collaborators = [
@@ -13,7 +17,9 @@ let collaborators = [
   { id: 3, name: 'Carlos Eduardo', role: 'Gerente de Engenharia', dept: 'Tecnologia & Engenharia', mode: 'Híbrido (Flexível)', status: 'Ativo', avatar: 'assets/persona_gerente_engenharia_1786668955432.jpg' },
   { id: 4, name: 'Lucas Silva', role: 'Senior Python/React Developer', dept: 'Tecnologia & Engenharia', mode: 'Remoto (Banco Flexível)', status: 'Ativo', avatar: 'assets/persona_desenvolvedor_remoto_1786668981059.jpg' },
   { id: 5, name: 'João Oliveira', role: 'Líder de Produção Industrial', dept: 'Operações Industriais', mode: 'Presencial (Escala 12x36)', status: 'Ativo', avatar: 'assets/persona_operador_fabrica_1786668991478.jpg' },
-  { id: 6, name: 'Ana Souza', role: 'Recrutadora & Talent Acquisition', dept: 'Recursos Humanos', mode: 'Remoto (Banco Flexível)', status: 'Ativo', avatar: 'assets/persona_recrutador_1786669002453.jpg' }
+  { id: 6, name: 'Ana Souza', role: 'Recrutadora & Talent Acquisition', dept: 'Recursos Humanos', mode: 'Remoto (Banco Flexível)', status: 'Ativo', avatar: 'assets/persona_recrutador_1786669002453.jpg' },
+  { id: 7, name: 'Gabriel Torres', role: 'Analista de Compliance', dept: 'Financeiro & Seguros', mode: 'Presencial (Comercial - Financeiro)', status: 'Ativo', avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&auto=format&fit=crop&q=80' },
+  { id: 8, name: 'Helena Martins', role: 'Corretora Sênior de Seguros', dept: 'Financeiro & Seguros', mode: 'Presencial (Comercial - Financeiro)', status: 'Ativo', avatar: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=100&auto=format&fit=crop&q=80' }
 ];
 
 const screenTitles = {
@@ -34,13 +40,16 @@ const screenTitles = {
   'tela-12': 'Tela 12: Gestão de Benefícios (Flexíveis vs Fixos)',
   'tela-13': 'Tela 13: Desempenho & OKRs (Avaliação 360°)',
   'tela-14': 'Tela 14: Módulo Industrial (EPIs & ASO)',
-  'tela-15': 'Tela 15: Configuração da Empresa & Variabilidades'
+  'tela-15': 'Tela 15: Configuração da Empresa & Variabilidades',
+  'tela-16': 'Tela 16: Compliance & Auditoria (Segmento Financeiro)',
+  'tela-17': 'Tela 17: Portal do Corretor (Exclusivo FinCorp Seguros)'
 };
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
   renderCrudTable();
   updateTenantUI();
+  applyExclusiveFeatureVisibility();
 });
 
 // Screen Navigation Handler
@@ -74,23 +83,38 @@ function switchTenant(tenantKey) {
   currentTenant = tenantKey;
   document.getElementById('tenantSelect').value = tenantKey;
   updateTenantUI();
-  showToast(`Cliente alterado para: ${tenantKey === 'tech' ? 'Empresa de Tecnologia (Remoto/OKRs)' : 'Indústria Metalúrgica (Presencial/EPIs)'}`);
+
+  const tenantLabels = {
+    tech: 'Empresa de Tecnologia (Remoto/OKRs)',
+    industry: 'Indústria Metalúrgica (Presencial/EPIs)',
+    financial: 'FinCorp Seguros (Financeiro/Compliance)'
+  };
+  showToast(`Cliente alterado para: ${tenantLabels[tenantKey] || tenantKey}`);
 }
 
 function updateTenantUI() {
   const tenantTag = document.getElementById('tenantTag');
   const loginLabel = document.getElementById('loginTenantLabel');
   const indFields = document.getElementById('industryFields');
+  const finFields = document.getElementById('financialFields');
   const pontoRegraLabel = document.getElementById('pontoRegraLabel');
   const bancoHorasLabel = document.getElementById('bancoHorasLabel');
   const benTenantType = document.getElementById('benTenantType');
   const perfTenantType = document.getElementById('perfTenantType');
+  const modCompliance = document.getElementById('modCompliance');
+
+  // Classe no <body> alimenta a visibilidade por SEGMENTO no CSS
+  // (.tech-only / .ind-only / .fin-only) — mecanismo único e reutilizável
+  // para qualquer novo item de menu/tela que dependa apenas do segmento.
+  document.body.classList.remove('tenant-tech', 'tenant-industry', 'tenant-financial');
+  document.body.classList.add(`tenant-${currentTenant === 'tech' ? 'tech' : currentTenant === 'industry' ? 'industry' : 'financial'}`);
 
   if (currentTenant === 'tech') {
     tenantTag.className = 'tenant-tag tech-tag';
     tenantTag.innerHTML = '<i class="fa-solid fa-microchip"></i> Configuração: Empresa de Tecnologia';
     if (loginLabel) loginLabel.textContent = 'Cliente A - Tech Innovators';
     if (indFields) indFields.style.display = 'none';
+    if (finFields) finFields.style.display = 'none';
     if (pontoRegraLabel) pontoRegraLabel.textContent = 'Banco de Horas Flexível (Tech)';
     if (bancoHorasLabel) bancoHorasLabel.textContent = 'Saldo Banco de Horas (Flexível)';
     if (benTenantType) benTenantType.textContent = 'Flexível - Caju/Flash (Cliente A - Tecnologia)';
@@ -99,11 +123,13 @@ function updateTenantUI() {
     document.getElementById('modBancoFlex').checked = true;
     document.getElementById('modIndustrial').checked = false;
     document.getElementById('modOKRs').checked = true;
-  } else {
+    if (modCompliance) modCompliance.checked = false;
+  } else if (currentTenant === 'industry') {
     tenantTag.className = 'tenant-tag ind-tag';
     tenantTag.innerHTML = '<i class="fa-solid fa-industry"></i> Configuração: Indústria Metalúrgica';
     if (loginLabel) loginLabel.textContent = 'Cliente B - Metalúrgica Sul';
     if (indFields) indFields.style.display = 'block';
+    if (finFields) finFields.style.display = 'none';
     if (pontoRegraLabel) pontoRegraLabel.textContent = 'Escala de Turno 12x36 (Indústria)';
     if (bancoHorasLabel) bancoHorasLabel.textContent = 'Horas Extras em Turno (12x36)';
     if (benTenantType) benTenantType.textContent = 'Fixos Categoriados por Convenção Coletiva (Cliente B)';
@@ -112,7 +138,47 @@ function updateTenantUI() {
     document.getElementById('modBancoFlex').checked = false;
     document.getElementById('modIndustrial').checked = true;
     document.getElementById('modOKRs').checked = false;
+    if (modCompliance) modCompliance.checked = false;
+  } else {
+    // financial
+    tenantTag.className = 'tenant-tag fin-tag';
+    tenantTag.innerHTML = '<i class="fa-solid fa-building-columns"></i> Configuração: FinCorp Seguros (Financeiro)';
+    if (loginLabel) loginLabel.textContent = 'Cliente C - FinCorp Seguros';
+    if (indFields) indFields.style.display = 'none';
+    if (finFields) finFields.style.display = 'block';
+    if (pontoRegraLabel) pontoRegraLabel.textContent = 'Jornada Comercial com Ponto Controlado (Financeiro)';
+    if (bancoHorasLabel) bancoHorasLabel.textContent = 'Horas Extras Comerciais (Financeiro)';
+    if (benTenantType) benTenantType.textContent = 'Seguro de Vida + Benefícios Regulados (Cliente C - Financeiro)';
+    if (perfTenantType) perfTenantType.textContent = 'Metas Comerciais & Conformidade (Financeiro)';
+
+    document.getElementById('modBancoFlex').checked = false;
+    document.getElementById('modIndustrial').checked = false;
+    document.getElementById('modOKRs').checked = false;
+    if (modCompliance) modCompliance.checked = true;
   }
+}
+
+// Aplica a visibilidade do recurso EXCLUSIVO DE CLIENTE (Portal do Corretor).
+// Independente do tenant/segmento — controlado pelo checkbox modBrokerPortal
+// na Tela 15, simulando um add-on contratado por um único cliente.
+function applyExclusiveFeatureVisibility() {
+  document.body.classList.toggle('client-exclusive-active', clientExclusiveFeatureEnabled);
+}
+
+function toggleExclusiveFeature() {
+  const checkbox = document.getElementById('modBrokerPortal');
+  clientExclusiveFeatureEnabled = checkbox ? checkbox.checked : false;
+  applyExclusiveFeatureVisibility();
+
+  // Se o usuário desativar o recurso enquanto estiver navegando nele,
+  // devolve para a tela de configuração ao invés de deixar uma tela órfã.
+  if (!clientExclusiveFeatureEnabled && activeScreen === 'tela-17') {
+    showScreen('tela-15');
+  }
+
+  showToast(clientExclusiveFeatureEnabled
+    ? 'Portal do Corretor ativado (recurso exclusivo deste cliente).'
+    : 'Portal do Corretor desativado para este cliente.');
 }
 
 // Persona Tab Switcher
@@ -142,7 +208,7 @@ function renderCrudTable() {
       </td>
       <td>${c.role}</td>
       <td>${c.dept}</td>
-      <td><span class="badge ${c.mode.includes('Remoto') ? 'tech-badge' : 'ind-badge'}">${c.mode}</span></td>
+      <td><span class="badge ${c.mode.includes('Remoto') ? 'tech-badge' : c.mode.includes('Financeiro') ? 'fin-badge' : 'ind-badge'}">${c.mode}</span></td>
       <td><span class="status-pill status-active">${c.status}</span></td>
       <td>
         <button class="btn btn-sm btn-outline" onclick="viewColabDetails(${c.id})" title="Ver Detalhes"><i class="fa-solid fa-eye"></i></button>

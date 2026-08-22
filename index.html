@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HRTech Core - Protótipo de Telas, Personas & Storyboard (LPS)</title>
-  <meta name="description" content="Plataforma Modular de Gestão de RH - Protótipo interativo de 15 telas, 6 personas com mapa de empatia, storyboard de 14 etapas e variabilidade de Linha de Produção de Software (LPS).">
+  <meta name="description" content="Plataforma Modular de Gestão de RH - Protótipo interativo de 17 telas, 6 personas com mapa de empatia, storyboard de 14 etapas e variabilidade de Linha de Produção de Software (LPS) em 3 clientes/segmentos.">
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,6 +31,7 @@
           <select id="tenantSelect" onchange="switchTenant(this.value)">
             <option value="tech">Cliente A - Tech Innovators (Tecnologia)</option>
             <option value="industry">Cliente B - Metalúrgica Sul (Indústria)</option>
+            <option value="financial">Cliente C - FinCorp Seguros (Financeiro)</option>
           </select>
         </div>
       </div>
@@ -86,14 +87,23 @@
         <a href="#tela-12" class="nav-item" onclick="showScreen('tela-12', event)">
           <span class="screen-num">12</span> <i class="fa-solid fa-gift"></i> <span>Benefícios</span>
         </a>
-        <a href="#tela-13" class="nav-item" onclick="showScreen('tela-13', event)">
+        <a href="#tela-13" class="nav-item tech-only" onclick="showScreen('tela-13', event)">
           <span class="screen-num">13</span> <i class="fa-solid fa-chart-line"></i> <span>Desempenho & OKRs</span>
         </a>
-        <a href="#tela-14" class="nav-item" onclick="showScreen('tela-14', event)">
+        <a href="#tela-14" class="nav-item ind-only" onclick="showScreen('tela-14', event)">
           <span class="screen-num">14</span> <i class="fa-solid fa-helmet-safety"></i> <span>EPIs e Exames (ASO)</span>
         </a>
         <a href="#tela-15" class="nav-item" onclick="showScreen('tela-15', event)">
           <span class="screen-num">15</span> <i class="fa-solid fa-sliders"></i> <span>Configuração da Empresa</span>
+        </a>
+
+        <!-- Section: Variabilidade Avançada (Segmento e Cliente Específico) -->
+        <div class="nav-section-title">Variabilidade Avançada (LPS)</div>
+        <a href="#tela-16" class="nav-item fin-only" onclick="showScreen('tela-16', event)">
+          <span class="screen-num">16</span> <i class="fa-solid fa-file-shield"></i> <span>Compliance & Auditoria</span>
+        </a>
+        <a href="#tela-17" class="nav-item exclusive-only" onclick="showScreen('tela-17', event)">
+          <span class="screen-num">17</span> <i class="fa-solid fa-handshake"></i> <span>Portal do Corretor</span> <span class="badge-exclusive">Exclusivo</span>
         </a>
       </nav>
 
@@ -144,7 +154,7 @@
             </div>
           </div>
 
-          <div class="grid-2-col">
+          <div class="grid-3-col">
             <div class="card client-card tech-border">
               <div class="client-header">
                 <i class="fa-solid fa-laptop-code client-icon tech-color"></i>
@@ -178,6 +188,33 @@
               </ul>
               <button class="btn btn-outline ind-btn" onclick="switchTenant('industry')">Simular Visão Indústria</button>
             </div>
+
+            <div class="card client-card fin-border">
+              <div class="client-header">
+                <i class="fa-solid fa-building-columns client-icon fin-color"></i>
+                <div>
+                  <h4>Cliente C — FinCorp Seguros</h4>
+                  <span class="badge fin-badge">Financeiro / Seguros</span>
+                </div>
+              </div>
+              <ul class="feature-list">
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Jornada:</strong> Presencial/comercial com controle de horário bancário</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Benefícios:</strong> Seguro de vida obrigatório + benefícios regulados</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Desempenho:</strong> Avaliação por metas comerciais e conformidade</li>
+                <li><i class="fa-solid fa-check check-icon"></i> <strong>Segurança & Regulação:</strong> Compliance, trilha de auditoria e dupla custódia</li>
+              </ul>
+              <button class="btn btn-outline fin-btn" onclick="switchTenant('financial')">Simular Visão Financeiro</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4 class="card-title"><i class="fa-solid fa-layer-group"></i> Os 3 Níveis de Variabilidade da LPS</h4>
+            <p style="margin-bottom: 12px;">A variabilidade do HRTech Core não acontece em um único nível. Ela é modelada em <strong>três camadas independentes</strong>, o que é o que realmente sustenta o Reuso do núcleo:</p>
+            <ul class="feature-list">
+              <li><i class="fa-solid fa-cube check-icon"></i> <strong>Núcleo comum:</strong> cadastro de colaboradores, autenticação, aprovações — 100% reutilizado por qualquer cliente.</li>
+              <li><i class="fa-solid fa-layer-group check-icon"></i> <strong>Segmento (Tecnologia / Indústria / Financeiro):</strong> módulos e regras compartilhados por todos os clientes daquele segmento (ex: EPIs para toda indústria, Compliance para todo financeiro).</li>
+              <li><i class="fa-solid fa-key check-icon"></i> <strong>Cliente específico:</strong> funcionalidade contratada/ativada para <strong>um único cliente</strong>, independente do segmento (ex: Portal do Corretor, exclusivo da FinCorp Seguros). Veja a Tela 15 e a Tela 17.</li>
+            </ul>
           </div>
         </section>
 
@@ -650,19 +687,19 @@
               <div class="chart-mock-bar">
                 <div class="bar-group">
                   <span>Engenharia & TI</span>
-                  <div class="bar-fill" style="width: 85%;">85 pessoas (57%)</div>
+                  <div class="bar-track"><div class="bar-fill" style="width: 85%;">85 pessoas (57%)</div></div>
                 </div>
                 <div class="bar-group">
                   <span>Operação / Fábrica</span>
-                  <div class="bar-fill" style="width: 40%;">40 pessoas (27%)</div>
+                  <div class="bar-track"><div class="bar-fill" style="width: 40%;">40 pessoas (27%)</div></div>
                 </div>
                 <div class="bar-group">
                   <span>Recrutamento & RH</span>
-                  <div class="bar-fill" style="width: 15%;">15 pessoas (10%)</div>
+                  <div class="bar-track"><div class="bar-fill" style="width: 15%;">15 pessoas (10%)</div></div>
                 </div>
                 <div class="bar-group">
                   <span>Diretoria / Gestão</span>
-                  <div class="bar-fill" style="width: 8%;">8 pessoas (6%)</div>
+                  <div class="bar-track"><div class="bar-fill" style="width: 8%;">8 pessoas (6%)</div></div>
                 </div>
               </div>
             </div>
@@ -757,6 +794,7 @@
                     <option value="Tecnologia & Engenharia">Tecnologia & Engenharia</option>
                     <option value="Recursos Humanos">Recursos Humanos</option>
                     <option value="Operações Industriais">Operações Industriais</option>
+                    <option value="Financeiro & Seguros">Financeiro & Seguros</option>
                     <option value="Diretoria">Diretoria</option>
                   </select>
                 </div>
@@ -771,6 +809,7 @@
                     <option value="Híbrido (Flexível)">Híbrido (Flexível)</option>
                     <option value="Presencial (Escala 12x36)">Presencial (Escala 12x36)</option>
                     <option value="Presencial (Turnos Fixo)">Presencial (Turnos Fixo)</option>
+                    <option value="Presencial (Comercial - Financeiro)">Presencial (Comercial - Financeiro)</option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -790,6 +829,21 @@
                   <div class="form-group">
                     <label>Validade do ASO (Exame Ocupacional)</label>
                     <input type="date" class="form-control" value="2027-02-15">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Módulo Condicional Financeiro/Seguros -->
+              <div class="conditional-box fin-only-box" id="financialFields">
+                <h5><i class="fa-solid fa-building-columns"></i> Campos Específicos do Módulo Financeiro (Compliance)</h5>
+                <div class="grid-2-col">
+                  <div class="form-group">
+                    <label>Certificação Susep (Corretor)</label>
+                    <select class="form-control"><option>Não aplicável</option><option>Certificado - Vida e Previdência</option><option>Certificado - Ramos Elementares</option></select>
+                  </div>
+                  <div class="form-group">
+                    <label>Nível de Acesso a Dados Sensíveis (LGPD)</label>
+                    <select class="form-control"><option>Padrão</option><option>Restrito</option><option>Dupla Custódia</option></select>
                   </div>
                 </div>
               </div>
@@ -1260,6 +1314,210 @@
                   <span class="slider round"></span>
                 </label>
               </div>
+
+              <div class="module-toggle-card">
+                <div>
+                  <strong>Módulo Compliance & Auditoria (Financeiro)</strong>
+                  <p class="text-sm">Ativa trilha de auditoria e aprovação em dupla custódia para o segmento Financeiro/Seguros</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="modCompliance" onchange="toggleModuleConfig()">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ==================== RECURSO EXCLUSIVO DE CLIENTE ==================== -->
+          <div class="config-divider-exclusive"><i class="fa-solid fa-key"></i> Recurso Exclusivo de Cliente (fora da segmentação)</div>
+
+          <div class="card">
+            <div class="exclusive-banner">
+              <i class="fa-solid fa-circle-info"></i>
+              <div>
+                <p><strong>Isto não é um módulo de segmento.</strong> Diferente de "Compliance & Auditoria" (que qualquer cliente Financeiro pode habilitar), o <strong>Portal do Corretor</strong> foi desenvolvido e liberado apenas para a <strong>FinCorp Seguros</strong>, via um flag de cliente independente da configuração de segmento. Outro cliente do segmento Financeiro não veria esta opção nem este menu.</p>
+              </div>
+            </div>
+
+            <div class="module-toggle-grid">
+              <div class="module-toggle-card exclusive-card">
+                <div>
+                  <strong>Portal do Corretor <span class="badge-exclusive">Exclusivo FinCorp</span></strong>
+                  <p class="text-sm">Add-on contratado individualmente por este cliente — controla comissionamento e apólices de corretores parceiros</p>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="modBrokerPortal" checked onchange="toggleExclusiveFeature()">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4 class="card-title"><i class="fa-solid fa-table-list"></i> Matriz de Ativos Reutilizáveis & Requisitos Variáveis (Atualizada)</h4>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Descrição</th>
+                  <th>Tecnologia</th>
+                  <th>Indústria</th>
+                  <th>Financeiro</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>AR01–AR05</td>
+                  <td>Ativos reutilizáveis do núcleo (Auth/RBAC, Organograma, Motor de Ponto, Modelo de Dados, Suíte de Testes)</td>
+                  <td><span class="status-pill status-success">Reutilizado</span></td>
+                  <td><span class="status-pill status-success">Reutilizado</span></td>
+                  <td><span class="status-pill status-success">Reutilizado</span></td>
+                </tr>
+                <tr>
+                  <td>AR06</td>
+                  <td>Matriz de requisitos e pontos de variabilidade (documento)</td>
+                  <td><span class="status-pill status-success">Reutilizado</span></td>
+                  <td><span class="status-pill status-success">Reutilizado</span></td>
+                  <td><span class="status-pill status-success">Reutilizado</span></td>
+                </tr>
+                <tr>
+                  <td>RFV07</td>
+                  <td>Trilha de auditoria e dupla custódia</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="badge fin-badge">Segmento</span></td>
+                </tr>
+                <tr>
+                  <td>RFV08</td>
+                  <td>Certificação Susep e nível de acesso LGPD</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="badge fin-badge">Segmento</span></td>
+                </tr>
+                <tr>
+                  <td>RFV09</td>
+                  <td>Portal do Corretor (comissionamento de parceiros)</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="badge-exclusive">Cliente Específico</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="text-sm" style="margin-top: 10px;">RFV07 e RFV08 variam por <strong>segmento</strong> (disponíveis para qualquer cliente Financeiro). RFV09 varia por <strong>cliente específico</strong> — é a prova de que a LPS aqui suporta personalização além da simples troca de tema/segmento.</p>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 16: COMPLIANCE & AUDITORIA (SEGMENTO FINANCEIRO) ==================== -->
+        <section id="tela-16" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-file-shield highlight-icon"></i> Compliance & Auditoria (RFV07 / RFV08)</h3>
+            <p>Módulo disponível para <strong>todo o segmento Financeiro</strong> — não é exclusivo de um único cliente. Qualquer empresa financeira instanciada na LPS pode habilitá-lo na Tela 15.</p>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card">
+              <h4><i class="fa-solid fa-list-check"></i> Trilha de Auditoria (Últimos Eventos)</h4>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Data/Hora</th>
+                    <th>Usuário</th>
+                    <th>Ação</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>14/08/2026 09:12</td>
+                    <td>Gabriel Torres</td>
+                    <td>Alteração de dados cadastrais sensíveis</td>
+                    <td><span class="status-pill status-warning">Aguardando 2ª Aprovação</span></td>
+                  </tr>
+                  <tr>
+                    <td>13/08/2026 17:40</td>
+                    <td>Helena Martins</td>
+                    <td>Emissão de apólice acima do limite de alçada</td>
+                    <td><span class="status-pill status-success">Aprovado (Dupla Custódia)</span></td>
+                  </tr>
+                  <tr>
+                    <td>12/08/2026 11:05</td>
+                    <td>Mariana Santos</td>
+                    <td>Consulta a dados de colaborador (LGPD)</td>
+                    <td><span class="status-pill status-neutral">Registrado</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card">
+              <h4><i class="fa-solid fa-user-shield"></i> Aprovação em Dupla Custódia</h4>
+              <p>Operações sensíveis (alteração cadastral, emissão fora de alçada) exigem confirmação de um segundo responsável antes de serem efetivadas — regra obrigatória apenas para o segmento Financeiro.</p>
+              <ul class="detail-list">
+                <li><strong>Regra ativa:</strong> Dupla aprovação para valores acima de R$ 50.000,00</li>
+                <li><strong>Responsável 1:</strong> Analista solicitante</li>
+                <li><strong>Responsável 2:</strong> Gestor ou Compliance</li>
+                <li><strong>Base legal:</strong> Normas Susep e política interna de conformidade</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== SCREEN 17: PORTAL DO CORRETOR (EXCLUSIVO FINCORP) ==================== -->
+        <section id="tela-17" class="screen-view">
+          <div class="card">
+            <h3><i class="fa-solid fa-handshake highlight-icon"></i> Portal do Corretor <span class="badge-exclusive">Exclusivo FinCorp Seguros</span></h3>
+            <p>Este módulo <strong>não pertence ao pacote padrão do segmento Financeiro</strong>. É um recurso contratado individualmente pela FinCorp Seguros para gerenciar sua rede própria de corretores parceiros.</p>
+          </div>
+
+          <div class="card">
+            <div class="exclusive-banner">
+              <i class="fa-solid fa-diagram-project"></i>
+              <div>
+                <p><strong>Como esta variabilidade é separada das demais:</strong> o núcleo do HRTech Core não conhece "Portal do Corretor". A funcionalidade vive em uma camada de extensão acima do segmento Financeiro, habilitada por um flag de cliente (<code>hrtech_client_flags_financial</code> na configuração), e some completamente da navegação se este flag estiver desligado — mesmo para outros clientes financeiros. Isso evita que o núcleo e o pacote de segmento precisem ser alterados para atender a um pedido pontual de um único cliente.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2-col">
+            <div class="card">
+              <h4><i class="fa-solid fa-users"></i> Corretores Parceiros Ativos</h4>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Corretor</th>
+                    <th>Apólices no Mês</th>
+                    <th>Comissão Acumulada</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Helena Martins</td>
+                    <td>18</td>
+                    <td>R$ 12.400,00</td>
+                  </tr>
+                  <tr>
+                    <td>Corretora Sul Seguros Ltda.</td>
+                    <td>27</td>
+                    <td>R$ 19.850,00</td>
+                  </tr>
+                  <tr>
+                    <td>Paulo Andrade (Autônomo)</td>
+                    <td>9</td>
+                    <td>R$ 5.100,00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card">
+              <h4><i class="fa-solid fa-file-invoice-dollar"></i> Resumo de Comissionamento</h4>
+              <ul class="detail-list">
+                <li><strong>Apólices emitidas via parceiros (mês):</strong> 54</li>
+                <li><strong>Comissão total a repassar:</strong> R$ 37.350,00</li>
+                <li><strong>Prazo de repasse:</strong> Até o 5º dia útil do mês seguinte</li>
+                <li><strong>Regra de auditoria:</strong> Todo repasse acima de R$ 15.000,00 segue para dupla custódia (Tela 16)</li>
+              </ul>
+              <button class="btn btn-outline btn-block">Gerar Relatório de Repasse</button>
             </div>
           </div>
         </section>
