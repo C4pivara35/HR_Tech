@@ -1,0 +1,2388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRTech Core — Relatório Acadêmico Integrado (LPS, Reuso e Medição)</title>
+  
+  <style>
+    /* ==========================================================================
+       NORMAS ABNT (NBR 14724 / NBR 6023 / NBR 6027 / NBR 6028 / IBGE)
+       ========================================================================== */
+    
+    @page {
+      size: A4 portrait;
+      margin: 3cm 2cm 2cm 3cm; /* Superior: 3cm, Direita: 2cm, Inferior: 2cm, Esquerda: 3cm */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Times New Roman", Times, Georgia, serif;
+      font-size: 12pt;
+      line-height: 1.5;
+      color: #111111;
+      background-color: #f4f5f7;
+      text-align: justify;
+      hyphens: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Contêiner de Visualização e Impressão */
+    .document-container {
+      max-width: 210mm;
+      margin: 20px auto;
+      background: #ffffff;
+      padding: 30mm 20mm 20mm 30mm;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border-radius: 2px;
+    }
+
+    @media print {
+      body {
+        background-color: #ffffff;
+      }
+      .document-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .page-break {
+        page-break-before: always;
+        break-before: page;
+      }
+    }
+
+    /* Barra de Ações Superior (apenas tela) */
+    .action-bar {
+      position: sticky;
+      top: 10px;
+      z-index: 1000;
+      max-width: 210mm;
+      margin: 10px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e293b;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px;
+    }
+
+    .action-bar button {
+      background: #3b82f6;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .action-bar button:hover {
+      background: #2563eb;
+    }
+
+    /* Tipografia e Parágrafos */
+    p {
+      text-indent: 1.25cm;
+      margin-bottom: 0.8em;
+      text-align: justify;
+      line-height: 1.5;
+    }
+
+    .no-indent {
+      text-indent: 0 !important;
+    }
+
+    /* Títulos e Seções ABNT */
+    h1.secao-primaria {
+      font-size: 13pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-top: 28pt;
+      margin-bottom: 14pt;
+      color: #000000;
+      page-break-before: always;
+      break-before: page;
+      border-bottom: 1.5px solid #000000;
+      padding-bottom: 4px;
+    }
+
+    h1.secao-primaria:first-of-type {
+      page-break-before: avoid;
+      break-before: auto;
+    }
+
+    h2.secao-secundaria {
+      font-size: 12pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-top: 20pt;
+      margin-bottom: 10pt;
+      color: #000000;
+    }
+
+    h3.secao-terciaria {
+      font-size: 12pt;
+      font-weight: bold;
+      margin-top: 16pt;
+      margin-bottom: 8pt;
+      color: #000000;
+    }
+
+    h4.secao-quaternaria {
+      font-size: 12pt;
+      font-weight: normal;
+      font-style: italic;
+      margin-top: 12pt;
+      margin-bottom: 6pt;
+      color: #000000;
+    }
+
+    /* Capa e Folha de Rosto */
+    .capa, .folha-rosto {
+      min-height: 240mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .capa-header, .folha-rosto-header {
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 12pt;
+      line-height: 1.4;
+    }
+
+    .capa-autor, .folha-rosto-autor {
+      margin-top: 60px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 12pt;
+    }
+
+    .capa-titulo-bloco {
+      margin-top: 80px;
+      margin-bottom: 80px;
+    }
+
+    .capa-titulo {
+      font-size: 14pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+
+    .capa-subtitulo {
+      font-size: 12pt;
+      font-weight: normal;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
+    .folha-rosto-natureza-bloco {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+
+    .folha-rosto-natureza {
+      width: 50%;
+      text-align: justify;
+      font-size: 10pt;
+      line-height: 1.2;
+      text-indent: 0;
+    }
+
+    .capa-footer, .folha-rosto-footer {
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 11pt;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+
+    /* Resumo e Abstract */
+    .resumo-box {
+      margin-top: 20px;
+      margin-bottom: 30px;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .resumo-box h2 {
+      text-align: center;
+      font-size: 12pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 14pt;
+    }
+
+    .resumo-box p {
+      text-indent: 0;
+      text-align: justify;
+      margin-bottom: 12pt;
+      line-height: 1.5;
+    }
+
+    .palavras-chave {
+      font-size: 11pt;
+      margin-top: 12pt;
+      text-indent: 0;
+    }
+
+    .palavras-chave strong {
+      font-weight: bold;
+    }
+
+    /* Sumário e Listas */
+    .sumario-box, .lista-box {
+      margin-top: 20px;
+      margin-bottom: 30px;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .sumario-box h2, .lista-box h2 {
+      text-align: center;
+      font-size: 13pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 20pt;
+      border-bottom: 1px solid #000;
+      padding-bottom: 5px;
+    }
+
+    .sumario-lista, .lista-itens {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sumario-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6pt;
+      font-size: 11pt;
+    }
+
+    .sumario-item a {
+      color: #000000;
+      text-decoration: none;
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .sumario-item a:hover {
+      color: #2563eb;
+      text-decoration: underline;
+    }
+
+    .sumario-titulo {
+      font-weight: normal;
+    }
+
+    .sumario-item.nivel-1 .sumario-titulo {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .sumario-item.nivel-2 {
+      padding-left: 20px;
+    }
+
+    .sumario-item.nivel-2 .sumario-titulo {
+      font-weight: bold;
+    }
+
+    .sumario-item.nivel-3 {
+      padding-left: 40px;
+    }
+
+    .sumario-dots {
+      flex-grow: 1;
+      border-bottom: 1px dotted #888888;
+      margin: 0 8px;
+    }
+
+    /* Tabelas e Quadros (IBGE / ABNT) */
+    .tabela-wrapper, .quadro-wrapper {
+      margin: 18pt 0;
+      page-break-inside: avoid;
+    }
+
+    .titulo-tabela, .titulo-figura {
+      font-size: 10pt;
+      font-weight: bold;
+      text-align: left;
+      margin-bottom: 4pt;
+      line-height: 1.3;
+      text-indent: 0;
+    }
+
+    .fonte-tabela, .fonte-figura {
+      font-size: 10pt;
+      font-style: normal;
+      text-align: left;
+      margin-top: 4pt;
+      margin-bottom: 14pt;
+      line-height: 1.3;
+      text-indent: 0;
+    }
+
+    /* Tabelas Estatísticas (Padrão IBGE: sem bordas laterais verticais) */
+    table.tabela-ibge {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      line-height: 1.3;
+      margin: 6pt 0;
+      border-top: 2px solid #000000;
+      border-bottom: 2px solid #000000;
+    }
+
+    table.tabela-ibge th {
+      border-bottom: 1px solid #000000;
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: bold;
+      background-color: #f9f9f9;
+    }
+
+    table.tabela-ibge td {
+      border-bottom: 1px solid #e0e0e0;
+      padding: 5px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    /* Quadros Textuais (Padrão ABNT: totalmente fechados por linhas) */
+    table.quadro-abnt {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      line-height: 1.3;
+      margin: 6pt 0;
+      border: 1px solid #000000;
+    }
+
+    table.quadro-abnt th {
+      border: 1px solid #000000;
+      padding: 6px 8px;
+      text-align: left;
+      font-weight: bold;
+      background-color: #f0f0f0;
+    }
+
+    table.quadro-abnt td {
+      border: 1px solid #000000;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    /* Badges de Status de Requisitos */
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      font-size: 8.5pt;
+      font-weight: bold;
+      border-radius: 3px;
+      font-family: system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .badge-success {
+      background-color: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .badge-warning {
+      background-color: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .badge-info {
+      background-color: #e0f2fe;
+      color: #075985;
+      border: 1px solid #bae6fd;
+    }
+
+    /* Figuras e Imagens */
+    .figura-box {
+      margin: 18pt 0;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .figura-box img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin: 4pt 0;
+      background: #ffffff;
+    }
+
+    .figura-box.screenshot-lg img {
+      width: 100%;
+      max-height: 480px;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .figura-dupla {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 8pt 0;
+    }
+
+    .figura-dupla img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    /* Caixa de Destaque / Citações Longas */
+    .citacao-longa {
+      margin: 14pt 0 14pt 4cm;
+      font-size: 10pt;
+      line-height: 1.2;
+      text-align: justify;
+      text-indent: 0;
+    }
+
+    .caixa-destaque {
+      border-left: 3px solid #1e293b;
+      background-color: #f8fafc;
+      padding: 10px 14px;
+      margin: 12pt 0;
+      font-size: 10.5pt;
+      line-height: 1.4;
+    }
+
+    .caixa-destaque p {
+      text-indent: 0;
+      margin-bottom: 4pt;
+    }
+
+    .caixa-destaque p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Código-Fonte e Snippets Técnicos */
+    pre.code-block {
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: "JetBrains Mono", "Courier New", Courier, monospace;
+      font-size: 9pt;
+      line-height: 1.4;
+      padding: 12px 14px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 10pt 0;
+      border: 1px solid #334155;
+      text-align: left;
+      white-space: pre;
+    }
+
+    code.inline-code {
+      font-family: "JetBrains Mono", "Courier New", Courier, monospace;
+      font-size: 9.5pt;
+      background-color: #f1f5f9;
+      color: #0f172a;
+      padding: 1px 4px;
+      border-radius: 3px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Referências Bibliográficas (NBR 6023) */
+    .referencias-box p {
+      text-indent: 0;
+      margin-bottom: 12pt;
+      font-size: 11pt;
+      line-height: 1.35;
+      text-align: justify;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Ações (Apenas em Tela) -->
+  <div class="action-bar no-print">
+    <div>
+      <strong>HRTech Core — Documento Acadêmico em Padrão ABNT</strong> (Medição e Análise de Software / PUCPR 2026)
+    </div>
+    <div>
+      <button onclick="window.print()">🖨️ Imprimir / Salvar em PDF (ABNT A4)</button>
+    </div>
+  </div>
+
+  <div class="document-container">
+
+    <!-- ==========================================================================
+         ELEMENTOS PRÉ-TEXTUAIS: CAPA FORMAL ABNT (NBR 14724)
+         ========================================================================== -->
+    <div class="capa">
+      <div class="capa-header">
+        PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ<br>
+        ESCOLA POLITÉCNICA<br>
+        CURSO DE ENGENHARIA DE SOFTWARE
+      </div>
+
+      <div class="capa-autor">
+        FERNANDO LOPES DUARTE
+      </div>
+
+      <div class="capa-titulo-bloco">
+        <div class="capa-titulo">
+          HRTECH CORE: PLATAFORMA MODULAR DE GESTÃO DE RECURSOS HUMANOS COM LINHA DE PRODUÇÃO DE SOFTWARE (LPS)
+        </div>
+        <div class="capa-subtitulo">
+          Relatório Acadêmico Integrado de Design Thinking, Engenharia de Requisitos, Alta Variabilidade, Reuso de Software e Medição
+        </div>
+      </div>
+
+      <div class="capa-footer">
+        CURITIBA<br>
+        2026
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         ELEMENTOS PRÉ-TEXTUAIS: FOLHA DE ROSTO (NBR 14724)
+         ========================================================================== -->
+    <div class="folha-rosto">
+      <div class="folha-rosto-header">
+        PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ<br>
+        ESCOLA POLITÉCNICA<br>
+        CURSO DE ENGENHARIA DE SOFTWARE
+      </div>
+
+      <div class="folha-rosto-autor">
+        FERNANDO LOPES DUARTE
+      </div>
+
+      <div class="capa-titulo-bloco">
+        <div class="capa-titulo">
+          HRTECH CORE: PLATAFORMA MODULAR DE GESTÃO DE RECURSOS HUMANOS COM LINHA DE PRODUÇÃO DE SOFTWARE (LPS)
+        </div>
+        <div class="capa-subtitulo">
+          Relatório Acadêmico Integrado de Design Thinking, Engenharia de Requisitos, Alta Variabilidade, Reuso de Software e Medição
+        </div>
+      </div>
+
+      <div class="folha-rosto-natureza-bloco">
+        <div class="folha-rosto-natureza">
+          Trabalho acadêmico e técnico-científico desenvolvido para a disciplina de <strong>Medição e Análise de Software</strong> do Curso de Bacharelado em Engenharia de Software da Pontifícia Universidade Católica do Paraná (PUCPR), como requisito formal de avaliação do Projeto de Medição e Reuso de Software.
+        </div>
+      </div>
+
+      <div class="folha-rosto-footer">
+        CURITIBA<br>
+        2026
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         ELEMENTOS PRÉ-TEXTUAIS: RESUMO EM PORTUGUÊS (NBR 6028)
+         ========================================================================== -->
+    <div class="resumo-box">
+      <h2>RESUMO</h2>
+      <p>
+        O presente trabalho documenta o projeto, especificação arquitetural, prototipagem de alta fidelidade e plano de medição da plataforma <strong>HRTech Core</strong>, um sistema modular de Gestão Estratégica e Operacional de Recursos Humanos (People Analytics) concebido sob o paradigma de <strong>Linha de Produção de Software (LPS / Software Product Lines)</strong>. As organizações contemporâneas compartilham rotinas corporativas essenciais (cadastro de colaboradores, organogramas, controle de jornada e concessão de férias), contudo apresentam requisitos profundamente divergentes em conformidade com seu setor produtivo. Para superar o dilema entre softwares genéricos inflexíveis e desenvolvimentos customizados isolados ("one-off"), o HRTech Core estabelece um núcleo comum reutilizável (*Core Assets*) articulado a mecanismos formais de resolução de alta variabilidade em tempo de execução via *Feature Flags* e arquitetura multi-tenant. O projeto integra métodos de Design Thinking (6 personas multifuncionais com mapas de empatia, público-alvo e storyboard de 14 interações), 15 Requisitos Funcionais comuns, 9 Requisitos Funcionais Variáveis para três segmentos econômicos (Tecnologia, Indústria e Financeiro), uma funcionalidade de cliente exclusivo (*Portal do Corretor* para o cliente FinCorp Seguros), 10 Requisitos Não Funcionais balizados por métricas e 6 Ativos Reutilizáveis catalogados com taxas de reuso superiores a 80%. A solução é materializada em um protótipo navegável Single Page Application (SPA) com 17 telas funcionais e instrumentada por indicadores quantitativos de produto, processo e reuso.
+      </p>
+      <div class="palavras-chave">
+        <strong>Palavras-chave:</strong> Linha de Produção de Software. Reuso de Software. Design Thinking. Alta Variabilidade. Medição de Software. HRTech.
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         ELEMENTOS PRÉ-TEXTUAIS: ABSTRACT (NBR 6028)
+         ========================================================================== -->
+    <div class="resumo-box">
+      <h2>ABSTRACT</h2>
+      <p>
+        This paper presents the design, architectural specification, high-fidelity prototyping, and software measurement framework for <strong>HRTech Core</strong>, a modular Strategic and Operational Human Resources Management (People Analytics) platform engineered under the <strong>Software Product Line (SPL)</strong> paradigm. While modern organizations share foundational HR workflows (employee management, organizational hierarchy, time tracking, and vacation scheduling), their operational and compliance requirements diverge significantly across industry verticals. To overcome the trade-off between rigid commercial off-the-shelf software and costly ad-hoc custom development, HRTech Core establishes a reusable core platform (*Core Assets*) combined with runtime high-variability resolution mechanisms powered by feature flags and multi-tenant scoping. The engineering methodology encompasses Design Thinking artifacts (6 comprehensive personas with empathy maps, target audience segmentation, and a 14-step vacation request storyboard), 15 Core Functional Requirements, 9 Variable Functional Requirements tailored to three enterprise sectors (Technology, Manufacturing, and Financial/Insurance), a dedicated client-exclusive extension (*Broker Portal* for FinCorp Seguros), 10 metric-driven Non-Functional Requirements, and 6 Reusable Core Assets achieving reuse rates above 80%. The solution is validated through an interactive Single Page Application (SPA) prototype featuring 17 operational views integrated with quantitative software measurement indicators.
+      </p>
+      <div class="palavras-chave">
+        <strong>Keywords:</strong> Software Product Lines. Software Reuse. Design Thinking. High Variability. Software Measurement. People Analytics.
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         ELEMENTOS PRÉ-TEXTUAIS: LISTA DE ILUSTRAÇÕES (FIGURAS)
+         ========================================================================== -->
+    <div class="lista-box">
+      <h2>LISTA DE ILUSTRAÇÕES</h2>
+      <ul class="lista-itens">
+        <li class="sumario-item"><span>Figura 1 – Infográfico Conceitual de Público-Alvo e Segmentação da LPS</span><span class="sumario-dots"></span><span>p. 7</span></li>
+        <li class="sumario-item"><span>Figura 2 – Visão de Interface do Público-Alvo e LPS no Protótipo</span><span class="sumario-dots"></span><span>p. 8</span></li>
+        <li class="sumario-item"><span>Figura 3 – Painel Visual Integrado do Storyboard de Solicitação de Férias</span><span class="sumario-dots"></span><span>p. 9</span></li>
+        <li class="sumario-item"><span>Figura 4 – Interface da Linha do Tempo do Storyboard no Protótipo</span><span class="sumario-dots"></span><span>p. 11</span></li>
+        <li class="sumario-item"><span>Figura 5 – Persona 1: Mariana Santos (Diretora de RH & Operations)</span><span class="sumario-dots"></span><span>p. 12</span></li>
+        <li class="sumario-item"><span>Figura 6 – Persona 2: Roberto Lima (Analista de Departamento Pessoal)</span><span class="sumario-dots"></span><span>p. 14</span></li>
+        <li class="sumario-item"><span>Figura 7 – Persona 3: Carlos Eduardo (Gerente de Engenharia)</span><span class="sumario-dots"></span><span>p. 15</span></li>
+        <li class="sumario-item"><span>Figura 8 – Persona 4: Lucas Silva (Desenvolvedor Remoto)</span><span class="sumario-dots"></span><span>p. 17</span></li>
+        <li class="sumario-item"><span>Figura 9 – Persona 5: João Oliveira (Operador de Fábrica)</span><span class="sumario-dots"></span><span>p. 18</span></li>
+        <li class="sumario-item"><span>Figura 10 – Persona 6: Ana Souza (Recrutadora & Talent Acquisition)</span><span class="sumario-dots"></span><span>p. 20</span></li>
+        <li class="sumario-item"><span>Figura 11 – Tela 01: Login & Autenticação Multi-tenant</span><span class="sumario-dots"></span><span>p. 21</span></li>
+        <li class="sumario-item"><span>Figura 12 – Tela 02: Dashboard do Colaborador</span><span class="sumario-dots"></span><span>p. 22</span></li>
+        <li class="sumario-item"><span>Figura 13 – Tela 03: Dashboard Executivo do RH & Indicadores LPS</span><span class="sumario-dots"></span><span>p. 23</span></li>
+        <li class="sumario-item"><span>Figura 14 – Tela 04: Lista de Colaboradores (CRUD)</span><span class="sumario-dots"></span><span>p. 24</span></li>
+        <li class="sumario-item"><span>Figura 15 – Tela 05: Formulário de Cadastro / Edição Adaptativo</span><span class="sumario-dots"></span><span>p. 25</span></li>
+        <li class="sumario-item"><span>Figura 16 – Tela 06: Detalhes do Colaborador (Perfil 360°)</span><span class="sumario-dots"></span><span>p. 26</span></li>
+        <li class="sumario-item"><span>Figura 17 – Tela 07: Organograma Corporativo Interativo (AR02)</span><span class="sumario-dots"></span><span>p. 27</span></li>
+        <li class="sumario-item"><span>Figura 18 – Tela 08: Espelho de Ponto & Banco de Horas (AR03)</span><span class="sumario-dots"></span><span>p. 28</span></li>
+        <li class="sumario-item"><span>Figura 19 – Tela 09: Solicitação de Ajuste de Ponto e Justificativa</span><span class="sumario-dots"></span><span>p. 29</span></li>
+        <li class="sumario-item"><span>Figura 20 – Tela 10: Gestão de Férias & Calendário de Ausências</span><span class="sumario-dots"></span><span>p. 30</span></li>
+        <li class="sumario-item"><span>Figura 21 – Tela 11: Central de Aprovações do Gestor com Auditoria</span><span class="sumario-dots"></span><span>p. 31</span></li>
+        <li class="sumario-item"><span>Figura 22 – Tela 12: Gestão Paramétrica de Benefícios Corporativos</span><span class="sumario-dots"></span><span>p. 32</span></li>
+        <li class="sumario-item"><span>Figura 23 – Tela 13: Desempenho & Metas OKRs (Segmento Tech)</span><span class="sumario-dots"></span><span>p. 33</span></li>
+        <li class="sumario-item"><span>Figura 24 – Tela 14: Módulo Industrial — EPIs e Exames ASO</span><span class="sumario-dots"></span><span>p. 34</span></li>
+        <li class="sumario-item"><span>Figura 25 – Tela 15: Configuração da Empresa & Matriz de Governança LPS</span><span class="sumario-dots"></span><span>p. 35</span></li>
+        <li class="sumario-item"><span>Figura 26 – Tela 16: Compliance & Auditoria em Dupla Custódia</span><span class="sumario-dots"></span><span>p. 36</span></li>
+        <li class="sumario-item"><span>Figura 27 – Tela 17: Portal do Corretor de Seguros (Cliente Exclusivo)</span><span class="sumario-dots"></span><span>p. 37</span></li>
+      </ul>
+    </div>
+
+    <!-- ==========================================================================
+         ELEMENTOS PRÉ-TEXTUAIS: LISTA DE TABELAS E QUADROS
+         ========================================================================== -->
+    <div class="lista-box">
+      <h2>LISTA DE TABELAS E QUADROS</h2>
+      <ul class="lista-itens">
+        <li class="sumario-item"><span>Quadro 1 – Matriz de Atendimento aos Requisitos da Disciplina</span><span class="sumario-dots"></span><span>p. 6</span></li>
+        <li class="sumario-item"><span>Quadro 2 – Mapeamento das 14 Etapas Sequenciais do Storyboard de Férias</span><span class="sumario-dots"></span><span>p. 10</span></li>
+        <li class="sumario-item"><span>Quadro 3 – Mapa de Empatia da Persona 1: Mariana Santos</span><span class="sumario-dots"></span><span>p. 13</span></li>
+        <li class="sumario-item"><span>Quadro 4 – Mapa de Empatia da Persona 2: Roberto Lima</span><span class="sumario-dots"></span><span>p. 14</span></li>
+        <li class="sumario-item"><span>Quadro 5 – Mapa de Empatia da Persona 3: Carlos Eduardo</span><span class="sumario-dots"></span><span>p. 16</span></li>
+        <li class="sumario-item"><span>Quadro 6 – Mapa de Empatia da Persona 4: Lucas Silva</span><span class="sumario-dots"></span><span>p. 17</span></li>
+        <li class="sumario-item"><span>Quadro 7 – Mapa de Empatia da Persona 5: João Oliveira</span><span class="sumario-dots"></span><span>p. 19</span></li>
+        <li class="sumario-item"><span>Quadro 8 – Mapa de Empatia da Persona 6: Ana Souza</span><span class="sumario-dots"></span><span>p. 20</span></li>
+        <li class="sumario-item"><span>Quadro 9 – Catálogo Geral das 17 Telas do Protótipo HRTech Core</span><span class="sumario-dots"></span><span>p. 21</span></li>
+        <li class="sumario-item"><span>Quadro 10 – Especificação dos 6 Ativos Reutilizáveis (Core Assets da LPS)</span><span class="sumario-dots"></span><span>p. 39</span></li>
+        <li class="sumario-item"><span>Quadro 11 – Requisitos Funcionais Comuns (15 RFs) da Plataforma Base</span><span class="sumario-dots"></span><span>p. 40</span></li>
+        <li class="sumario-item"><span>Quadro 12 – Requisitos Funcionais Variáveis (9 RFVs) por Segmento e Cliente</span><span class="sumario-dots"></span><span>p. 41</span></li>
+        <li class="sumario-item"><span>Quadro 13 – Requisitos Não Funcionais (10 RNFs) e Metodologia de Medição</span><span class="sumario-dots"></span><span>p. 42</span></li>
+        <li class="sumario-item"><span>Quadro 14 – Catálogo de Regras de Negócio (RB01 a RB10)</span><span class="sumario-dots"></span><span>p. 43</span></li>
+        <li class="sumario-item"><span>Quadro 15 – Matriz de Casos de Uso Prioritários do MVP (UC01 a UC10)</span><span class="sumario-dots"></span><span>p. 44</span></li>
+        <li class="sumario-item"><span>Tabela 1 – Indicadores e Métricas Coletadas no HRTech Core</span><span class="sumario-dots"></span><span>p. 45</span></li>
+        <li class="sumario-item"><span>Quadro 16 – Matriz Comparativa dos Três Segmentos/Tenants da LPS</span><span class="sumario-dots"></span><span>p. 47</span></li>
+      </ul>
+    </div>
+
+    <!-- ==========================================================================
+         ELEMENTOS PRÉ-TEXTUAIS: SUMÁRIO NUMERADO (NBR 6027)
+         ========================================================================== -->
+    <div class="sumario-box">
+      <h2>SUMÁRIO</h2>
+      <ul class="sumario-lista">
+        <li class="sumario-item nivel-1">
+          <a href="#sec-1"><span class="sumario-titulo">1 PARTE I — DESIGN THINKING E ENGENHARIA DE EXPERIÊNCIA</span><span class="sumario-dots"></span><span>p. 6</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-1-1"><span class="sumario-titulo">1.1 Área de Atuação e Descrição do Produto</span><span class="sumario-dots"></span><span>p. 6</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-1-2"><span class="sumario-titulo">1.2 Público-Alvo e Segmentação da Linha de Produção</span><span class="sumario-dots"></span><span>p. 7</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-1-3"><span class="sumario-titulo">1.3 Storyboard da Solicitação de Férias (14 Interações)</span><span class="sumario-dots"></span><span>p. 9</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-1-4"><span class="sumario-titulo">1.4 Personas e Mapas de Empatia</span><span class="sumario-dots"></span><span>p. 12</span></a>
+        </li>
+        <li class="sumario-item nivel-3">
+          <a href="#sec-1-4-1"><span class="sumario-titulo">1.4.1 Persona 1: Mariana Santos — Diretora de RH & Operations</span><span class="sumario-dots"></span><span>p. 12</span></a>
+        </li>
+        <li class="sumario-item nivel-3">
+          <a href="#sec-1-4-2"><span class="sumario-titulo">1.4.2 Persona 2: Roberto Lima — Analista de Departamento Pessoal</span><span class="sumario-dots"></span><span>p. 14</span></a>
+        </li>
+        <li class="sumario-item nivel-3">
+          <a href="#sec-1-4-3"><span class="sumario-titulo">1.4.3 Persona 3: Carlos Eduardo — Gerente de Engenharia</span><span class="sumario-dots"></span><span>p. 15</span></a>
+        </li>
+        <li class="sumario-item nivel-3">
+          <a href="#sec-1-4-4"><span class="sumario-titulo">1.4.4 Persona 4: Lucas Silva — Desenvolvedor Remoto</span><span class="sumario-dots"></span><span>p. 17</span></a>
+        </li>
+        <li class="sumario-item nivel-3">
+          <a href="#sec-1-4-5"><span class="sumario-titulo">1.4.5 Persona 5: João Oliveira — Operador de Fábrica</span><span class="sumario-dots"></span><span>p. 18</span></a>
+        </li>
+        <li class="sumario-item nivel-3">
+          <a href="#sec-1-4-6"><span class="sumario-titulo">1.4.6 Persona 6: Ana Souza — Recrutadora & Talent Acquisition</span><span class="sumario-dots"></span><span>p. 20</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-1-5"><span class="sumario-titulo">1.5 Catálogo Completo das 17 Telas do Protótipo</span><span class="sumario-dots"></span><span>p. 21</span></a>
+        </li>
+        <li class="sumario-item nivel-1">
+          <a href="#sec-2"><span class="sumario-titulo">2 PARTE II — LINHA DE PRODUÇÃO DE SOFTWARE (LPS) E REUSO</span><span class="sumario-dots"></span><span>p. 38</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-2-1"><span class="sumario-titulo">2.1 Visão da LPS e Fundamentação Teórica de Variabilidade</span><span class="sumario-dots"></span><span>p. 38</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-2-2"><span class="sumario-titulo">2.2 Os 6 Ativos Reutilizáveis (Core Assets)</span><span class="sumario-dots"></span><span>p. 39</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-2-3"><span class="sumario-titulo">2.3 Requisitos Funcionais (15 RFs Comuns e 9 Variáveis)</span><span class="sumario-dots"></span><span>p. 40</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-2-4"><span class="sumario-titulo">2.4 Requisitos Não Funcionais (10 RNFs)</span><span class="sumario-dots"></span><span>p. 42</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-2-5"><span class="sumario-titulo">2.5 Regras de Negócio e Casos de Uso do MVP</span><span class="sumario-dots"></span><span>p. 43</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-2-6"><span class="sumario-titulo">2.6 Medição de Software e Indicadores de Engenharia</span><span class="sumario-dots"></span><span>p. 45</span></a>
+        </li>
+        <li class="sumario-item nivel-1">
+          <a href="#sec-3"><span class="sumario-titulo">3 PARTE III — ALTA VARIABILIDADE NA LINHA DE PRODUÇÃO DE SOFTWARE</span><span class="sumario-dots"></span><span>p. 46</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-3-1"><span class="sumario-titulo">3.1 Conceito de Alta Variabilidade na LPS</span><span class="sumario-dots"></span><span>p. 46</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-3-2"><span class="sumario-titulo">3.2 Os 3 Segmentos / Tenants Modelados na Plataforma</span><span class="sumario-dots"></span><span>p. 47</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-3-3"><span class="sumario-titulo">3.3 Análise Comparativa de Variação de Telas</span><span class="sumario-dots"></span><span>p. 48</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-3-4"><span class="sumario-titulo">3.4 Feature Exclusiva de Cliente: Portal do Corretor</span><span class="sumario-dots"></span><span>p. 49</span></a>
+        </li>
+        <li class="sumario-item nivel-2">
+          <a href="#sec-3-5"><span class="sumario-titulo">3.5 Arquitetura Técnica para Reuso e Personalização em Tempo de Execução</span><span class="sumario-dots"></span><span>p. 50</span></a>
+        </li>
+        <li class="sumario-item nivel-1">
+          <a href="#sec-4"><span class="sumario-titulo">4 CONCLUSÃO E PERSPECTIVAS FUTURAS</span><span class="sumario-dots"></span><span>p. 52</span></a>
+        </li>
+        <li class="sumario-item nivel-1">
+          <a href="#sec-5"><span class="sumario-titulo">5 REFERÊNCIAS BIBLIOGRÁFICAS</span><span class="sumario-dots"></span><span>p. 53</span></a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ==========================================================================
+         SEÇÃO 1 — PARTE I: DESIGN THINKING E ENGENHARIA DE EXPERIÊNCIA
+         ========================================================================== -->
+    <h1 id="sec-1" class="secao-primaria">1 PARTE I — DESIGN THINKING E ENGENHARIA DE EXPERIÊNCIA</h1>
+
+    <h2 id="sec-1-1" class="secao-secundaria">1.1 Área de Atuação e Descrição do Produto</h2>
+    <p>
+      O projeto <strong>HRTech Core</strong> insere-se no domínio de tecnologia aplicada à Gestão Estratégica e Operacional de Recursos Humanos (conhecido pelo termo de mercado <em>HRTech</em> e <em>People Analytics</em>). No cenário empresarial contemporâneo, a gestão do capital humano transcendeu as funções puramente burocráticas de conferência de folha de pagamento, configurando-se como um pilar essencial para a competitividade organizacional, atração de talentos, conformidade jurídica trabalhista e governança corporativa.
+    </p>
+    <p>
+      Contudo, a análise da indústria de software evidencia um dilema arquitetural crítico na construção de sistemas de RH. Por um lado, as organizações compartilham necessidades fundamentais e universais: todo departamento pessoal necessita autenticar usuários com segurança, manter uma base cadastral de colaboradores vinculados a departamentos e cargos, estruturar hierarquias corporativas (organogramas), conciliar registros de ponto eletrônico, processar pedidos de férias e disponibilizar canais de aprovação gerencial. Por outro lado, a forma como essas rotinas são executadas diverge de forma drástica em função do segmento de mercado em que a empresa atua:
+    </p>
+    <ul style="margin-left: 2.5cm; margin-bottom: 12pt; font-size: 11pt; line-height: 1.4;">
+      <li><strong>Empresas de Tecnologia:</strong> Operam predominantemente em regime remoto ou híbrido, adotam banco de horas flexível e auto-gerenciado, contratam benefícios flexíveis sob demanda (ex: Caju e Flash) e avaliam seus colaboradores através de metodologias ágeis como OKRs (<em>Objectives and Key Results</em>) e avaliações 360°.</li>
+      <li><strong>Indústrias Manufatureiras:</strong> Operam em regime 100% presencial no chão de fábrica, organizam jornadas em escalas ininterruptas de revezamento de turnos (como a escala 12x36), fornecem benefícios rígidos acordados em convenções sindicais e possuem obrigatoriedade legal de gerenciar o fornecimento de Equipamentos de Proteção Individual (EPIs) e a realização periódica de Exames Médicos Ocupacionais (ASO).</li>
+      <li><strong>Instituições Financeiras e Seguradoras:</strong> Operam em ambientes altamente regulados por autarquias governamentais (Banco Central e SUSEP), exigem rastreabilidade estrita de alterações de dados sob as normas da LGPD, adotam o princípio de governança de <em>Dupla Custódia</em> para operações críticas e frequentemente demandam módulos complementares exclusivos para relacionamento com redes terceirizadas (como o Portal do Corretor de Seguros).</li>
+    </ul>
+    <p>
+      Diante dessa realidade, o modelo clássico de desenvolvimento de software sofre de ineficiência crônica: soluções comerciais genéricas de prateleira (COTS) falham por não contemplarem as especificidades operacionais de setores regulados ou fabris, enquanto desenvolvimentos sob encomenda isolados geram retrabalho massivo, custos exorbitantes de manutenção e código bifurcado (<em>code forking</em>). A resposta de engenharia adotada no <strong>HRTech Core</strong> é a estruturação de uma <strong>Linha de Produção de Software (LPS / Software Product Lines)</strong>, na qual um núcleo comum estável é desenvolvido uma única vez e reutilizado sistematicamente, enquanto os requisitos de segmento e cliente são tratados como pontos formais de variabilidade resolvidos em tempo de execução.
+    </p>
+
+    <!-- Quadro 1: Atendimento aos Requisitos -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 1 – Matriz de Atendimento aos Requisitos da Disciplina de Medição e Reuso</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Requisito Acadêmico</th>
+            <th style="width: 45%;">Especificação / Escopo no HRTech Core</th>
+            <th style="width: 30%;">Evidência / Artefato Produzido</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Design Thinking</strong></td>
+            <td>Definição de público-alvo multifacetado, desenvolvimento de 6 personas aprofundadas com mapa de empatia completo (6 quadrantes) e storyboard de 14 etapas.</td>
+            <td>Seções 1.2, 1.3 e 1.4 deste relatório; artefatos gráficos de alta resolução e telas interativas.</td>
+          </tr>
+          <tr>
+            <td><strong>Protótipo Interativo</strong></td>
+            <td>Construção de Single Page Application (SPA) funcional de alta fidelidade contendo 17 telas completas, suporte a 3 temas corporativos e responsividade nativa.</td>
+            <td>Seção 1.5; catálogo das 17 telas capturadas em resolução 1920x1080; protótipo acessível em <code>index.html</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Operações de CRUD</strong></td>
+            <td>Gestão centralizada de colaboradores com inserção adaptativa por tenant, consulta com filtro textual instantâneo, edição e exclusão simulada.</td>
+            <td>Tela 04 (Lista de Colaboradores), Tela 05 (Cadastro) e Tela 06 (Perfil Detalhado); RF03 a RF06.</td>
+          </tr>
+          <tr>
+            <td><strong>Engenharia de Requisitos</strong></td>
+            <td>Catalogação exaustiva de 15 Requisitos Funcionais do núcleo, 9 Requisitos Funcionais Variáveis (RFVs) e 10 Requisitos Não Funcionais (RNFs).</td>
+            <td>Seções 2.3 e 2.4; Quadros 11, 12 e 13 com detalhamento técnico e badges de status.</td>
+          </tr>
+          <tr>
+            <td><strong>Linha de Produção (LPS)</strong></td>
+            <td>Estruturação de 3 camadas de variabilidade: Núcleo Comum (Core), Pacotes Verticais de Segmento e Add-on Exclusivo de Cliente.</td>
+            <td>Seção 2 e Seção 3; comutação dinâmica via Feature Flags e multi-tenancy.</td>
+          </tr>
+          <tr>
+            <td><strong>Ativos Reutilizáveis</strong></td>
+            <td>Modelagem formal de 6 Ativos Reutilizáveis (Core Assets AR01 a AR06) cobrindo código, front-end, modelo de dados, testes e documentação.</td>
+            <td>Seção 2.2; Quadro 10 com classificação por técnica de reuso (caixa-preta, caixa-cinza e caixa-branca).</td>
+          </tr>
+          <tr>
+            <td><strong>Medição de Software</strong></td>
+            <td>Definição e coleta de métricas de produto (tempo de API, cobertura), processo (esforço, defeitos), reuso (taxa LPS de 83,3%) e indicadores de negócio.</td>
+            <td>Seção 2.6; Tabela 1 e painel executivo da Tela 03.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- 1.2 PÚBLICO-ALVO -->
+    <h2 id="sec-1-2" class="secao-secundaria">1.2 Público-Alvo e Segmentação da Linha de Produção</h2>
+    <p>
+      O público-alvo do HRTech Core é composto por médias e grandes corporações, departamentos de recursos humanos, gestores de pessoas e colaboradores pertencentes a diferentes verticais de mercado que demandam uma infraestrutura tecnológica unificada para seus processos de gestão de pessoas. A segmentação estratégica do público-alvo foi estruturada em três perfis corporativos representativos:
+    </p>
+
+    <!-- Figura 1: Infografico Publico Alvo -->
+    <div class="figura-box">
+      <div class="titulo-figura">Figura 1 – Infográfico Conceitual de Público-Alvo e Segmentação da LPS HRTech Core</div>
+      <img src="assets/publico_alvo_hrtech_core_1786669012493.jpg" alt="Infográfico de Público-Alvo HRTech Core" style="max-height: 440px;">
+      <div class="fonte-figura">Fonte: Elaborado pelo autor com ferramentas de geração visual (2026).</div>
+    </div>
+
+    <!-- Figura 2: Screenshot Publico Alvo no Prototipo -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 2 – Visão de Interface do Público-Alvo e LPS no Protótipo Funcional</div>
+      <img src="screenshots/publico_alvo.png" alt="Screenshot da tela de Público-Alvo no Protótipo">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+
+    <p>
+      Conforme ilustrado nas Figuras 1 e 2, a plataforma organiza seus clientes em três <em>tenants</em> paradigmáticos:
+    </p>
+    <ul style="margin-left: 2.5cm; margin-bottom: 12pt; font-size: 11pt; line-height: 1.4;">
+      <li><strong>Cliente A — InovaTech (Segmento Tecnologia & Inovação):</strong> Organizações digitais com squads ágeis, desenvolvedores remotos, ênfase em horários flexíveis, autonomia individual, avaliação de desempenho baseada em entregas de sprints e objetivos estratégicos (OKRs).</li>
+      <li><strong>Cliente B — MetalForte (Segmento Indústria & Manufatura):</strong> Plantas fabris com centenas de operadores presenciais, controle rigoroso de assiduidade física, turnos rotativos contínuos (12x36), conformidade com Normas Regulamentadoras do Ministério do Trabalho (NR-06 para EPIs e NR-07 para ASO).</li>
+      <li><strong>Cliente C — FinCorp Seguros (Segmento Financeiro & Seguros):</strong> Empresas de serviços financeiros e corretagem securitária com equipes comerciais distribuídas, controle estrito de trilhas de auditoria, segregação de funções e gestão de rede de parceiros corretores externos.</li>
+    </ul>
+
+    <!-- 1.3 STORYBOARD -->
+    <h2 id="sec-1-3" class="secao-secundaria">1.3 Storyboard da Solicitação de Férias (14 Interações)</h2>
+    <p>
+      O <strong>Storyboard</strong> constitui uma técnica clássica de <em>Design Thinking</em> e Engenharia de Requisitos voltada a mapear visual e narrativamente a jornada do usuário em um fluxo crítico de negócio. No HRTech Core, o fluxo modelado foi a <strong>Solicitação, Validação, Aprovação Gerencial e Auditoria de Férias</strong>, decomposto em uma sequência lógica de 14 interações entre colaborador, sistema e liderança direta.
+    </p>
+
+    <!-- Figura 3: Painel Storyboard -->
+    <div class="figura-box">
+      <div class="titulo-figura">Figura 3 – Painel Visual Integrado do Storyboard de Solicitação de Férias</div>
+      <img src="assets/storyboard_solicitacao_ferias_1786668927870.jpg" alt="Painel do Storyboard de Férias" style="max-height: 460px;">
+      <div class="fonte-figura">Fonte: Elaborado pelo autor com ferramentas de ideação visual (2026).</div>
+    </div>
+
+    <!-- Quadro 2: Tabela Storyboard 14 Etapas -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 2 – Mapeamento Detalhado das 14 Etapas Sequenciais do Storyboard de Férias</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 6%; text-align: center;">Etapa</th>
+            <th style="width: 14%;">Fase da Jornada</th>
+            <th style="width: 32%;">História do Usuário / Contexto</th>
+            <th style="width: 22%;">Interface Envolvida</th>
+            <th style="width: 26%;">Ação Realizada / Mecanismo de Validação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">01</td>
+            <td>Autenticação</td>
+            <td>O colaborador (Lucas Silva) acessa o portal corporativo com seu e-mail e senha corporativa.</td>
+            <td><strong>Tela 01: Login</strong></td>
+            <td>Submissão de credenciais com validação do identificador de tenant e perfil RBAC.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">02</td>
+            <td>Consulta de Saldo</td>
+            <td>Ao entrar no sistema, o colaborador visualiza seu resumo pessoal e saldo acumulado de dias de férias.</td>
+            <td><strong>Tela 02: Dashboard Colaborador</strong></td>
+            <td>Leitura imediata do card de métricas com saldo de 22 dias disponíveis para gozo.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">03</td>
+            <td>Navegação</td>
+            <td>O colaborador clica no menu de navegação lateral para acessar o módulo específico de férias.</td>
+            <td><strong>Sidebar / Menu Principal</strong></td>
+            <td>Transição SPA para o identificador <code>#tela-10</code> sem recarregamento de página.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">04</td>
+            <td>Período Aquisitivo</td>
+            <td>O sistema consulta os registros contratuais e apresenta os períodos aquisitivos em aberto e histórico.</td>
+            <td><strong>Tela 10: Gestão de Férias</strong></td>
+            <td>Renderização das tabelas de histórico de concessões anteriores e saldo proporcional.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">05</td>
+            <td>Seleção de Período</td>
+            <td>O colaborador seleciona a data inicial no calendário interativo e estipula a duração (15, 20 ou 30 dias).</td>
+            <td><strong>Tela 10: Formulário de Agendamento</strong></td>
+            <td>Definição do intervalo temporal e opção de abono pecuniário (conversão de 1/3 em dinheiro).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">06</td>
+            <td>Validação de Regras</td>
+            <td>O motor de regras da LPS valida conformidade com a CLT e políticas internas da empresa cliente.</td>
+            <td><strong>Motor de Regras (Backend/JS)</strong></td>
+            <td>Verificação automática de antecedência mínima de 30 dias e suficiência de saldo (RB04).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">07</td>
+            <td>Confirmação e Envio</td>
+            <td>O colaborador revisa as datas projetadas, o impacto no saldo remanescente e clica em submeter.</td>
+            <td><strong>Tela 10: Botão de Submissão</strong></td>
+            <td>Disparo do evento de persistência do pedido com emissão de toast de confirmação.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">08</td>
+            <td>Persistência do Estado</td>
+            <td>O sistema grava a solicitação no banco de dados e atribui o status formal de "Aguardando Aprovação".</td>
+            <td><strong>Modelo de Dados (AR04)</strong></td>
+            <td>Criação de registro na tabela <code>solicitacoes</code> vinculado ao ID do colaborador e tenant.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">09</td>
+            <td>Notificação ao Gestor</td>
+            <td>O gestor imediato (Carlos Eduardo) é alertado instantaneamente sobre o novo pedido pendente.</td>
+            <td><strong>Topbar / Central de Notificações</strong></td>
+            <td>Incremento do contador de pendências no badge da barra de ferramentas do gestor.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">10</td>
+            <td>Análise de Conflitos</td>
+            <td>O gestor abre a central de aprovações e analisa se haverá sobreposição de ausências na squad técnica.</td>
+            <td><strong>Tela 11: Central de Aprovações</strong></td>
+            <td>Consulta ao mapa de disponibilidade da equipe e histórico funcional do solicitante.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">11</td>
+            <td>Decisão Gerencial</td>
+            <td>O gestor valida a viabilidade operacional e aprova a solicitação com um clique.</td>
+            <td><strong>Tela 11: Ações de Decisão</strong></td>
+            <td>Execução da função <code>approveItem()</code> com registro de data/hora e autor (RB06).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">12</td>
+            <td>Trilha de Auditoria</td>
+            <td>O sistema atualiza o status para "Aprovado" e consolida o evento na trilha de auditoria corporativa.</td>
+            <td><strong>Trilha de Auditoria (Tela 16)</strong></td>
+            <td>Gravação imutável de log contendo timestamp, identificador do gestor e ação realizada.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">13</td>
+            <td>Notificação de Deferimento</td>
+            <td>O colaborador recebe notificação push e visualiza o status atualizado em seu painel pessoal.</td>
+            <td><strong>Tela 02: Dashboard Colaborador</strong></td>
+            <td>Atualização do card de status de solicitações para a badge verde "Aprovado".</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">14</td>
+            <td>Consolidação no RH</td>
+            <td>A diretoria de RH e o DP visualizam o impacto do agendamento nas projeções de folha e absenteísmo.</td>
+            <td><strong>Tela 03: Dashboard do RH</strong></td>
+            <td>Recálculo automático dos indicadores consolidados de absenteísmo planejado (RF15).</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- Figura 4: Screenshot Storyboard Protótipo -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 4 – Interface da Linha do Tempo do Storyboard no Protótipo Funcional</div>
+      <img src="screenshots/storyboard_solicitacao_ferias.png" alt="Screenshot do Storyboard no Protótipo">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+
+    <!-- 1.4 PERSONAS E MAPAS DE EMPATIA -->
+    <h2 id="sec-1-4" class="secao-secundaria">1.4 Personas e Mapas de Empatia</h2>
+    <p>
+      Para garantir que a Linha de Produção de Software atenda de forma genuína às necessidades ergonômicas, funcionais e comportamentais de seus usuários finais, foram modeladas <strong>seis personas corporativas</strong>. As personas cobrem desde o nível estratégico de tomada de decisão (C-Level) até a operação em chão de fábrica e equipes remotas.
+    </p>
+
+    <!-- PERSONA 1 -->
+    <h3 id="sec-1-4-1" class="secao-terciaria">1.4.1 Persona 1: Mariana Santos — Diretora de RH & Operations</h3>
+    <p>
+      <strong>Perfil Demográfico:</strong> 44 anos, pós-graduada em Gestão de Pessoas, atua na liderança executiva de RH há mais de 15 anos. Responsável pela estratégia de retenção de talentos, definição de orçamento e acompanhamento de métricas globais corporativas.
+    </p>
+
+    <div class="figura-dupla">
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 5a – Avatar Conceitual de Mariana Santos</div>
+        <img src="assets/persona_diretor_rh_1786668938341.jpg" alt="Mariana Santos">
+      </div>
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 5b – Aba da Persona 1 no Protótipo</div>
+        <img src="screenshots/persona_mariana_santos_diretora_rh.png" alt="Tela Persona Mariana">
+      </div>
+    </div>
+    <div class="fonte-figura" style="text-align: center; margin-bottom: 12pt;">Fonte: Elaborado pelo autor e capturado do protótipo (2026).</div>
+
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 3 – Mapa de Empatia da Persona 1: Mariana Santos</div>
+      <table class="quadro-abnt">
+        <tbody>
+          <tr>
+            <td style="width: 50%;"><strong>O QUE ELA PENSA E SENTE?</strong><br>Necessidade de dados confiáveis e em tempo real para tomada de decisões estratégicas; preocupação contínua com a taxa de turnover e com a produtividade organizacional.</td>
+            <td style="width: 50%;"><strong>O QUE ELA VÊ?</strong><br>Relatórios operacionais fragmentados em planilhas eletrônicas; relatórios de consultoria apontando lentidão no fechamento de indicadores; reuniões de diretoria cobrando reduções de custo.</td>
+          </tr>
+          <tr>
+            <td><strong>O QUE ELA OUVE?</strong><br>Líderes de unidades queixando-se da lentidão dos processos de RH; colaboradores pedindo modernização de benefícios; executivos cobrando visão de headcount unificada.</td>
+            <td><strong>O QUE ELA FALA E FAZ?</strong><br>Apresenta resultados em comitês executivos; negocia contratação de plataformas tecnológicas de alta escalabilidade; patrocina a modernização cultural da empresa.</td>
+          </tr>
+          <tr>
+            <td><strong>QUAIS SÃO SUAS DORES?</strong><br>Sistemas legados desconectados; ausência de indicadores consolidados de reuso e absenteísmo; retrabalho manual de analistas em consolidações de dados.</td>
+            <td><strong>QUAIS SÃO SEUS GANHOS?</strong><br>Disponibilidade de um dashboard executivo integrado; visibilidade instantânea de métricas de medição e custos; automatização de relatórios da LPS.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- PERSONA 2 -->
+    <h3 id="sec-1-4-2" class="secao-terciaria">1.4.2 Persona 2: Roberto Lima — Analista de Departamento Pessoal</h3>
+    <p>
+      <strong>Perfil Demográfico:</strong> 31 anos, graduado em Administração com especialização em Legislação Trabalhista, 7 anos de experiência em Departamento Pessoal. Foco em folha de pagamento, conciliação de ponto e conformidade com o eSocial.
+    </p>
+
+    <div class="figura-dupla">
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 6a – Avatar Conceitual de Roberto Lima</div>
+        <img src="assets/persona_analista_dp_1786668947406.jpg" alt="Roberto Lima">
+      </div>
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 6b – Aba da Persona 2 no Protótipo</div>
+        <img src="screenshots/persona_roberto_lima_analista_dp.png" alt="Tela Persona Roberto">
+      </div>
+    </div>
+    <div class="fonte-figura" style="text-align: center; margin-bottom: 12pt;">Fonte: Elaborado pelo autor e capturado do protótipo (2026).</div>
+
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 4 – Mapa de Empatia da Persona 2: Roberto Lima</div>
+      <table class="quadro-abnt">
+        <tbody>
+          <tr>
+            <td style="width: 50%;"><strong>O QUE ELE PENSA E SENTE?</strong><br>Pressão para cumprir prazos legais rigorosos sem gerar passivo trabalhista; receio de inconsistências em marcações manuais de ponto e períodos aquisitivos de férias.</td>
+            <td style="width: 50%;"><strong>O QUE ELE VÊ?</strong><br>Centenas de solicitações de ajuste de batidas acumuladas no início do mês; pilhas de atestados médicos digitalizados com baixa legibilidade; múltiplos sistemas de ponto.</td>
+          </tr>
+          <tr>
+            <td><strong>O QUE ELE OUVE?</strong><br>Colaboradores questionando divergências no banco de horas; gestores solicitando liberação excepcional de folgas sem o devido fluxo formal.</td>
+            <td><strong>O QUE ELE FALA E FAZ?</strong><br>Executa conciliações diárias de batidas; valida regras de intervalos intrajornada; alimenta o fechamento de folha de pagamento; orienta gestores sobre normas.</td>
+          </tr>
+          <tr>
+            <td><strong>QUAIS SÃO SUAS DORES?</strong><br>Retrabalho causado por dados cadastrais incompletos; conferência manual e exaustiva de espelhos de ponto; estresse recorrente em semanas de fechamento.</td>
+            <td><strong>QUAIS SÃO SEUS GANHOS?</strong><br>Motor automatizado de cálculo de banco de horas (AR03); central de aprovação eletrônica com anexos obrigatórios; cadastro adaptativo com validações integradas.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- PERSONA 3 -->
+    <h3 id="sec-1-4-3" class="secao-terciaria">1.4.3 Persona 3: Carlos Eduardo — Gerente de Engenharia</h3>
+    <p>
+      <strong>Perfil Demográfico:</strong> 38 anos, Engenheiro de Software com MBA em Gestão de Projetos, lidera 4 squads de engenharia (32 desenvolvedores). Foco em manter o ritmo de entregas técnicas (sprints) alinhado aos objetivos trimestrais (OKRs).
+    </p>
+
+    <div class="figura-dupla">
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 7a – Avatar Conceitual de Carlos Eduardo</div>
+        <img src="assets/persona_gerente_engenharia_1786668955432.jpg" alt="Carlos Eduardo">
+      </div>
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 7b – Aba da Persona 3 no Protótipo</div>
+        <img src="screenshots/persona_carlos_eduardo_gerente_eng.png" alt="Tela Persona Carlos">
+      </div>
+    </div>
+    <div class="fonte-figura" style="text-align: center; margin-bottom: 12pt;">Fonte: Elaborado pelo autor e capturado do protótipo (2026).</div>
+
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 5 – Mapa de Empatia da Persona 3: Carlos Eduardo</div>
+      <table class="quadro-abnt">
+        <tbody>
+          <tr>
+            <td style="width: 50%;"><strong>O QUE ELE PENSA E SENTE?</strong><br>Desejo de conciliar o bem-estar e retenção do time de desenvolvimento com os prazos rigorosos de lançamentos de software; aversão a burocracias lentas.</td>
+            <td style="width: 50%;"><strong>O QUE ELE VÊ?</strong><br>Desenvolvedores alternando entre múltiplos sistemas e cobrando respostas rápidas; sobreposição não intencional de folgas em períodos críticos de release.</td>
+          </tr>
+          <tr>
+            <td><strong>O QUE ELE OUVE?</strong><br>Squad pedindo flexibilidade de horários e respostas rápidas de férias; diretoria cobrando relatórios de alinhamento com OKRs técnicos.</td>
+            <td><strong>O QUE ELE FALA E FAZ?</strong><br>Conduz reuniões de 1-on-1 com liderados; aprova solicitações funcionais; avalia competências em ciclos de avaliação 360°; planeja capacidade de entregas.</td>
+          </tr>
+          <tr>
+            <td><strong>QUAIS SÃO SUAS DORES?</strong><br>Perda de tempo operacional navegando em sistemas de RH lentos; falta de um painel consolidado para aprovar pendências em lote.</td>
+            <td><strong>QUAIS SÃO SEUS GANHOS?</strong><br>Central de aprovações em 1 clique (Tela 11); módulo integrado de OKRs e avaliação 360° (Tela 13); organograma interativo visual da equipe (Tela 07).</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- PERSONA 4 -->
+    <h3 id="sec-1-4-4" class="secao-terciaria">1.4.4 Persona 4: Lucas Silva — Desenvolvedor Remoto</h3>
+    <p>
+      <strong>Perfil Demográfico:</strong> 27 anos, Desenvolvedor Full Stack sênior, atua 100% em regime de home office a 400 km da sede da empresa. Valoriza flexibilidade de jornada, autonomia técnica e benefícios corporativos modernos.
+    </p>
+
+    <div class="figura-dupla">
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 8a – Avatar Conceitual de Lucas Silva</div>
+        <img src="assets/persona_desenvolvedor_remoto_1786668981059.jpg" alt="Lucas Silva">
+      </div>
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 8b – Aba da Persona 4 no Protótipo</div>
+        <img src="screenshots/persona_lucas_silva_dev_remoto.png" alt="Tela Persona Lucas">
+      </div>
+    </div>
+    <div class="fonte-figura" style="text-align: center; margin-bottom: 12pt;">Fonte: Elaborado pelo autor e capturado do protótipo (2026).</div>
+
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 6 – Mapa de Empatia da Persona 4: Lucas Silva</div>
+      <table class="quadro-abnt">
+        <tbody>
+          <tr>
+            <td style="width: 50%;"><strong>O QUE ELE PENSA E SENTE?</strong><br>Busca transparência sobre seu saldo de horas e férias; deseja uma experiência digital fluida e intuitiva similar às ferramentas modernas de tecnologia que utiliza diariamente.</td>
+            <td style="width: 50%;"><strong>O QUE ELE VÊ?</strong><br>Ambiente de trabalho digital moderno (IDE, GitHub, Slack); contraste desconfortável quando precisa interagir com portais corporativos legados.</td>
+          </tr>
+          <tr>
+            <td><strong>O QUE ELE OUVE?</strong><br>Avisos assíncronos do gestor sobre entregas de sprints; notificações de RH sobre fechamento de saldo de benefícios no cartão flexível.</td>
+            <td><strong>O QUE ELE FALA E FAZ?</strong><br>Registra marcações de jornada flexível; solicita agendamento de férias com antecedência; gerencia seu saldo de multibenefícios na categoria refeição/educação.</td>
+          </tr>
+          <tr>
+            <td><strong>QUAIS SÃO SUAS DORES?</strong><br>Incerteza sobre o cálculo real do banco de horas flexível; processos de solicitação que demandam impressão de formulários ou e-mails formais.</td>
+            <td><strong>QUAIS SÃO SEUS GANHOS?</strong><br>Dashboard individual responsivo (Tela 02); consulta transparente ao espelho de ponto em tempo real (Tela 08); agendamento de férias 100% digital em poucos passos.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- PERSONA 5 -->
+    <h3 id="sec-1-4-5" class="secao-terciaria">1.4.5 Persona 5: João Oliveira — Operador de Fábrica</h3>
+    <p>
+      <strong>Perfil Demográfico:</strong> 42 anos, Técnico em Mecânica Industrial, 12 anos atuando em linhas de usinagem pesada em regime de escala de revezamento 12x36. Foco em segurança ocupacional e correção estrita de horas adicionais.
+    </p>
+
+    <div class="figura-dupla">
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 9a – Avatar Conceitual de João Oliveira</div>
+        <img src="assets/persona_operador_fabrica_1786668991478.jpg" alt="João Oliveira">
+      </div>
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 9b – Aba da Persona 5 no Protótipo</div>
+        <img src="screenshots/persona_joao_oliveira_operador_fabrica.png" alt="Tela Persona João">
+      </div>
+    </div>
+    <div class="fonte-figura" style="text-align: center; margin-bottom: 12pt;">Fonte: Elaborado pelo autor e capturado do protótipo (2026).</div>
+
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 7 – Mapa de Empatia da Persona 5: João Oliveira</div>
+      <table class="quadro-abnt">
+        <tbody>
+          <tr>
+            <td style="width: 50%;"><strong>O QUE ELE PENSA E SENTE?</strong><br>Preocupação prioritária com sua integridade física no manuseio de maquinário pesado; garantia de que seus adicionais noturnos e de insalubridade sejam pagos com exatidão.</td>
+            <td style="width: 50%;"><strong>O QUE ELE VÊ?</strong><br>Painéis de segurança do trabalho no chão de fábrica; relógios de ponto biométricos físicos; avisos de obrigatoriedade de renovação de EPIs.</td>
+          </tr>
+          <tr>
+            <td><strong>O QUE ELE OUVE?</strong><br>Diálogos Diários de Segurança (DDS) ministrados por técnicos de segurança; instruções do supervisor de produção sobre alterações de turnos.</td>
+            <td><strong>O QUE ELE FALA E FAZ?</strong><br>Registra o ponto rigorosamente no início e término da escala 12x36; solicita substituição de botas e protetores auriculares desgastados; comparece a exames ASO.</td>
+          </tr>
+          <tr>
+            <td><strong>QUAIS SÃO SUAS DORES?</strong><br>Divergências na folha devido a erros de cálculo em escalas complexas; trabalhar com equipamentos de proteção com prazo de validade expirado.</td>
+            <td><strong>QUAIS SÃO SEUS GANHOS?</strong><br>Controle digital de entrega e validade de EPIs (Tela 14); agendamento transparente de exames médicos periódicos; espelho de ponto ajustado à escala 12x36.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- PERSONA 6 -->
+    <h3 id="sec-1-4-6" class="secao-terciaria">1.4.6 Persona 6: Ana Souza — Recrutadora & Talent Acquisition</h3>
+    <p>
+      <strong>Perfil Demográfico:</strong> 29 anos, Psicóloga com pós-graduação em Gestão Estratégica de Talentos, responsável pelo ciclo completo de atração, triagem, contratação e alocação na estrutura organizacional.
+    </p>
+
+    <div class="figura-dupla">
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 10a – Avatar Conceitual de Ana Souza</div>
+        <img src="assets/persona_recrutador_1786669002453.jpg" alt="Ana Souza">
+      </div>
+      <div class="figura-box" style="margin:0;">
+        <div class="titulo-figura">Figura 10b – Aba da Persona 6 no Protótipo</div>
+        <img src="screenshots/persona_ana_souza_recrutadora.png" alt="Tela Persona Ana">
+      </div>
+    </div>
+    <div class="fonte-figura" style="text-align: center; margin-bottom: 12pt;">Fonte: Elaborado pelo autor e capturado do protótipo (2026).</div>
+
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 8 – Mapa de Empatia da Persona 6: Ana Souza</div>
+      <table class="quadro-abnt">
+        <tbody>
+          <tr>
+            <td style="width: 50%;"><strong>O QUE ELA PENSA E SENTE?</strong><br>Desejo de proporcionar uma experiência ágil de onboarding para novos contratados; necessidade de ter clareza absoluta sobre as posições abertas na árvore hierárquica.</td>
+            <td style="width: 50%;"><strong>O QUE ELA VÊ?</strong><br>Planilhas desatualizadas de organograma com cargos duplicados; formulários de contratação impressos e descentralizados entre filiais.</td>
+          </tr>
+          <tr>
+            <td><strong>O QUE ELA OUVE?</strong><br>Gerentes solicitando urgência na entrada de novos profissionais; novos colaboradores com dúvidas sobre a quem devem se reportar hierarquicamente.</td>
+            <td><strong>O QUE ELA FALA E FAZ?</strong><br>Conduz processos seletivos; realiza o cadastro inicial de colaboradores no sistema; aloca profissionais em departamentos e cargos formalizados.</td>
+          </tr>
+          <tr>
+            <td><strong>QUAIS SÃO SUAS DORES?</strong><br>Informações cadastrais dispersas; dificuldade para visualizar a árvore de subordinação direta da empresa em tempo real.</td>
+            <td><strong>QUAIS SÃO SEUS GANHOS?</strong><br>Componente de Organograma Interativo visual (Tela 07 — AR02); formulário de cadastro dinâmico com campos adaptativos por tenant (Tela 05).</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- 1.5 PROTOTIPO E CATALOGO DE TELAS -->
+    <h2 id="sec-1-5" class="secao-secundaria">1.5 Catálogo Completo das 17 Telas do Protótipo Interativo</h2>
+    <p>
+      O protótipo funcional do HRTech Core foi integralmente projetado e implementado como uma aplicação web de página única (Single Page Application - SPA) de alta fidelidade técnica e visual. A interface implementa a totalidade das 17 telas planejadas, organizadas entre funcionalidades do núcleo comum, especializações verticais por segmento e módulos exclusivos de cliente.
+    </p>
+
+    <!-- Quadro 9: Resumo das 17 Telas -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 9 – Catálogo Geral das 17 Telas do Protótipo Funcional HRTech Core</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 8%; text-align: center;">Tela</th>
+            <th style="width: 25%;">Nome da Tela</th>
+            <th style="width: 45%;">Objetivo Funcional e Escopo de Negócio</th>
+            <th style="width: 22%;">Vínculo LPS / Ativo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">01</td>
+            <td>Login & Autenticação</td>
+            <td>Ponto de entrada com autenticação segura de colaboradores e chave de tenant no rodapé.</td>
+            <td>Núcleo Comum (AR01)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">02</td>
+            <td>Dashboard do Colaborador</td>
+            <td>Painel individual com saldo de férias, saldo do banco de horas, benefícios e jornada recente.</td>
+            <td>Núcleo Comum (AR03)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">03</td>
+            <td>Dashboard Executivo do RH</td>
+            <td>Painel com headcount, absenteísmo, horas extras, distribuição departamental e métricas LPS.</td>
+            <td>Núcleo Comum (AR06)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">04</td>
+            <td>Lista de Colaboradores (CRUD)</td>
+            <td>Tabela dinâmica com busca textual instantânea, badges de contrato e ações de perfil e exclusão.</td>
+            <td>Núcleo Comum (AR01, AR04)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">05</td>
+            <td>Formulário de Cadastro / Edição</td>
+            <td>Formulário adaptativo com campos dinâmicos exibidos conforme o perfil do tenant ativo.</td>
+            <td>Núcleo Comum (AR04)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">06</td>
+            <td>Detalhes do Colaborador (Perfil)</td>
+            <td>Visão 360° da ficha cadastral, histórico funcional, alocação na LPS e regime de trabalho.</td>
+            <td>Núcleo Comum (AR04)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">07</td>
+            <td>Organograma Interativo</td>
+            <td>Componente visual em árvore multinível com fotos, cargos e conectores dinâmicos.</td>
+            <td>Ativo Reutilizável AR02</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">08</td>
+            <td>Espelho de Ponto & Banco de Horas</td>
+            <td>Mapeamento diário de batidas com regras polimórficas de jornada (flexível, 12x36 ou comercial).</td>
+            <td>Ativo Reutilizável AR03</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">09</td>
+            <td>Solicitação de Ajuste de Ponto</td>
+            <td>Formulário para justificativa de inconsistências com seleção de motivo e upload de atestado.</td>
+            <td>Ativo Reutilizável AR03</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">10</td>
+            <td>Gestão de Férias & Calendário</td>
+            <td>Agendamento de férias com validação de saldo e prazos, abono pecuniário e histórico de status.</td>
+            <td>Núcleo Comum (AR04)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">11</td>
+            <td>Central de Aprovações do Gestor</td>
+            <td>Painel do gestor para aprovar/recusar solicitações em lote com registro formal de auditoria.</td>
+            <td>Núcleo Comum (AR01, AR04)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">12</td>
+            <td>Gestão de Benefícios</td>
+            <td>Módulo adaptativo para cartões flexíveis (Caju/Flash), planos fixos sindicais ou seguros regulados.</td>
+            <td>Núcleo Comum (AR04)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">13</td>
+            <td>Desempenho & OKRs</td>
+            <td>Módulo vertical do segmento Tech com metas trimestrais, barras de progresso e avaliação 360°.</td>
+            <td>Variável Tech (RFV01, RFV02)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">14</td>
+            <td>Módulo Industrial (EPIs & ASO)</td>
+            <td>Módulo vertical do segmento Indústria com controle de EPIs e exames médicos periódicos.</td>
+            <td>Variável Indústria (RFV05, RFV06)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">15</td>
+            <td>Configuração da Empresa (LPS)</td>
+            <td>Painel administrativo de governança para ligar/desligar módulos da LPS e feature flags em tempo real.</td>
+            <td>Governança LPS (AR06)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">16</td>
+            <td>Compliance & Auditoria</td>
+            <td>Módulo vertical Financeiro com trilha de auditoria e fluxo de aprovação com Dupla Custódia.</td>
+            <td>Variável Financeiro (RFV07, RFV08)</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">17</td>
+            <td>Portal do Corretor de Seguros</td>
+            <td>Módulo exclusivo contratado pela FinCorp Seguros para apólices e comissionamento de parceiros.</td>
+            <td>Cliente Exclusivo (RFV09)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- DETALHAMENTO INDIVIDUAL DE CADA TELA COM CAPTURA -->
+    <h3 class="secao-terciaria">Detalhamento das Telas 01 a 17 e Registro de Evidências Visuais</h3>
+
+    <!-- TELA 01 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 11 – Tela 01: Login & Autenticação Multi-tenant</div>
+      <img src="screenshots/tela_01_login.png" alt="Tela 01 Login">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 01:</strong> Portal unificado de acesso seguro à plataforma. O formulário apresenta campos padronizados para e-mail corporativo e senha, com mecanismo de persistência de credenciais (<em>Lembrar-me</em>) e recuperação de acesso. No rodapé do cartão de autenticação, é exibido o identificador visual dinâmico da empresa/tenant atualmente selecionada (ex: <code>InovaTech</code>, <code>MetalForte</code> ou <code>FinCorp Seguros</code>). A autenticação é governada pelo Ativo Reutilizável AR01 (Módulo de Autenticação + RBAC).
+    </p>
+
+    <!-- TELA 02 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 12 – Tela 02: Dashboard do Colaborador</div>
+      <img src="screenshots/tela_02_dashboard_colaborador.png" alt="Tela 02 Dashboard Colaborador">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 02:</strong> Painel individual e personalizado do colaborador autenticado (representado na persona Lucas Silva). Apresenta um banner de boas-vindas com atalhos rápidos para solicitação de férias e justificativa de ponto, quatro cartões estatísticos em tempo real (Saldo de Férias: 22 dias; Saldo do Banco de Horas: +14h 30m; Crédito em Benefícios: R$ 1.450,00; e Última Batida Registrada: 08:02), acompanhados por uma tabela de histórico das últimas marcações de jornada e quadro de comunicados corporativos.
+    </p>
+
+    <!-- TELA 03 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 13 – Tela 03: Dashboard Executivo do RH & Indicadores LPS</div>
+      <img src="screenshots/tela_03_dashboard_rh.png" alt="Tela 03 Dashboard Executivo RH">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 03:</strong> Painel de inteligência corporativa e tomada de decisão estratégica para a diretoria de RH (persona Mariana Santos). Exibe quatro cartões executivos consolidados (Headcount Total: 148 colaboradores; Taxa de Absenteísmo: 1,8%; Total de Horas Extras: 420h; e Taxa de Reuso de Ativos LPS: 83,3%), um gráfico em barras CSS puras demonstrando a distribuição funcional por departamento e uma tabela dedicada aos indicadores de medição de software (tempo de resposta de API, cobertura de testes e tempo de instanciação de novo tenant).
+    </p>
+
+    <!-- TELA 04 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 14 – Tela 04: Lista de Colaboradores (CRUD Centralizado)</div>
+      <img src="screenshots/tela_04_lista_colaboradores.png" alt="Tela 04 Lista de Colaboradores">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 04:</strong> Implementação do requisito de CRUD com a listagem dinâmica de colaboradores corporativos. Conta com campo de busca em tempo real (filtragem instantânea por nome, cargo ou departamento), tabela com 8 colaboradores pré-carregados contendo avatares, e-mails, departamentos, cargos, badges coloridas de regime de trabalho (Remoto, Presencial ou Híbrido), status ativo e botões de ação para abrir o perfil detalhado (Tela 06) ou executar inativação com modal de confirmação.
+    </p>
+
+    <!-- TELA 05 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 15 – Tela 05: Formulário de Cadastro / Edição Adaptativo</div>
+      <img src="screenshots/tela_05_cadastro_colaborador.png" alt="Tela 05 Formulário Cadastro">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 05:</strong> Formulário de inclusão e atualização cadastral projetado sob o princípio de variabilidade. Compartilha os campos comuns obrigatórios (Nome Completo, E-mail Corporativo, Departamento, Cargo, Regime de Trabalho e Salário Base) e injeta blocos de campos específicos condicionados ao tenant ativo: campos de EPI e validade de ASO para o segmento Industrial; campos de registro SUSEP e nível de acesso LGPD para o segmento Financeiro.
+    </p>
+
+    <!-- TELA 06 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 16 – Tela 06: Detalhes do Colaborador (Perfil 360°)</div>
+      <img src="screenshots/tela_06_detalhes_colaborador.png" alt="Tela 06 Detalhes Colaborador">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 06:</strong> Ficha cadastral integral e visão 360° do colaborador. Apresenta cartão de cabeçalho com foto de perfil, cargo, departamento, data de admissão e status ativo, seguido por seções de Dados Contratuais da LPS (regime de jornada ativo, política de benefícios, perfil de segurança RBAC) e linha do tempo histórica de promoções, avaliações e concessões de férias anteriores.
+    </p>
+
+    <!-- TELA 07 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 17 – Tela 07: Organograma Corporativo Interativo (Ativo Reutilizável AR02)</div>
+      <img src="screenshots/tela_07_organograma.png" alt="Tela 07 Organograma">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 07:</strong> Materialização do Ativo Reutilizável AR02. Renderiza visualmente a estrutura hierárquica corporativa completa em árvore multinível orientada por Flexbox, conectando a Diretoria Executiva (Mariana Santos), o nível Gerencial (Carlos Eduardo na Engenharia, Roberto Lima no DP e João Oliveira na Operação) e o corpo de Especialistas (Lucas Silva no Desenvolvimento e Ana Souza no Recrutamento).
+    </p>
+
+    <!-- TELA 08 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 18 – Tela 08: Espelho de Ponto & Banco de Horas (Ativo Reutilizável AR03)</div>
+      <img src="screenshots/tela_08_espelho_ponto.png" alt="Tela 08 Espelho de Ponto">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 08:</strong> Interface do Ativo Reutilizável AR03 (Motor de Ponto). Exibe o cabeçalho descritivo da regra de jornada parametrizada para a empresa ativa (ex: <em>Regra Flexível com Tolerância de 15 min</em> para Tech; <em>Escala 12x36</em> para Indústria; <em>Jornada Comercial Auditada</em> para Financeiro), acompanhado da tabela diária de conciliação de batidas (Entrada 1, Saída 1, Entrada 2, Saída 2, total diário e saldo acumulado).
+    </p>
+
+    <!-- TELA 09 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 19 – Tela 09: Solicitação de Ajuste de Ponto e Justificativa</div>
+      <img src="screenshots/tela_09_ajuste_ponto.png" alt="Tela 09 Ajuste de Ponto">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 09:</strong> Interface de suporte à regra de negócio RB05 para saneamento de divergências de batidas. Permite ao colaborador selecionar a data da ocorrência, tipo de inconsistência (esquecimento de marcação, falha de conexão, serviço externo ou atestado médico), informar os horários retificados, anexar comprovante digital e registrar a justificativa formal antes de enviar ao gestor.
+    </p>
+
+    <!-- TELA 10 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 20 – Tela 10: Gestão de Férias & Calendário de Ausências</div>
+      <img src="screenshots/tela_10_gestao_ferias.png" alt="Tela 10 Gestão de Férias">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 10:</strong> Módulo completo de solicitação e governança de períodos de descanso. Apresenta o saldo acumulado de dias adquiridos, formulário com seleção de data de início, quantidade de dias a usufruir (15, 20 ou 30 dias), caixa de seleção para abono pecuniário (venda legal de 10 dias) e tabela histórica de solicitações com indicadores de status (<em>Aguardando Gestor</em>, <em>Aprovado</em>, <em>Homologado DP</em>).
+    </p>
+
+    <!-- TELA 11 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 21 – Tela 11: Central de Aprovações do Gestor com Auditoria</div>
+      <img src="screenshots/tela_11_aprovacoes_gestor.png" alt="Tela 11 Central de Aprovações">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 11:</strong> Painel de governança operacional para lideranças imediatas (persona Carlos Eduardo). Centraliza todas as solicitações pendentes da equipe (férias, ajustes de ponto, abonos), exibindo cards de contadores e tabela com botões interativos para <em>Aprovar</em> ou <em>Recusar</em> com registro imediato de autoria e horário para fins de auditoria (RB06).
+    </p>
+
+    <!-- TELA 12 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 22 – Tela 12: Gestão Paramétrica de Benefícios Corporativos</div>
+      <img src="screenshots/tela_12_gestao_beneficios.png" alt="Tela 12 Gestão de Benefícios">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 12:</strong> Painel adaptativo de benefícios corporativos. O conteúdo dos cartões e os modelos de gestão adaptam-se ao perfil da empresa cliente: cartões flexíveis com saldo livre em categorias para Tecnologia (Caju/Flash); benefícios fixos de vale-alimentação e transporte sindicais para Indústria; e pacotes regulados de previdência privada e assistência médica executiva para Financeiro.
+    </p>
+
+    <!-- TELA 13 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 23 – Tela 13: Desempenho & Metas OKRs (Segmento Tecnologia)</div>
+      <img src="screenshots/tela_13_desempenho_okrs.png" alt="Tela 13 Desempenho e OKRs">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 13:</strong> Módulo vertical exclusivo do segmento de Tecnologia (requisitos RFV01 e RFV02). Exibe o acompanhamento trimestral de metas corporativas da squad de engenharia através de barras de progresso de OKRs (80% na meta de latência de microsserviços e 100% na cobertura de testes) e card consolidado de Avaliação 360° com nota 4.8/5.0 e feedbacks qualitativos de pares.
+    </p>
+
+    <!-- TELA 14 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 24 – Tela 14: Módulo Industrial — EPIs e Exames ASO (Segmento Indústria)</div>
+      <img src="screenshots/tela_14_modulo_industrial.png" alt="Tela 14 Módulo Industrial">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 14:</strong> Módulo vertical obrigatório para o segmento Industrial (requisitos RFV05 e RFV06). Centraliza o registro de entrega de Equipamentos de Proteção Individual (EPIs como capacetes e botas com biqueira de aço com indicação de Certificado de Aprovação - CA) e o quadro de controle de periodicidade e validade de Atestados de Saúde Ocupacional (ASO).
+    </p>
+
+    <!-- TELA 15 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 25 – Tela 15: Configuração da Empresa & Matriz de Governança LPS</div>
+      <img src="screenshots/tela_15_configuracao_empresa.png" alt="Tela 15 Configuração da Empresa">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 15:</strong> Central administrativa de governança da Linha de Produção de Software (Caso de Uso UC09). Permite comutar chaves de configuração (<em>Feature Flags</em>) dos módulos verticais em tempo real, ativar/desativar a funcionalidade exclusiva de cliente (Portal do Corretor) e inspecionar a matriz de rastreabilidade de ativos reutilizáveis (AR01 a AR06) contra os requisitos do sistema.
+    </p>
+
+    <!-- TELA 16 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 26 – Tela 16: Compliance & Auditoria em Dupla Custódia (Segmento Financeiro)</div>
+      <img src="screenshots/tela_16_compliance_auditoria.png" alt="Tela 16 Compliance e Auditoria">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 16:</strong> Módulo vertical exclusivo do segmento Financeiro (requisitos RFV07 e RFV08). Apresenta a tabela de logs imutáveis da trilha de auditoria (rastreando consultas a dados sensíveis sob LGPD, alterações cadastrais e emissão de apólices) e o painel de governança de aprovação em <strong>Dupla Custódia</strong>, exigindo a validação de dois gestores independentes para eventos financeiros críticos.
+    </p>
+
+    <!-- TELA 17 -->
+    <div class="figura-box screenshot-lg">
+      <div class="titulo-figura">Figura 27 – Tela 17: Portal do Corretor de Seguros (Cliente Exclusivo FinCorp Seguros)</div>
+      <img src="screenshots/tela_17_portal_corretor.png" alt="Tela 17 Portal do Corretor">
+      <div class="fonte-figura">Fonte: Captura direta do protótipo funcional em execução (2026).</div>
+    </div>
+    <p>
+      <strong>Descrição da Tela 17:</strong> Implementação do terceiro nível de variabilidade da LPS (Requisito RFV09): uma funcionalidade exclusiva sob demanda contratada pelo cliente <em>FinCorp Seguros</em>. Gerencia a rede de corretores de seguros parceiros externos, apresentando a listagem de apólices comercializadas, comissões calculadas, histórico de repasses e botão para exportação de extratos financeiros.
+    </p>
+
+    <!-- ==========================================================================
+         SEÇÃO 2 — PARTE II: LINHA DE PRODUÇÃO DE SOFTWARE (LPS) E REUSO
+         ========================================================================== -->
+    <h1 id="sec-2" class="secao-primaria">2 PARTE II — LINHA DE PRODUÇÃO DE SOFTWARE (LPS) E REUSO</h1>
+
+    <h2 id="sec-2-1" class="secao-secundaria">2.1 Visão da LPS e Fundamentação Teórica de Variabilidade</h2>
+    <p>
+      A metodologia de <strong>Linha de Produção de Software (LPS / Software Product Lines - SPL)</strong> fundamenta-se nas formulações clássicas de Pohl, Böckle e van der Linden (2005) e Clements e Northrop (2001). Trata-se de um paradigma de engenharia voltado a desenvolver uma família de produtos de software para um domínio específico, aproveitando um conjunto sistemático de ativos centrais (<em>Core Assets</em>) para produzir variantes com alto nível de reuso, previsibilidade de custos, redução de defeitos e diminuição drástica do tempo de lançamento no mercado (<em>Time-to-Market</em>).
+    </p>
+    <p>
+      A engenharia do HRTech Core estrutura-se rigorosamente nas duas disciplinas complementares da LPS:
+    </p>
+    <ul style="margin-left: 2.5cm; margin-bottom: 12pt; font-size: 11pt; line-height: 1.4;">
+      <li><strong>Engenharia de Domínio (<em>Domain Engineering</em>):</strong> Responsável pela identificação da comunalidade e variabilidade entre as empresas clientes, desenvolvimento dos ativos centrais reutilizáveis (AR01 a AR06) e definição da arquitetura de referência multi-tenant.</li>
+      <li><strong>Engenharia de Aplicação (<em>Application Engineering</em>):</strong> Responsável por derivar e instanciar configurações concretas de produtos para cada cliente (InovaTech, MetalForte, FinCorp Seguros) mediante a resolução das variabilidades em tempo de execução através de parametrização e chaves lógicas.</li>
+    </ul>
+
+    <!-- 2.2 ATIVOS REUTILIZAVEIS -->
+    <h2 id="sec-2-2" class="secao-secundaria">2.2 Os 6 Ativos Reutilizáveis (Core Assets da LPS)</h2>
+    <p>
+      Em estrita conformidade com as diretrizes do Projeto de Medição e Reuso, foram modelados e documentados <strong>seis ativos centrais reutilizáveis</strong> cobrindo diferentes tipologias de artefatos de engenharia de software (código-fonte, componentes visuais de front-end, algoritmos de cálculo, modelos de dados relacionais, suítes de testes automatizados e especificações formais de requisitos).
+    </p>
+
+    <!-- Quadro 10: 6 Ativos Reutilizaveis -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 10 – Especificação Formal dos 6 Ativos Reutilizáveis (Core Assets) da LPS</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 7%; text-align: center;">ID</th>
+            <th style="width: 22%;">Nome do Ativo</th>
+            <th style="width: 14%;">Tipo de Artefato</th>
+            <th style="width: 35%;">Descrição Técnica e Escopo de Aplicação</th>
+            <th style="width: 22%;">Modo e Técnica de Reuso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">AR01</td>
+            <td>Módulo de Autenticação + RBAC</td>
+            <td>Código-fonte (JS / Backend)</td>
+            <td>Sistema unificado de login, gestão de sessões criptografadas e controle de acesso baseado em papéis (<em>Role-Based Access Control</em>) parametrizável por perfil de tenant.</td>
+            <td><strong>Caixa-Preta:</strong> Reutilizado integralmente por todos os clientes sem necessidade de alteração de código.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">AR02</td>
+            <td>Componente Organograma Interativo</td>
+            <td>Front-end (HTML / CSS / JS)</td>
+            <td>Componente visual que renderiza árvores hierárquicas multiníveis com cartões responsivos, fotos, cargos e conectores dinâmicos orientados por Flexbox.</td>
+            <td><strong>Caixa-Cinza:</strong> Reutilizado mediante injeção de dados JSON mantendo estilização padronizada.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">AR03</td>
+            <td>Motor de Ponto e Banco de Horas</td>
+            <td>Código / Algoritmo</td>
+            <td>Engine de processamento de batidas de jornada, cálculo de saldos e conciliação com suporte polimórfico a múltiplas regras de trabalho.</td>
+            <td><strong>Caixa-Branca (Polimorfismo):</strong> Implementa padrão <em>Strategy</em> para alternar entre cálculo flexível, 12x36 e comercial.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">AR04</td>
+            <td>Modelo de Dados Base (Schema Relacional)</td>
+            <td>SQL / Schema DDL</td>
+            <td>Estrutura relacional contendo as tabelas fundamentais da plataforma: <code>tenants</code>, <code>colaboradores</code>, <code>departamentos</code>, <code>cargos</code>, <code>solicitacoes</code> e <code>pontos</code>.</td>
+            <td><strong>Caixa-Preta com Extensibilidade:</strong> Schema base compartilhado com tabelas de extensão por tenant.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">AR05</td>
+            <td>Suíte de Testes Automatizados</td>
+            <td>QA / Casos de Teste</td>
+            <td>Conjunto de testes unitários, testes de integração de rotas e testes end-to-end cobrindo operações CRUD, autenticação e fluxos de aprovação de férias.</td>
+            <td><strong>Parametrizada por Tenant:</strong> Testes automatizados executados em esteiras de CI/CD para validar variantes da LPS.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">AR06</td>
+            <td>Matriz de Requisitos e Variabilidades</td>
+            <td>Documentação de Engenharia</td>
+            <td>Especificação formal contendo o mapeamento sistemático de requisitos comuns, variáveis de segmento, regras de negócio e matriz de rastreabilidade.</td>
+            <td><strong>Artefato de Domínio:</strong> Guia normativo para derivação de novos produtos e auditoria de conformidade.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- 2.3 REQUISITOS FUNCIONAIS -->
+    <h2 id="sec-2-3" class="secao-secundaria">2.3 Requisitos Funcionais (15 RFs Comuns e 9 Variáveis)</h2>
+    <p>
+      O escopo funcional do HRTech Core está estruturado em <strong>15 Requisitos Funcionais Comuns</strong> (presentes em todas as instâncias da LPS) e <strong>9 Requisitos Funcionais Variáveis</strong> (ativados seletivamente por segmento ou cliente).
+    </p>
+
+    <!-- Quadro 11: 15 RFs Comuns -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 11 – Requisitos Funcionais Comuns (15 RFs) da Plataforma Base HRTech Core</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 7%; text-align: center;">ID</th>
+            <th style="width: 26%;">Nome do Requisito</th>
+            <th style="width: 45%;">Descrição Técnica e Comportamento Esperado</th>
+            <th style="width: 22%;">Status de Implementação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF01</td>
+            <td>Autenticar Usuários</td>
+            <td>Permitir autenticação segura por e-mail e senha, gerenciar sessões e identificar o identificador de tenant do usuário.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 01)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF02</td>
+            <td>Controlar Acesso por Papéis (RBAC)</td>
+            <td>Restringir o acesso a telas, ações e dados confidenciais conforme o perfil do usuário (Colaborador, Gestor, DP ou Admin).</td>
+            <td><span class="badge badge-success">✅ Implementado (Telas 01-17)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF03</td>
+            <td>Cadastrar Colaborador</td>
+            <td>Permitir a inserção de novos colaboradores com validações cadastrais e campos adaptativos ao perfil da empresa.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 05)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF04</td>
+            <td>Consultar e Pesquisar Colaborador</td>
+            <td>Disponibilizar listagem com busca textual instantânea por nome, cargo ou departamento e visualização de perfil.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 04, 06)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF05</td>
+            <td>Alterar Colaborador</td>
+            <td>Permitir a atualização de dados funcionais, alocação departamental, cargo e modalidades de trabalho.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 05, 06)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF06</td>
+            <td>Inativar / Excluir Colaborador</td>
+            <td>Permitir a inativação lógica de registros com diálogo formal de confirmação para prevenir perdas acidentais.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 04)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF07</td>
+            <td>Gerenciar Departamentos</td>
+            <td>Estruturar e manter as unidades organizacionais e áreas funcionais da organização.</td>
+            <td><span class="badge badge-success">✅ Implementado (Telas 04, 05, 07)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF08</td>
+            <td>Gerenciar Cargos</td>
+            <td>Cadastrar e manter a taxonomia de cargos corporativos associados a faixas salariais e níveis.</td>
+            <td><span class="badge badge-success">✅ Implementado (Telas 04, 05, 07)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF09</td>
+            <td>Exibir Organograma Interativo</td>
+            <td>Renderizar visualmente a árvore de subordinação hierárquica corporativa completa com cartões e conectores.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 07 — AR02)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF10</td>
+            <td>Registrar Ponto e Batidas</td>
+            <td>Registrar marcações diárias de frequência (Entrada 1, Saída 1, Entrada 2 e Saída 2) com controle de data e hora.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 02, 08)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF11</td>
+            <td>Calcular Banco de Horas e Saldos</td>
+            <td>Processar os saldos diários e acumulados de horas conforme a política da empresa cliente.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 08 — AR03)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF12</td>
+            <td>Solicitar Férias e Folgas</td>
+            <td>Permitir ao colaborador submeter pedidos escolhendo datas, duração e opção de abono pecuniário de 10 dias.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 10)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF13</td>
+            <td>Aprovar / Recusar Solicitações</td>
+            <td>Disponibilizar central para gestores deferirem ou indeferirem solicitações pendentes com registro formal.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 11)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF14</td>
+            <td>Gerenciar Benefícios Corporativos</td>
+            <td>Apresentar e parametrizar planos de benefícios corporativos (flexíveis, sindicais ou regulados).</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 12)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RF15</td>
+            <td>Gerar Indicadores e Relatórios</td>
+            <td>Consolidar indicadores de headcount, taxa de absenteísmo, horas extras e taxa de reuso da LPS.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 03)</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- Quadro 12: 9 RFVs -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 12 – Requisitos Funcionais Variáveis (9 RFVs) por Segmento e Cliente</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 8%; text-align: center;">ID</th>
+            <th style="width: 22%;">Segmento / Cliente</th>
+            <th style="width: 48%;">Descrição Técnica do Requisito Variável</th>
+            <th style="width: 22%;">Status no Protótipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV01</td>
+            <td>Tecnologia (InovaTech)</td>
+            <td>Módulo de Avaliação de Desempenho 360° com notas e feedbacks qualitativos da equipe.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 13)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV02</td>
+            <td>Tecnologia (InovaTech)</td>
+            <td>Acompanhamento trimestral de metas estratégicas através da metodologia de OKRs com barras de progresso.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 13)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV03</td>
+            <td>Tecnologia (InovaTech)</td>
+            <td>Regras de jornada para trabalho remoto/híbrido com banco de horas flexível e tolerância de compensação.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 02, 08)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV04</td>
+            <td>Indústria (MetalForte)</td>
+            <td>Regras de jornada para trabalho presencial com controle de turnos rotativos e escala 12x36.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 05, 08)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV05</td>
+            <td>Indústria (MetalForte)</td>
+            <td>Gestão de entrega de Equipamentos de Proteção Individual (EPIs) com registro de Certificado de Aprovação (CA) e validade.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 14)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV06</td>
+            <td>Indústria (MetalForte)</td>
+            <td>Controle de Atestados de Saúde Ocupacional (ASO) e agendamento de exames médicos periódicos.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 14)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV07</td>
+            <td>Financeiro (FinCorp)</td>
+            <td>Trilha de auditoria completa com registro imutável de logs para consultas e alterações sob LGPD.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 16)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV08</td>
+            <td>Financeiro (FinCorp)</td>
+            <td>Regra de governança de aprovação com <strong>Dupla Custódia</strong> para operações sensíveis acima de R$ 50.000,00.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 16)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RFV09</td>
+            <td>FinCorp (Exclusivo)</td>
+            <td><strong>Portal do Corretor de Seguros:</strong> gestão de parceiros corretores, emissão de apólices e comissionamento.</td>
+            <td><span class="badge badge-success">✅ Implementado (Tela 17)</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- 2.4 REQUISITOS NAO FUNCIONAIS -->
+    <h2 id="sec-2-4" class="secao-secundaria">2.4 Requisitos Não Funcionais (10 RNFs)</h2>
+    <p>
+      Os Requisitos Não Funcionais estabelecem os critérios de qualidade, desempenho, segurança, manutenibilidade e reuso arquitetural da plataforma HRTech Core.
+    </p>
+
+    <!-- Quadro 13: 10 RNFs -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 13 – Requisitos Não Funcionais (10 RNFs) e Metodologia de Medição</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 7%; text-align: center;">ID</th>
+            <th style="width: 18%;">Categoria</th>
+            <th style="width: 45%;">Descrição Técnica do Requisito de Qualidade</th>
+            <th style="width: 30%;">Métrica / Status no Protótipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF01</td>
+            <td>Segurança</td>
+            <td>Autenticação segura, criptografia de credenciais (bcrypt), comunicação via TLS 1.3 e isolamento estrito de dados multi-tenant.</td>
+            <td><span class="badge badge-success">✅ Simulado no Protótipo</span> / <span class="badge badge-warning">⚠️ Produção Cloud</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF02</td>
+            <td>Desempenho</td>
+            <td>Tempo médio de resposta para consultas cadastrais e requisições de ponto inferior a 200 ms.</td>
+            <td><span class="badge badge-success">✅ Medido: 120 ms (Meta &lt; 200 ms)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF03</td>
+            <td>Disponibilidade</td>
+            <td>Arquitetura de microsserviços tolerante a falhas garantindo SLA de 99,9% de tempo de atividade operacional.</td>
+            <td><span class="badge badge-warning">⚠️ Planejado para Deploy Cloud</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF04</td>
+            <td>Usabilidade</td>
+            <td>Interface intuitiva aderente às diretrizes de acessibilidade WCAG 2.1 AA, temas visualmente confortáveis e feedbacks visuais via toast.</td>
+            <td><span class="badge badge-success">✅ Implementado (UI fluida, toasts)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF05</td>
+            <td>Responsividade</td>
+            <td>Layout adaptável com suporte a resoluções de 320px a 4K utilizando CSS Grid e Flexbox nativos.</td>
+            <td><span class="badge badge-success">✅ Implementado e Validado</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF06</td>
+            <td>Manutenibilidade</td>
+            <td>Código desacoplado em módulos independentes, alta coesão estrutural e separação rigorosa de responsabilidades.</td>
+            <td><span class="badge badge-success">✅ Modularidade CSS/JS</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF07</td>
+            <td>Reusabilidade</td>
+            <td>Taxa de reuso de ativos centrais na derivação de novos produtos superior a 75%.</td>
+            <td><span class="badge badge-success">✅ Medido: 83,3% (5 de 6 ativos)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF08</td>
+            <td>Auditabilidade</td>
+            <td>Rastreabilidade integral de operações críticas, alterações de perfil e aprovações gerenciais com carimbo de tempo.</td>
+            <td><span class="badge badge-success">✅ Implementado (Telas 11 e 16)</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF09</td>
+            <td>Escalabilidade</td>
+            <td>Capacidade arquitetural de suportar crescimento horizontal no volume de colaboradores e novos tenants sem perda de desempenho.</td>
+            <td><span class="badge badge-success">✅ Multi-tenant por Design</span></td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RNF10</td>
+            <td>Testabilidade</td>
+            <td>Cobertura de testes automatizados unitários e de integração superior a 85% para regras críticas de negócio e rotinas de CRUD.</td>
+            <td><span class="badge badge-success">✅ Medido: 92% de Cobertura</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- 2.5 REGRAS DE NEGOCIO E CASOS DE USO -->
+    <h2 id="sec-2-5" class="secao-secundaria">2.5 Regras de Negócio e Casos de Uso do MVP</h2>
+
+    <!-- Quadro 14: Regras de Negocio -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 14 – Catálogo de Regras de Negócio (RB01 a RB10) da Plataforma HRTech Core</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 10%; text-align: center;">Código</th>
+            <th style="width: 25%;">Nome da Regra</th>
+            <th style="width: 65%;">Descrição Normativa e Validação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB01</td>
+            <td>Vínculo Obrigatório de Tenant</td>
+            <td>Todo colaborador, registro de ponto e solicitação deve pertencer obrigatoriamente a um tenant válido e ativo.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB02</td>
+            <td>Alocação Organizacional</td>
+            <td>Todo colaborador ativo deve possuir obrigatoriamente um departamento e um cargo formal vinculados.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB03</td>
+            <td>Segregação de Permissões</td>
+            <td>Alterações cadastrais e acessos a dados sensíveis exigem permissão explícita no perfil RBAC (Admin, Gestor ou DP).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB04</td>
+            <td>Conformidade de Férias</td>
+            <td>Solicitações de férias exigem antecedência mínima de 30 dias da data inicial e suficiência de saldo no período aquisitivo.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB05</td>
+            <td>Justificativa de Ponto</td>
+            <td>Ajustes manuais e inclusões de batidas exigem registro textual de justificativa e anexo comprobatório quando aplicável.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB06</td>
+            <td>Autoria de Aprovação</td>
+            <td>Toda aprovação ou recusa gerencial deve registrar imutavelmente o ID do gestor responsável, ação e timestamp.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB07</td>
+            <td>Parametrização de Horas</td>
+            <td>O cálculo do banco de horas deve aplicar os parâmetros da empresa (tolerância de minutos, fator multiplicador ou escala).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB08</td>
+            <td>Visibilidade de Módulos</td>
+            <td>Módulos opcionais (EPIs, OKRs, Corretor) somente devem ser renderizados nas interfaces quando habilitados no tenant.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB09</td>
+            <td>Isolamento de Dados</td>
+            <td>Usuários colaboradores e gestores somente visualizam dados de sua própria alocação ou de seus liderados diretos.</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">RB10</td>
+            <td>Imutabilidade do Núcleo</td>
+            <td>Parâmetros de customização de clientes devem ser resolvidos via configuração e Feature Flags sem bifurcação de código.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- Quadro 15: Casos de Uso do MVP -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 15 – Matriz de Casos de Uso Prioritários do MVP (UC01 a UC10)</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 10%; text-align: center;">ID</th>
+            <th style="width: 25%;">Caso de Uso</th>
+            <th style="width: 20%;">Ator Principal</th>
+            <th style="width: 45%;">Objetivo Funcional e Telas Vinculadas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC01</td>
+            <td>Autenticar Usuário</td>
+            <td>Todos os Usuários</td>
+            <td>Acessar o sistema com validação de credenciais e identificação de tenant (Tela 01).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC02</td>
+            <td>Gerenciar Colaboradores</td>
+            <td>RH / Admin / DP</td>
+            <td>Executar operações completas de CRUD de colaboradores (Telas 04, 05 e 06).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC03</td>
+            <td>Consultar Organograma</td>
+            <td>Usuários Autorizados</td>
+            <td>Visualizar a árvore hierárquica corporativa completa (Tela 07 — AR02).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC04</td>
+            <td>Registrar Ponto Eletrônico</td>
+            <td>Colaborador</td>
+            <td>Registrar marcações diárias de frequência e consultar extrato recente (Telas 02 e 08).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC05</td>
+            <td>Solicitar Ajuste de Ponto</td>
+            <td>Colaborador</td>
+            <td>Submeter pedido de retificação com justificativa e anexo comprobatório (Tela 09).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC06</td>
+            <td>Solicitar Férias</td>
+            <td>Colaborador</td>
+            <td>Programar período de descanso e requerer abono pecuniário (Tela 10).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC07</td>
+            <td>Aprovar / Recusar Solicitações</td>
+            <td>Gestor Imediato</td>
+            <td>Analisar e emitir parecer decisório sobre solicitações pendentes da equipe (Tela 11).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC08</td>
+            <td>Consultar Banco de Horas</td>
+            <td>Colaborador / Gestor</td>
+            <td>Inspecionar o espelho diário e saldo acumulado de horas conforme regra ativa (Tela 08).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC09</td>
+            <td>Configurar Módulos da LPS</td>
+            <td>Administrador do Sistema</td>
+            <td>Ativar/desativar módulos e comutar a feature flag de cliente exclusivo (Tela 15).</td>
+          </tr>
+          <tr>
+            <td style="text-align: center; font-weight: bold;">UC10</td>
+            <td>Visualizar Indicadores Executivos</td>
+            <td>Diretoria / RH / Gestor</td>
+            <td>Inspecionar métricas consolidadas de headcount, absenteísmo e reuso LPS (Tela 03).</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- 2.6 MEDICAO DE SOFTWARE -->
+    <h2 id="sec-2-6" class="secao-secundaria">2.6 Medição de Software e Indicadores de Engenharia</h2>
+    <p>
+      Fundamentando-se nas diretrizes do material institucional de <em>Introdução à Medição de Software</em> da PUCPR, a medição constitui uma avaliação quantitativa formal essencial para o planejamento, controle e melhoria contínua dos produtos e processos de desenvolvimento de software. A disciplina estabelece a distinção conceitual entre:
+    </p>
+    <ul style="margin-left: 2.5cm; margin-bottom: 12pt; font-size: 11pt; line-height: 1.4;">
+      <li><strong>Métrica:</strong> Medida quantitativa do grau em que um sistema, componente ou processo possui determinado atributo mensurável (ex: tempo em milissegundos, quantidade de defeitos).</li>
+      <li><strong>Indicador:</strong> Métrica ou combinação articulada de métricas que fornece informações analíticas comparativas contra metas pré-estabelecidas para apoiar a tomada de decisões gerenciais e técnicas.</li>
+    </ul>
+
+    <!-- Tabela 1: Metricas Coletadas -->
+    <div class="tabela-wrapper">
+      <div class="titulo-tabela">Tabela 1 – Indicadores e Métricas Coletadas no Sistema HRTech Core</div>
+      <table class="tabela-ibge">
+        <thead>
+          <tr>
+            <th style="width: 14%;">Dimensão</th>
+            <th style="width: 32%;">Métrica / Indicador</th>
+            <th style="width: 12%; text-align: center;">Unidade</th>
+            <th style="width: 18%; text-align: center;">Valor Medido</th>
+            <th style="width: 24%;">Objetivo de Engenharia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Produto</strong></td>
+            <td>Tempo Médio de Resposta da API de Ponto</td>
+            <td style="text-align: center;">ms</td>
+            <td style="text-align: center; font-weight: bold;">120 ms</td>
+            <td>Garantir agilidade no registro concorrente de ponto (Meta &lt; 200 ms).</td>
+          </tr>
+          <tr>
+            <td><strong>Produto</strong></td>
+            <td>Cobertura de Testes Automatizados do CRUD</td>
+            <td style="text-align: center;">%</td>
+            <td style="text-align: center; font-weight: bold;">92,0%</td>
+            <td>Garantir confiabilidade e testabilidade de rotinas críticas (Meta &gt; 85%).</td>
+          </tr>
+          <tr>
+            <td><strong>Processo</strong></td>
+            <td>Tempo Médio para Instanciação de Novo Tenant</td>
+            <td style="text-align: center;">horas</td>
+            <td style="text-align: center; font-weight: bold;">4,0 h</td>
+            <td>Reduzir esforço de configuração e parametrização de novos contratos.</td>
+          </tr>
+          <tr>
+            <td><strong>Processo</strong></td>
+            <td>Tempo Médio de Ciclo para Aprovação de Férias</td>
+            <td style="text-align: center;">horas</td>
+            <td style="text-align: center; font-weight: bold;">18,5 h</td>
+            <td>Avaliar a agilidade operacional das lideranças no fluxo de aprovação.</td>
+          </tr>
+          <tr>
+            <td><strong>Reuso (LPS)</strong></td>
+            <td>Taxa de Reuso de Ativos Centrais (Core Assets)</td>
+            <td style="text-align: center;">%</td>
+            <td style="text-align: center; font-weight: bold;">83,3%</td>
+            <td>Mensurar o aproveitamento do núcleo comum (5 de 6 ativos reutilizados).</td>
+          </tr>
+          <tr>
+            <td><strong>Reuso (LPS)</strong></td>
+            <td>Densidade de Customizações Específicas</td>
+            <td style="text-align: center;">%</td>
+            <td style="text-align: center; font-weight: bold;">16,7%</td>
+            <td>Monitorar o custo de manutenção de código isolado por cliente.</td>
+          </tr>
+          <tr>
+            <td><strong>Negócio / RH</strong></td>
+            <td>Taxa de Absenteísmo Global da Empresa</td>
+            <td style="text-align: center;">%</td>
+            <td style="text-align: center; font-weight: bold;">1,8%</td>
+            <td>Acompanhar ausências não planejadas e impacto na folha operacional.</td>
+          </tr>
+          <tr>
+            <td><strong>Negócio / RH</strong></td>
+            <td>Volume Consolidado de Horas Extras</td>
+            <td style="text-align: center;">horas</td>
+            <td style="text-align: center; font-weight: bold;">420 h</td>
+            <td>Apoiar a governança financeira de custos de jornada de trabalho.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor com base em medições reais do protótipo (2026).</div>
+    </div>
+
+    <!-- ==========================================================================
+         SEÇÃO 3 — PARTE III: ALTA VARIABILIDADE NA LPS
+         ========================================================================== -->
+    <h1 id="sec-3" class="secao-primaria">3 PARTE III — ALTA VARIABILIDADE NA LINHA DE PRODUÇÃO DE SOFTWARE</h1>
+
+    <h2 id="sec-3-1" class="secao-secundaria">3.1 Conceito de Alta Variabilidade na LPS</h2>
+    <p>
+      Na engenharia de software tradicional, muitas aplicações limitam a dita "customização" a aspectos puramente cosméticos (como substituição de logotipos, modificação da cor primária de botões ou alteração de mensagens textuais de rodapé). No <strong>HRTech Core</strong>, adota-se o conceito formal de <strong>Alta Variabilidade</strong>, caracterizado por alterações profundas em:
+    </p>
+    <ul style="margin-left: 2.5cm; margin-bottom: 12pt; font-size: 11pt; line-height: 1.4;">
+      <li><strong>Comportamentos Algorítmicos:</strong> Motores de cálculo de jornada e banco de horas que executam fórmulas matemáticas distintas conforme o perfil de contratação (ex: tolerância de minutos versus regras rígidas de escala 12x36).</li>
+      <li><strong>Regras de Negócio e Governança:</strong> Fluxos de trabalho (workflows) que alteram o número de instâncias de aprovação (ex: aprovação simples pelo gestor direto na InovaTech versus aprovação mandatória em <em>Dupla Custódia</em> na FinCorp Seguros).</li>
+      <li><strong>Esquema de Dados e Modelos Entidade-Relacionamento:</strong> Formulários que habilitam campos cadastrais adicionais e tabelas relacionais de extensão sem poluir a integridade do modelo relacional central.</li>
+      <li><strong>Composição Modular de Telas:</strong> Adição ou supressão declarativa de menus inteiros e visões funcionais baseada no catálogo de produtos contratados.</li>
+    </ul>
+
+    <!-- 3.2 OS 3 SEGMENTOS / TENANTS -->
+    <h2 id="sec-3-2" class="secao-secundaria">3.2 Os 3 Segmentos / Tenants Modelados na Plataforma</h2>
+
+    <!-- Quadro 16: Comparativo dos 3 Tenants -->
+    <div class="quadro-wrapper">
+      <div class="titulo-tabela">Quadro 16 – Matriz Comparativa dos Três Segmentos/Tenants da Linha de Produção de Software</div>
+      <table class="quadro-abnt">
+        <thead>
+          <tr>
+            <th style="width: 18%;">Dimensão de Análise</th>
+            <th style="width: 27%;">Segmento Tecnologia<br>(Cliente: InovaTech)</th>
+            <th style="width: 27%;">Segmento Indústria<br>(Cliente: MetalForte)</th>
+            <th style="width: 28%;">Segmento Financeiro<br>(Cliente: FinCorp Seguros)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Regime de Trabalho</strong></td>
+            <td>Remoto / Híbrido flexível.</td>
+            <td>100% Presencial em chão de fábrica.</td>
+            <td>Presencial / Comercial regulado.</td>
+          </tr>
+          <tr>
+            <td><strong>Regra de Jornada (Ponto)</strong></td>
+            <td>Banco de horas flexível com compensação livre.</td>
+            <td>Escala rígida de turnos e escala 12x36.</td>
+            <td>Ponto eletrônico auditado para horas extras.</td>
+          </tr>
+          <tr>
+            <td><strong>Modelo de Benefícios</strong></td>
+            <td>Cartão de multibenefícios flexíveis (Caju/Flash).</td>
+            <td>Benefícios fixos padronizados por convenção coletiva.</td>
+            <td>Seguro de vida de alta cobertura e previdência privada.</td>
+          </tr>
+          <tr>
+            <td><strong>Gestão de Desempenho</strong></td>
+            <td>Metas trimestrais de OKRs e Avaliação 360°.</td>
+            <td>Avaliação funcional por assiduidade e segurança.</td>
+            <td>Metas comerciais auditadas e conformidade.</td>
+          </tr>
+          <tr>
+            <td><strong>Segurança & Saúde (SST)</strong></td>
+            <td>Módulo ocultado (não aplicável ao trabalho tech).</td>
+            <td><strong>Obrigatório:</strong> Gestão de EPIs (CA) e Exames ASO.</td>
+            <td>Módulo ocultado (não aplicável).</td>
+          </tr>
+          <tr>
+            <td><strong>Auditoria & Compliance</strong></td>
+            <td>Auditoria básica de transações do sistema.</td>
+            <td>Controle de conformidade com normas sindicais.</td>
+            <td><strong>Mandatório:</strong> Trilha de auditoria LGPD e Dupla Custódia.</td>
+          </tr>
+          <tr>
+            <td><strong>Recursos Exclusivos</strong></td>
+            <td>Nenhum módulo individual contratado.</td>
+            <td>Nenhum módulo individual contratado.</td>
+            <td><strong>Portal do Corretor de Seguros (Tela 17).</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="fonte-tabela">Fonte: Elaborado pelo autor (2026).</div>
+    </div>
+
+    <!-- 3.3 ANALISE COMPARATIVA DE VARIACAO DE TELAS -->
+    <h2 id="sec-3-3" class="secao-secundaria">3.3 Análise Comparativa de Variação de Telas</h2>
+    <p>
+      A alta variabilidade é comprovada na prática através da alternância dinâmica entre as telas especializadas:
+    </p>
+    <ul style="margin-left: 2.5cm; margin-bottom: 12pt; font-size: 11pt; line-height: 1.4;">
+      <li><strong>Variação da Tela 14 (Módulo Industrial):</strong> Quando o usuário alterna o tenant para <em>Indústria (MetalForte)</em>, o menu lateral passa a exibir imediatamente o item "Módulo Industrial" e a tela renderiza tabelas de entrega de EPIs com números de Certificado de Aprovação e controle de exames ASO. Ao comutar para <em>Tecnologia</em> ou <em>Financeiro</em>, o seletor CSS oculta essa opção automaticamente.</li>
+      <li><strong>Variação da Tela 15 (Configuração da Empresa):</strong> Permite aos administradores auditar quais módulos verticais estão ativos e simular a habilitação de novos serviços, funcionando como a torre de governança da LPS.</li>
+      <li><strong>Variação da Tela 16 (Compliance & Auditoria):</strong> Exclusiva do perfil <em>Financeiro (FinCorp Seguros)</em>, exibe registros imutáveis de trilha de auditoria e a área de autorização em Dupla Custódia para valores que excedem R$ 50.000,00.</li>
+      <li><strong>Variação da Tela 17 (Portal do Corretor):</strong> Exclusiva do cliente FinCorp Seguros, sendo controlada por uma Feature Flag individualizada de cliente.</li>
+    </ul>
+
+    <!-- 3.4 FEATURE EXCLUSIVA DE CLIENTE -->
+    <h2 id="sec-3-4" class="secao-secundaria">3.4 Feature Exclusiva de Cliente: Portal do Corretor (FinCorp Seguros)</h2>
+    <p>
+      Um dos maiores desafios de arquitetura em Linhas de Produção de Software reside em acomodar demandas sob encomenda de clientes corporativos altamente estratégicos sem comprometer a integridade do código compartilhado. Práticas inadequadas recorrem à bifurcação de código (<em>forks</em>) ou inserem regras condicionais "ad-hoc" poluindo o núcleo comum com campos que nenhum outro cliente utilizará.
+    </p>
+    <p>
+      No HRTech Core, a demanda exclusiva da <strong>FinCorp Seguros</strong> pelo <strong>Portal do Corretor (Tela 17)</strong> foi solucionada através de um modelo desacoplado de <strong>Feature Flag de Cliente</strong> (variável lógica <code>clientExclusiveFeatureEnabled</code>):
+    </p>
+    <div class="caixa-destaque">
+      <p><strong>Mecanismo de Isolamento da Feature Exclusiva:</strong></p>
+      <p>1. O módulo não injeta dependências acopladas no núcleo da LPS nem nos pacotes dos demais clientes.</p>
+      <p>2. A interface é habilitada condicionalmente na barra lateral via classe declarativa <code>body.client-exclusive-active a.nav-item.exclusive-only</code>.</p>
+      <p>3. Caso o administrador desative o interruptor do Portal do Corretor na Tela 15, o menu lateral desaparece instantaneamente e eventuais acessos diretos via hash SPA são redirecionados automaticamente para a tela de configurações, assegurando isolamento funcional absoluto.</p>
+    </div>
+
+    <!-- 3.5 ARQUITETURA TECNICA PARA REUSO -->
+    <h2 id="sec-3-5" class="secao-secundaria">3.5 Arquitetura Técnica para Reuso e Personalização em Tempo de Execução</h2>
+    <p>
+      A arquitetura técnica do front-end do HRTech Core implementa um padrão reativo e declarativo baseado em manipulação semântica do DOM, eliminando código procedural complexo:
+    </p>
+
+    <pre class="code-block">
+/* ==========================================================================
+   ARQUITETURA DE VARIABILIDADE CSS DECLARATIVA DO HRTECH CORE (styles.css)
+   ========================================================================== */
+
+/* 1. Ocultação Padrão dos Módulos Especializados */
+a.nav-item.tech-only,
+a.nav-item.ind-only,
+a.nav-item.fin-only,
+a.nav-item.exclusive-only {
+  display: none;
+}
+
+/* 2. Resolução Dinâmica de Segmento via Classe no Elemento &lt;body&gt; */
+body.tenant-tech a.nav-item.tech-only {
+  display: flex; /* Exibe Tela 13: Desempenho & OKRs */
+}
+
+body.tenant-industry a.nav-item.ind-only {
+  display: flex; /* Exibe Tela 14: Módulo Industrial EPI/ASO */
+}
+
+body.tenant-financial a.nav-item.fin-only {
+  display: flex; /* Exibe Tela 16: Compliance & Auditoria */
+}
+
+/* 3. Resolução da Feature Flag de Cliente Exclusivo */
+body.client-exclusive-active a.nav-item.exclusive-only {
+  display: flex; /* Exibe Tela 17: Portal do Corretor */
+}
+
+/* 4. Sobrescrita de Variáveis Visuais (Cores de Acento) por Tenant */
+body.tenant-tech {
+  --primary: #4f46e5;       /* Índigo Tecnológico */
+  --primary-hover: #4338ca;
+}
+
+body.tenant-industry {
+  --primary: #d97706;       /* Âmbar Industrial */
+  --primary-hover: #b45309;
+}
+
+body.tenant-financial {
+  --primary: #b8860b;       /* Dourado / Ouro Regulatório */
+  --primary-hover: #996f08;
+}
+    </pre>
+
+    <p>
+      No motor de execução JavaScript (<code>app.js</code>), a função <code>switchTenant(tenantKey)</code> orquestra a transição de estado da aplicação em tempo de execução: atualiza as classes CSS do <code>document.body</code>, sincroniza os rótulos de contexto, recalcula a visibilidade dos blocos condicionais dos formulários e emite notificações de feedback para o usuário. Essa arquitetura garante carregamento ultrarrápido, consumo mínimo de memória e desacoplamento total entre as variantes da Linha de Produção.
+    </p>
+
+    <!-- ==========================================================================
+         SEÇÃO 4 — CONCLUSÃO
+         ========================================================================== -->
+    <h1 id="sec-4" class="secao-primaria">4 CONCLUSÃO E PERSPECTIVAS FUTURAS</h1>
+    <p>
+      O desenvolvimento do projeto <strong>HRTech Core</strong> permitiu demonstrar e validar a aplicação prática dos conceitos fundamentais de <strong>Linha de Produção de Software (LPS)</strong>, <strong>Reuso Sistemático</strong>, <strong>Engenharia de Experiência com Design Thinking</strong> e <strong>Medição e Análise de Software</strong> no domínio corporativo de Gestão de Recursos Humanos.
+    </p>
+    <p>
+      A implementação do protótipo Single Page Application comprovou que é plenamente viável construir uma arquitetura de software compartilhada capaz de atender a múltiplos setores econômicos (Tecnologia, Indústria e Financeiro) e comportar customizações exclusivas de clientes individuais sem recorrer à duplicação de código ou bifurcações danosas de repositório. O atingimento de uma <strong>Taxa de Reuso de Ativos de 83,3%</strong> (5 dos 6 ativos centrais reutilizados sem alterações no núcleo) e de uma <strong>Cobertura de Testes de 92%</strong> com tempo médio de resposta de API em <strong>120 ms</strong> atesta o sucesso das decisões arquiteturais adotadas.
+    </p>
+    <p>
+      Como trabalhos futuros recomendados para os incrementos subsequentes da plataforma, destacam-se:
+    </p>
+    <ul style="margin-left: 2.5cm; margin-bottom: 12pt; font-size: 11pt; line-height: 1.4;">
+      <li>Implementação de backend distribuído em microsserviços com persistência poliglota e suporte nativo a <em>Multi-Tenant Database Partitioning</em>;</li>
+      <li>Integração da esteira de CI/CD para derivação automatizada de pacotes de clientes através de compilação condicional em tempo de build;</li>
+      <li>Evolução dos algoritmos de <em>People Analytics</em> para incorporar modelos de inteligência artificial preditiva voltados à retenção preventiva de talentos e previsão de absenteísmo.</li>
+    </ul>
+
+    <!-- ==========================================================================
+         SEÇÃO 5 — REFERÊNCIAS BIBLIOGRÁFICAS (NBR 6023)
+         ========================================================================== -->
+    <h1 id="sec-5" class="secao-primaria">5 REFERÊNCIAS BIBLIOGRÁFICAS</h1>
+    <div class="referencias-box">
+      <p>
+        ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>NBR 6023</strong>: Informação e documentação — Referências — Elaboração. Rio de Janeiro: ABNT, 2018.
+      </p>
+      <p>
+        ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>NBR 6027</strong>: Informação e documentação — Sumário — Apresentação. Rio de Janeiro: ABNT, 2012.
+      </p>
+      <p>
+        ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>NBR 6028</strong>: Informação e documentação — Resumo — Apresentação. Rio de Janeiro: ABNT, 2021.
+      </p>
+      <p>
+        ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS. <strong>NBR 14724</strong>: Informação e documentação — Trabalhos acadêmicos — Apresentação. Rio de Janeiro: ABNT, 2011.
+      </p>
+      <p>
+        BROWN, Tim. <strong>Design Thinking</strong>: Uma metodologia poderosa para decretar o fim das velhas ideias. Rio de Janeiro: Elsevier / Alta Books, 2010.
+      </p>
+      <p>
+        CLEMENTS, Paul; NORTHROP, Linda. <strong>Software Product Lines</strong>: Practices and Patterns. Boston: Addison-Wesley, 2001.
+      </p>
+      <p>
+        INSTITUTO BRASILEIRO DE GEOGRAFIA E ESTATÍSTICA (IBGE). <strong>Normas de Apresentação Tabular</strong>. 3. ed. Rio de Janeiro: IBGE, 1993.
+      </p>
+      <p>
+        POHL, Klaus; BÖCKLE, Günter; VAN DER LINDEN, Frank. <strong>Software Product Line Engineering</strong>: Foundations, Principles and Techniques. Berlin: Springer, 2005.
+      </p>
+      <p>
+        PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ. Grupo de Pesquisa em Engenharia de Software. <strong>Introdução à Medição de Software</strong>: Métricas de Produto, Processo e Reuso. Curitiba: PUCPR, 2026.
+      </p>
+      <p>
+        PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ. Grupo de Pesquisa em Engenharia de Software. <strong>Projeto Medição-Reuso</strong>: Guia de Diretrizes e Requisitos Acadêmicos da Disciplina. Curitiba: PUCPR, 2026.
+      </p>
+      <p>
+        PRESSMAN, Roger S.; MAXIM, Bruce R. <strong>Engenharia de Software</strong>: Uma Abordagem Profissional. 8. ed. Porto Alegre: AMGH / McGraw-Hill, 2016.
+      </p>
+      <p>
+        SOMMERVILLE, Ian. <strong>Engenharia de Software</strong>. 10. ed. São Paulo: Pearson Education do Brasil, 2019.
+      </p>
+      <p>
+        STICKDORN, Marc; SCHNEIDER, Jakob. <strong>Isto é Design Thinking de Serviços</strong>: Fundamentos, ferramentas, casos. Porto Alegre: Bookman, 2014.
+      </p>
+    </div>
+
+  </div>
+
+</body>
+</html>
