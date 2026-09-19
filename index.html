@@ -14,6 +14,17 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Top Banner: Functional App Gateway -->
+  <div style="background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%); color: #ffffff; padding: 12px 24px; text-align: center; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4); z-index: 9999; position: relative;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">⭐ NOVO — SISTEMA REAL FUNCIONAL</span>
+      <span>O protótipo em HTML puro está demonstrado abaixo. Para acessar o site real funcional com Controllers, BD SQLite e Painel Admin:</span>
+    </div>
+    <a href="app/index.php" style="background: #ffffff; color: #4f46e5; text-decoration: none; padding: 8px 18px; border-radius: 8px; font-weight: 800; font-size: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px;">
+      <i class="fa-solid fa-rocket"></i> Entrar no Sistema Funcional (MVC) <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+
   <div class="app-container">
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
@@ -956,63 +967,42 @@
         <section id="tela-8" class="screen-view">
           <div class="card toolbar-card">
             <div>
-              <h3><i class="fa-solid fa-clock highlight-icon"></i> Espelho de Ponto & Banco de Horas (Ativo AR03)</h3>
+              <h3><i class="fa-solid fa-clock highlight-icon"></i> Espelho de Ponto &amp; Banco de Horas (Ativo AR03)</h3>
               <p>Mapeamento de batidas diárias. Regra atual: <strong id="pontoRegraLabel">Banco de Horas Flexível (Tech)</strong></p>
             </div>
-            <button class="btn btn-primary" onclick="showScreen('tela-9')"><i class="fa-solid fa-file-pen"></i> Solicitar Ajuste</button>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:1.4rem;font-weight:700;color:#10b981;font-variant-numeric:tabular-nums" class="live-clock">00:00:00</span>
+              <button class="btn btn-primary" onclick="showScreen('tela-9')"><i class="fa-solid fa-file-pen"></i> Solicitar Ajuste</button>
+            </div>
           </div>
 
+          <!-- Registrar ponto ao vivo -->
+          <div class="card" style="margin-bottom:16px">
+            <h4 style="margin-bottom:12px"><i class="fa-solid fa-fingerprint"></i> Registrar Batida (Portaria 671/2021 — SHA-256)</h4>
+            <form onsubmit="handlePunchSubmit(event)" style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+              <div class="form-group" style="margin:0;flex:1;min-width:180px">
+                <label>Colaborador</label>
+                <select id="punchEmployee" class="form-control"><option>Carregando...</option></select>
+              </div>
+              <div class="form-group" style="margin:0;flex:1;min-width:160px">
+                <label>Tipo de Batida</label>
+                <select id="punchType" class="form-control">
+                  <option value="ENTRY">🟢 ENTRY — Entrada</option>
+                  <option value="INTERVAL_START">🟡 INTERVAL_START — Início Intervalo</option>
+                  <option value="INTERVAL_END">🟢 INTERVAL_END — Fim Intervalo</option>
+                  <option value="EXIT">🔴 EXIT — Saída</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary" style="white-space:nowrap"><i class="fa-solid fa-stamp"></i> Registrar Agora</button>
+            </form>
+          </div>
+
+          <!-- Logs reais do banco -->
           <div class="card">
+            <h4 style="margin-bottom:12px"><i class="fa-solid fa-list-check"></i> Batidas Registradas no Banco (SQLite)</h4>
             <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Entrada 1</th>
-                  <th>Saída 1</th>
-                  <th>Entrada 2</th>
-                  <th>Saída 2</th>
-                  <th>Total Trabalhado</th>
-                  <th>Saldo do Dia</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>14/08/2026 (Hoje)</td>
-                  <td>08:02</td>
-                  <td>12:00</td>
-                  <td>13:00</td>
-                  <td>--:--</td>
-                  <td>04h 02m</td>
-                  <td><span class="status-pill status-active">Em Andamento</span></td>
-                </tr>
-                <tr>
-                  <td>13/08/2026</td>
-                  <td>08:00</td>
-                  <td>12:00</td>
-                  <td>13:00</td>
-                  <td>17:30</td>
-                  <td>08h 30m</td>
-                  <td><span class="status-pill status-success">+00h 30m</span></td>
-                </tr>
-                <tr>
-                  <td>12/08/2026</td>
-                  <td>08:00</td>
-                  <td>12:00</td>
-                  <td>13:00</td>
-                  <td>17:00</td>
-                  <td>08h 00m</td>
-                  <td><span class="status-pill status-neutral">00h 00m</span></td>
-                </tr>
-                <tr>
-                  <td>11/08/2026</td>
-                  <td>08:15</td>
-                  <td>12:00</td>
-                  <td>13:00</td>
-                  <td>17:45</td>
-                  <td>08h 30m</td>
-                  <td><span class="status-pill status-success">+00h 30m</span></td>
-                </tr>
-              </tbody>
+              <thead><tr><th>Colaborador</th><th>Tipo</th><th>Horário</th><th>Hash SHA-256</th><th>Portaria 671</th></tr></thead>
+              <tbody id="timeLogsBody"><tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px">Carregando...</td></tr></tbody>
             </table>
           </div>
         </section>
@@ -1062,7 +1052,7 @@
         <!-- ==================== SCREEN 10: FÉRIAS & CALENDÁRIO ==================== -->
         <section id="tela-10" class="screen-view">
           <div class="card">
-            <h3><i class="fa-solid fa-umbrella-beach highlight-icon"></i> Gestão de Férias & Calendário (Regra RB04)</h3>
+            <h3><i class="fa-solid fa-umbrella-beach highlight-icon"></i> Gestão de Férias &amp; Calendário (Regra RB04)</h3>
             <p>Consulte seu saldo de dias e programe suas férias respeitando as regras do seu contrato.</p>
           </div>
 
@@ -1071,8 +1061,12 @@
               <h4><i class="fa-solid fa-calendar-days"></i> Form de Solicitação de Férias</h4>
               <form onsubmit="handleVacationSubmit(event)">
                 <div class="form-group">
+                  <label for="feriasFuncionario">Colaborador *</label>
+                  <select id="feriasFuncionario" class="form-control"><option>Carregando...</option></select>
+                </div>
+                <div class="form-group">
                   <label for="feriasInicio">Data Inicial *</label>
-                  <input type="date" id="feriasInicio" class="form-control" value="2026-09-01" required>
+                  <input type="date" id="feriasInicio" class="form-control" value="2026-10-06" required>
                 </div>
                 <div class="form-group">
                   <label for="feriasDias">Quantidade de Dias *</label>
@@ -1083,26 +1077,13 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label><input type="checkbox"> Deseja vender 10 dias (Abono Pecuniário)?</label>
+                  <label><input type="checkbox"> Solicitar adiantamento do 13º salário</label>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-check-circle"></i> Confirmar Solicitação de Férias</button>
               </form>
             </div>
 
             <div class="card">
-              <h4><i class="fa-solid fa-history"></i> Minhas Solicitações de Férias</h4>
-              <div class="vacation-history-list">
-                <div class="vacation-item">
-                  <div class="vacation-dates">
-                    <strong>01/09/2026 a 15/09/2026 (15 dias)</strong>
-                    <span class="text-sm">Solicitado em 14/08/2026</span>
-                  </div>
-                  <span class="status-pill status-active">Aguardando Gestor</span>
-                </div>
-                <div class="vacation-item">
-                  <div class="vacation-dates">
-                    <strong>10/01/2026 a 20/01/2026 (10 dias)</strong>
-                    <span class="text-sm">Concluído em 20/01/2026</span>
                   </div>
                   <span class="status-pill status-success">Aprovado</span>
                 </div>
@@ -1129,7 +1110,7 @@
                   <th>Ações</th>
                 </tr>
               </thead>
-              <tbody id="approvalsTableBody">
+              <tbody id="approvalsTableBody" style="font-size:13px">
                 <tr>
                   <td>
                     <strong>Lucas Silva</strong><br>
