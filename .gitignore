@@ -1,0 +1,64 @@
+# ==============================================================================
+# HRTech Core — Git Ignore Configuration
+# PUCPR — Medição e Análise de Software (2026)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Agent Metadata & Internal Workspaces (STRICTLY EXCLUDED)
+# ------------------------------------------------------------------------------
+.agents/
+**/.agents/
+.agent/
+**/.agent/
+
+# ------------------------------------------------------------------------------
+# 2. Python Cache, Bytecode & Virtual Environments
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+ENV/
+env/
+
+# ------------------------------------------------------------------------------
+# 3. SQLite Databases & WAL/SHM Runtime Journals
+# ------------------------------------------------------------------------------
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.db
+*.db-wal
+*.db-shm
+database.sqlite
+database.sqlite-wal
+database.sqlite-shm
+test_live.sqlite
+test_live.sqlite-wal
+test_live.sqlite-shm
+
+# ------------------------------------------------------------------------------
+# 4. Operating System & Editor Metadata
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# ------------------------------------------------------------------------------
+# 5. Logs & Temporary Execution Files
+# ------------------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
