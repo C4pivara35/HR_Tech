@@ -32,8 +32,8 @@ class User implements
     StringableInterface,
     JsonSerializable
 {
-    private string $id;
-    private string $tenantId;
+    use \HrTech\Domain\Traits\EntityBaseTrait;
+
     private string $username;
     private string $email;
     private string $passwordHash;
@@ -42,8 +42,6 @@ class User implements
     private bool $mfaEnabled;
     private ?string $employeeId;
     private ?DateTimeImmutable $lastLoginAt;
-    private DateTimeImmutable $createdAt;
-    private ?DateTimeImmutable $updatedAt;
 
     /**
      * @param string $id
@@ -119,21 +117,6 @@ class User implements
         $this->validate();
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function getTenantId(): string
-    {
-        return $this->tenantId;
-    }
-
-    public function belongsToTenant(string $tenantId): bool
-    {
-        return $this->tenantId === trim($tenantId);
-    }
-
     public function getUsername(): string
     {
         return $this->username;
@@ -172,16 +155,6 @@ class User implements
     public function getLastLoginAt(): ?DateTimeImmutable
     {
         return $this->lastLoginAt;
-    }
-
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 
     /**

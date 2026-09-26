@@ -31,7 +31,8 @@ class Tenant implements
     StringableInterface,
     JsonSerializable
 {
-    private string $id;
+    use \HrTech\Domain\Traits\EntityBaseTrait;
+
     private Cnpj $cnpj;
     private string $corporateName;
     private string $tradingName;
@@ -39,8 +40,6 @@ class Tenant implements
     private bool $isActive;
     /** @var array<int, string> */
     private array $moduleLicenses;
-    private DateTimeImmutable $createdAt;
-    private ?DateTimeImmutable $updatedAt;
 
     /**
      * @param string $id Unique tenant identifier.
@@ -112,11 +111,6 @@ class Tenant implements
         return new self($id, $cnpj, $corporateName, $tradingName, true, $modules);
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
     public function getCnpj(): Cnpj
     {
         return $this->cnpj;
@@ -154,16 +148,6 @@ class Tenant implements
     public function getModuleLicenses(): array
     {
         return $this->moduleLicenses;
-    }
-
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 
     /**

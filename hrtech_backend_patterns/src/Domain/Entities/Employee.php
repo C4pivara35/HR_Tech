@@ -36,8 +36,8 @@ class Employee implements
     StringableInterface,
     JsonSerializable
 {
-    private string $id;
-    private string $tenantId;
+    use \HrTech\Domain\Traits\EntityBaseTrait;
+
     private Cpf $cpf;
     private string $fullName;
     private string $email;
@@ -52,8 +52,6 @@ class Employee implements
     private bool $isActive;
     private int $vacationDaysBalance;
     private int $bankHoursBalance; // in minutes (signed)
-    private DateTimeImmutable $createdAt;
-    private ?DateTimeImmutable $updatedAt;
 
     /**
      * @param string $id
@@ -146,21 +144,6 @@ class Employee implements
         $this->validate();
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function getTenantId(): string
-    {
-        return $this->tenantId;
-    }
-
-    public function belongsToTenant(string $tenantId): bool
-    {
-        return $this->tenantId === trim($tenantId);
-    }
-
     public function getCpf(): Cpf
     {
         return $this->cpf;
@@ -247,16 +230,6 @@ class Employee implements
     public function getBankHoursBalance(): int
     {
         return $this->bankHoursBalance;
-    }
-
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 
     // --------------------------------------------------------------------------

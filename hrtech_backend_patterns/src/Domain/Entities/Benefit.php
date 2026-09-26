@@ -34,6 +34,8 @@ class Benefit implements
     JsonableInterface,
     JsonSerializable
 {
+    use \HrTech\Domain\Traits\EntityBaseTrait;
+
     /**
      * @param string $id Unique benefit identifier (UUID / alphanumeric)
      * @param string $tenantId Tenant multi-tenant isolation scope
@@ -45,31 +47,21 @@ class Benefit implements
      * @param bool $isDeductible Whether this benefit can be legally deducted from payroll
      */
     public function __construct(
-        private readonly string $id,
-        private readonly string $tenantId,
+        string $id,
+        string $tenantId,
         private BenefitType $type,
         private string $name,
         private string $provider,
         private Money $value,
         private float $employeeCostSharePercentage = 0.0,
-        private bool $isDeductible = true
+        private bool $isDeductible = true,
+        ?\DateTimeImmutable $createdAt = null
     ) {
+        $this->id = trim($id);
+        $this->tenantId = trim($tenantId);
+        $this->createdAt = $createdAt ?? new \DateTimeImmutable();
+        $this->updatedAt = clone $this->createdAt;
         $this->validate();
-    }
-
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function getTenantId(): string
-    {
-        return $this->tenantId;
-    }
-
-    public function belongsToTenant(string $tenantId): bool
-    {
-        return $this->tenantId === trim($tenantId);
     }
 
     public function getType(): BenefitType
