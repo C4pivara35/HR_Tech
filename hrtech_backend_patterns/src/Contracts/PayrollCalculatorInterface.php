@@ -14,7 +14,7 @@ use HrTech\Domain\Entities\Employee;
 interface PayrollCalculatorInterface
 {
     /**
-     * Executes the end-to-end payroll calculation algorithm for the given employee.
+     * Executa o algoritmo completo de cálculo de folha de pagamento para o colaborador.
      *
      * @param Employee $employee The employee whose payroll is being calculated.
      * @param array<string, mixed> $payrollData Input data (worked hours, overtime, bonuses, deductions).

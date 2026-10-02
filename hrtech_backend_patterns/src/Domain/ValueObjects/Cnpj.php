@@ -9,18 +9,18 @@ use JsonSerializable;
 use Stringable;
 
 /**
- * CNPJ (Cadastro Nacional da Pessoa Jurídica) Value Object.
- * Enforces Brazilian Federal Revenue Modulo 11 check-digit validation.
+ * Value Object de CNPJ (Cadastro Nacional da Pessoa Jurídica).
+ * Executa a validação oficial do Módulo 11 da Receita Federal do Brasil.
  */
 readonly class Cnpj implements Stringable, JsonSerializable
 {
-    private const array WEIGHTS_FIRST_DIGIT = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-    private const array WEIGHTS_SECOND_DIGIT = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    private const WEIGHTS_FIRST_DIGIT = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    private const WEIGHTS_SECOND_DIGIT = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
     private string $digits;
 
     /**
-     * @throws ValidationException if CNPJ format or mathematical check digits fail
+     * @throws ValidationException se CNPJ format or mathematical check digits fail
      */
     public function __construct(string $cnpj)
     {
@@ -35,7 +35,7 @@ readonly class Cnpj implements Stringable, JsonSerializable
     }
 
     /**
-     * Strips all non-digit characters from the input.
+     * Remove todos os caracteres não numéricos da entrada.
      */
     public static function clean(string $cnpj): string
     {
@@ -142,7 +142,7 @@ readonly class Cnpj implements Stringable, JsonSerializable
     }
 
     /**
-     * Returns the 8-digit company root (matriz base).
+     * Retorna a raiz de 8 dígitos do CNPJ (base da matriz).
      */
     public function getRoot(): string
     {
@@ -150,7 +150,7 @@ readonly class Cnpj implements Stringable, JsonSerializable
     }
 
     /**
-     * Returns the 4-digit branch number (filial).
+     * Retorna os 4 dígitos do número de filial do CNPJ.
      */
     public function getBranch(): string
     {
@@ -158,7 +158,7 @@ readonly class Cnpj implements Stringable, JsonSerializable
     }
 
     /**
-     * Returns the 2-digit verification check digits.
+     * Retorna os 2 dígitos verificadores do CNPJ.
      */
     public function getCheckDigits(): string
     {
@@ -166,7 +166,7 @@ readonly class Cnpj implements Stringable, JsonSerializable
     }
 
     /**
-     * Checks if this CNPJ represents a headquarters/matrix (branch '0001').
+     * Verifica se este CNPJ representa uma matriz (filial '0001').
      */
     public function isHeadquarters(): bool
     {

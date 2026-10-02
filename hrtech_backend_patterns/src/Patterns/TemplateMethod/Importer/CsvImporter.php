@@ -13,8 +13,8 @@ use HrTech\Exceptions\ValidationException;
 /**
  * Class CsvImporter
  *
- * Importer for comma- and semicolon-delimited CSV biometric time clock files.
- * Normalizes punch headers (employee_id, punch_time, type, lat, lon) and maps to domain records.
+ * Importador para arquivos CSV delimitados por vírgula ou ponto e vírgula de relógios de ponto.
+ * Normaliza os cabeçalhos de batida (matrícula, data/hora, tipo, coordenadas) e mapeia para registros de domínio.
  */
 class CsvImporter extends TimeLogImporterTemplate
 {
@@ -23,7 +23,7 @@ class CsvImporter extends TimeLogImporterTemplate
      *
      * @var array<string, string>
      */
-    private const array HEADER_MAP = [
+    private const HEADER_MAP = [
         'employee_id'     => 'employee_id',
         'employeeid'      => 'employee_id',
         'emp_id'          => 'employee_id',
@@ -77,7 +77,7 @@ class CsvImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Parses CSV records into associative array rows with mapped column headers.
+     * Faz o parsing dos registros CSV em linhas de array associativo com cabeçalhos mapeados.
      *
      * @param mixed $handle
      * @return array<int, array<string, mixed>>
@@ -130,7 +130,7 @@ class CsvImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Closes the stream handle and releases resources.
+     * Fecha o manipulador de stream e libera recursos do sistema.
      *
      * @param mixed $handle
      */
@@ -142,7 +142,7 @@ class CsvImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Converts imported summary records into domain TimeLog entity instances.
+     * Converte registros importados em instâncias de entidades TimeLog de domínio.
      *
      * @param array<string, mixed> $importSummary
      * @param string $tenantId

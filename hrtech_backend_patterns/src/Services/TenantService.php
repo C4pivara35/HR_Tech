@@ -14,7 +14,7 @@ use HrTech\Repositories\Contracts\TenantRepositoryInterface;
  * Class TenantService
  *
  * Domain service orchestrating tenant lifecycle, CNPJ validation, licensing,
- * and multi-tenant organization management.
+ * e gerenciamento de organizações multi-tenant.
  *
  * @package HrTech\Services
  * @author Fernando Lopes Duarte (Membro 1 — CRUD 1: Gestão de Tenants)
@@ -27,7 +27,7 @@ class TenantService
     }
 
     /**
-     * Creates and persists a new tenant enterprise.
+     * Cria e persiste uma nova empresa cliente (tenant).
      *
      * @param string $id
      * @param string|Cnpj $cnpj
@@ -72,7 +72,7 @@ class TenantService
     }
 
     /**
-     * Finds a tenant by ID or throws TenantNotFoundException.
+     * Localiza uma empresa (tenant) por ID ou lança TenantNotFoundException.
      *
      * @throws TenantNotFoundException
      */
@@ -159,7 +159,7 @@ class TenantService
     }
 
     /**
-     * Deletes a tenant and cascades to all child relations.
+     * Exclui uma empresa e aplica exclusão em cascata a todos os registros vinculados.
      */
     public function deleteTenant(string $id): bool
     {

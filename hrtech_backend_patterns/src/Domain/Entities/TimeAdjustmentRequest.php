@@ -20,7 +20,7 @@ use JsonSerializable;
 /**
  * Class TimeAdjustmentRequest
  *
- * Represents an employee request for punch correction, missed punch inclusion,
+ * Representa uma solicitação do colaborador para retificação ou inclusão de batida esquecida,
  * or interval adjustment under Portaria 671/2021 MTE and internal HR compliance.
  */
 class TimeAdjustmentRequest implements
@@ -78,7 +78,7 @@ class TimeAdjustmentRequest implements
     }
 
     /**
-     * Approves the adjustment request.
+     * Aprova a solicitação de ajuste de ponto.
      *
      * @param string $approverId Manager or HR authority ID
      * @param string|null $comment Optional approval notes
@@ -114,7 +114,7 @@ class TimeAdjustmentRequest implements
     }
 
     /**
-     * Rejects the adjustment request with mandatory justification.
+     * Rejeita a solicitação de ajuste com justificativa obrigatória.
      *
      * @param string $approverId Manager or HR authority ID
      * @param string $reason Rejection explanation
@@ -148,7 +148,7 @@ class TimeAdjustmentRequest implements
     }
 
     /**
-     * Cancels the adjustment request. Only permitted for the requesting employee while pending.
+     * Cancela a solicitação de ajuste. Permitido apenas para o colaborador solicitante enquanto pendente.
      *
      * @param string $requesterId
      * @throws InvalidOperationException
@@ -248,7 +248,7 @@ class TimeAdjustmentRequest implements
     }
 
     /**
-     * Calculates time adjustment delta in minutes, or null if missed punch.
+     * Calcula a diferença do ajuste em minutos, ou null caso seja batida esquecida.
      */
     public function getTimeDeltaMinutes(): ?int
     {

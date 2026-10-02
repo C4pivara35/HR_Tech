@@ -10,7 +10,7 @@ use HrTech\Domain\ValueObjects\Cpf;
 /**
  * Interface EmployeeRepositoryInterface
  *
- * Contract for relational persistence and retrieval of Employee entities.
+ * Contrato para persistência relacional e recuperação de entidades de Colaboradores.
  *
  * @package HrTech\Repositories\Contracts
  * @author Andryus (Membro 2 — CRUD 3: Cadastro de Colaboradores)

@@ -168,22 +168,22 @@ final class M4TestRunner
     public function printSummary(): int
     {
         echo "\n" . str_repeat('=', 70) . "\n";
-        echo "\033[1;37mMILESTONE 4 VERIFICATION SUMMARY\033[0m\n";
+        echo "\033[1;37mMILESTONE 4 VERIFICATION RESUMO\033[0m\n";
         echo str_repeat('=', 70) . "\n";
-        echo "Total Assertions : {$this->totalAssertions}\n";
-        echo "Passed           : \033[32m{$this->passedAssertions}\033[0m\n";
-        echo "Failed           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
+        echo "Total de Asserções : {$this->totalAssertions}\n";
+        echo "Aprovadas        : \033[32m{$this->passedAssertions}\033[0m\n";
+        echo "Falhas           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
 
         if ($this->failedAssertions > 0) {
             echo "\n\033[1;31mFAILED TESTS:\033[0m\n";
             foreach ($this->failures as $failure) {
                 echo "  • {$failure}\n";
             }
-            echo "\n\033[1;31mRESULT: VERIFICATION FAILED\033[0m\n";
+            echo "\n\033[1;31mRESULTADO: VERIFICAÇÃO FALHOU\033[0m\n";
             return 1;
         }
 
-        echo "\n\033[1;32mRESULT: ALL MILESTONE 4 VERIFICATIONS PASSED (100%)\033[0m\n\n";
+        echo "\n\033[1;32mRESULTADO: TODAS AS VERIFICAÇÕES DO MILESTONE 4 FORAM APROVADAS (100%)\033[0m\n\n";
         return 0;
     }
 }
@@ -286,7 +286,7 @@ $runner->assertEquals(0, (int)$pdo->query("SELECT COUNT(*) FROM time_logs WHERE 
 // ==========================================================================
 $runner->suite('10 CRUD Operations across 5 Student Engineers');
 
-// Initial clean test tenant for CRUD operations
+// Empresa inicial limpa de teste para operações de CRUD
 $tenantRepo = new TenantRepository($db);
 $tenantService = new TenantService($tenantRepo);
 
@@ -397,7 +397,7 @@ $runner->assertEquals(1200000, $employee->getBaseSalary()->getCents(), 'CRUD 3 (
 $runner->assertEquals(30, $employee->getVacationBalanceDays(), 'CRUD 3 (Andryus): Initial vacation balance is 30 days');
 $runner->assertEquals(0, $employee->getBankHoursMinutes(), 'CRUD 3 (Andryus): Initial bank hours balance is 0 minutes');
 
-// Employee bank hours update
+// Atualização do banco de horas do colaborador
 $empService->recordBankHours('emp-andryus-1', 'tenant-fernando', 120); // +2 hours
 $refreshedEmp = $empService->getEmployee('emp-andryus-1', 'tenant-fernando');
 $runner->assertEquals(120, $refreshedEmp->getBankHoursMinutes(), 'CRUD 3 (Andryus): Bank hours credited to 120 minutes');
@@ -509,7 +509,7 @@ $runner->assertEquals('vac-valentin-1', $vacReq->id, 'CRUD 7 (Valentin): Vacatio
 $runner->assertEquals(15, $vacReq->durationDays, 'CRUD 7 (Valentin): Duration is 15 days');
 $runner->assertEquals(VacationStatus::REQUESTED, $vacReq->getStatus(), 'CRUD 7 (Valentin): Status is REQUESTED');
 
-// Approve vacation and check employee balance debit
+// Aprova férias e verifica débito atômico no saldo do colaborador
 $approvedVac = $vacService->approveVacation('vac-valentin-1', 'tenant-fernando', 'user-fernando-admin');
 $runner->assertEquals(VacationStatus::APPROVED_BY_MANAGER, $approvedVac->getStatus(), 'CRUD 7 (Valentin): Vacation approved by manager');
 $empAfterVac = $empService->getEmployee('emp-andryus-1', 'tenant-fernando');
@@ -574,7 +574,7 @@ $runner->assertEquals('aso-nicholas-1', $asoExam->id, 'CRUD 9 (Nicholas): ASO me
 $runner->assertTrue($asoExam->isFit, 'CRUD 9 (Nicholas): Collaborator is clinically FIT');
 $runner->assertFalse($asoExam->isExamExpired(), 'CRUD 9 (Nicholas): ASO is within valid period');
 
-// CRUD 10: Insurance Policy FinCorp (Nicholas)
+// CRUD 10: Apólice de Seguro FinCorp (Nicholas)
 $policyRepo = new InsurancePolicyRepository($db);
 $policyService = new InsurancePolicyService($policyRepo);
 
@@ -809,7 +809,7 @@ $runner->assertEquals('tech', $tTech->getSegment(), 'Pipeline: TechCorp created 
 $runner->assertEquals('industria', $tInd->getSegment(), 'Pipeline: Fabril S.A. created with industria segment');
 $runner->assertEquals('financeiro', $tFin->getSegment(), 'Pipeline: Banco Alpha created with financeiro segment');
 
-// Seed employees for each tenant
+// Insere colaboradores para cada empresa de teste
 $empTech = $empService->hireEmployee(
     'emp-e2e-tech', 't-e2e-tech', '222.333.444-05', 'Dev Tech', 'dev@techcorp.com',
     '11911111111', '1992-04-10', '2022-01-01', 'd-tech', 'r-tech', 10000, 'CLT'
@@ -825,7 +825,7 @@ $empFin = $empService->hireEmployee(
     '11933333333', '1990-11-30', '2020-03-15', 'd-fin', 'r-fin', 15000, 'CLT'
 );
 
-// Verify Strict Multi-Tenant Query Scoping
+// Verifica Escopo Estrito de Consultas Multi-Tenant
 $techEmployees = $empService->listEmployees('t-e2e-tech');
 $runner->assertEquals(1, count($techEmployees), 'Pipeline: TechCorp has exactly 1 employee');
 $runner->assertEquals('emp-e2e-tech', $techEmployees[0]->getId(), 'Pipeline: TechCorp employee retrieved');
@@ -834,19 +834,19 @@ $indEmployees = $empService->listEmployees('t-e2e-ind');
 $runner->assertEquals(1, count($indEmployees), 'Pipeline: Fabril S.A. has exactly 1 employee');
 $runner->assertEquals('emp-e2e-ind', $indEmployees[0]->getId(), 'Pipeline: Fabril S.A. employee retrieved');
 
-// Cross-tenant data isolation test: ensure t-e2e-tech cannot query t-e2e-ind employee
+// Teste de isolamento: garante que t-e2e-tech não possa consultar colaborador de t-e2e-ind
 $leakTest = $empService->getEmployee('emp-e2e-ind', 't-e2e-tech');
 $runner->assertTrue($leakTest === null, 'Pipeline: Cross-tenant data leakage blocked (getEmployee returns null across boundary)');
 
-// 1. Tech Workflow: Overtime is credited to Bank of Hours
+// 1. Fluxo Tech: Horas extras são creditadas no Banco de Horas
 $strategyTech = $lpsEngine->resolveOvertimeStrategy($tTech);
 $runner->assertTrue($strategyTech instanceof BankHoursStrategy, 'Pipeline Tech: Strategy is BankHoursStrategy');
-$bankMinutes = $strategyTech->calculateBankMinutes(2.0); // 2 hours overtime
+$bankMinutes = $strategyTech->calculateBankMinutes(2.0); // 2 horas extras
 $empService->recordBankHours('emp-e2e-tech', 't-e2e-tech', $bankMinutes);
 $updatedEmpTech = $empService->getEmployee('emp-e2e-tech', 't-e2e-tech');
 $runner->assertEquals(120, $updatedEmpTech->getBankHoursMinutes(), 'Pipeline Tech: 2h * 1.0 factor = 120 minutes banked');
 
-// 2. Indústria Workflow: Work blocked if ASO missing; unblocked when recorded; overtime paid in cash
+// 2. Fluxo Indústria: Trabalho bloqueado se sem ASO; liberado após registro; horas extras pagas em dinheiro
 $indEligibility1 = $lpsEngine->validateWorkEligibility($empInd, null, $tInd);
 $runner->assertFalse($indEligibility1['allowed'], 'Pipeline Indústria: Collaborator blocked from shift due to missing ASO');
 

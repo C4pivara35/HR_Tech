@@ -39,7 +39,7 @@ class TimeLogController {
         $adjStmt->execute([$activeTenantId]);
         $adjustments = $adjStmt->fetchAll();
 
-        // Employees for punch modal
+        // Colaboradores para o modal de batida de ponto
         $empStmt = $this->pdo->prepare("SELECT * FROM employees WHERE tenant_id = ? AND is_active = 1");
         $empStmt->execute([$activeTenantId]);
         $employees = $empStmt->fetchAll();

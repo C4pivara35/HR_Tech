@@ -20,7 +20,7 @@ use JsonSerializable;
 /**
  * Class TimeLog
  *
- * Implements an immutable biometric or mobile electronic time punch record adhering
+ * Implementa registro imutável de ponto eletrônico biométrico ou móvel em conformidade
  * to Portaria 671/2021 MTE with SHA-256 chained digital signature hashes.
  */
 class TimeLog implements
@@ -32,7 +32,7 @@ class TimeLog implements
     JsonableInterface,
     JsonSerializable
 {
-    public const string GENESIS_PREVIOUS_HASH = '0000000000000000000000000000000000000000000000000000000000000000';
+    public const GENESIS_PREVIOUS_HASH = '0000000000000000000000000000000000000000000000000000000000000000';
 
     public readonly string $signatureHash;
 
@@ -91,7 +91,7 @@ class TimeLog implements
     }
 
     /**
-     * Calculates the deterministic Portaria 671/2021 MTE tamper-evident SHA-256 hash.
+     * Calcula o hash SHA-256 inviolável e determinístico sob a Portaria 671/2021 MTE.
      *
      * @param string|null $previousHash
      * @return string 64-character lowercase hexadecimal string
@@ -130,7 +130,7 @@ class TimeLog implements
     }
 
     /**
-     * Factory method to generate the next chained TimeLog for this employee and tenant.
+     * Método fábrica para gerar a próxima batida de ponto encadeada deste colaborador e empresa.
      */
     public function createNext(
         string $id,
@@ -186,7 +186,7 @@ class TimeLog implements
     }
 
     /**
-     * Whether the punch represents beginning a period of work.
+     * Indica se a batida representa o início de um período de trabalho.
      */
     public function isEntry(): bool
     {
@@ -194,7 +194,7 @@ class TimeLog implements
     }
 
     /**
-     * Whether the punch represents ending a period of work.
+     * Indica se a batida representa o término de um período de trabalho.
      */
     public function isExit(): bool
     {
@@ -202,7 +202,7 @@ class TimeLog implements
     }
 
     /**
-     * Checks if the punch occurred within an approved workplace geofence radius.
+     * Verifica se a batida ocorreu dentro do perímetro de geofencing autorizado da sede/filial.
      */
     public function isWithinGeofence(GeoLocation $workplace, float $radiusMeters): bool
     {

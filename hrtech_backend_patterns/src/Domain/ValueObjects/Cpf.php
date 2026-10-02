@@ -17,7 +17,7 @@ readonly class Cpf implements Stringable, JsonSerializable
     private string $digits;
 
     /**
-     * @throws ValidationException if CPF format or check digits fail
+     * @throws ValidationException se CPF format or check digits fail
      */
     public function __construct(string $cpf)
     {

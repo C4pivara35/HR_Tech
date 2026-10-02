@@ -20,7 +20,7 @@ use JsonSerializable;
 /**
  * Class VacationRequest
  *
- * Implements vacation scheduling and lifecycle compliance under CLT Articles 129–145,
+ * Implementa gestão de férias e conformidade trabalhista sob os Artigos 129 a 145 da CLT,
  * including 30-day notice periods, 3-period split rules, and abono pecuniário cashout.
  */
 class VacationRequest implements
@@ -32,11 +32,11 @@ class VacationRequest implements
     JsonableInterface,
     JsonSerializable
 {
-    public const int MAX_ANNUAL_VACATION_DAYS = 30;
-    public const int MAX_ABONO_DAYS = 10;
-    public const int MIN_NOTICE_DAYS = 30;
-    public const int MIN_SPLIT_PERIOD_DAYS = 5;
-    public const int MIN_MAJOR_PERIOD_DAYS = 14;
+    public const MAX_ANNUAL_VACATION_DAYS = 30;
+    public const MAX_ABONO_DAYS = 10;
+    public const MIN_NOTICE_DAYS = 30;
+    public const MIN_SPLIT_PERIOD_DAYS = 5;
+    public const MIN_MAJOR_PERIOD_DAYS = 14;
 
     public readonly int $abonoDays;
     public readonly DateTimeImmutable $createdAt;
@@ -135,7 +135,7 @@ class VacationRequest implements
     }
 
     /**
-     * Validates that the vacation start date satisfies the minimum 30-day notice rule (Art. 135 CLT).
+     * Valida se a data de início das férias atende à antecedência mínima legal de 30 dias (Art. 135 da CLT).
      *
      * @param DateTimeImmutable|null $referenceDate
      * @throws ValidationException
@@ -159,7 +159,7 @@ class VacationRequest implements
     }
 
     /**
-     * Validates a complete split schedule of up to 3 vacation periods under Art. 134 §1 CLT.
+     * Valida o fracionamento em até 3 períodos de férias conforme o Art. 134 §1 da CLT.
      *
      * @param int[] $periodDurations Days per period (e.g. [14, 8, 8], [15, 15], or [20] with abono)
      * @param bool $hasAbono Whether 10 days of abono are taken
@@ -220,7 +220,7 @@ class VacationRequest implements
     }
 
     /**
-     * Checks if vacation start date falls on Friday (5) or Saturday (6) prior to Sunday rest (Art. 134 §3 CLT).
+     * Verifica se o início das férias antecede em dois dias o repouso semanal remunerado (Art. 134 §3 da CLT).
      */
     public function startsOnRestDayEve(): bool
     {
@@ -233,7 +233,7 @@ class VacationRequest implements
     // --------------------------------------------------------------------------
 
     /**
-     * Approves the vacation request. Transitions REQUESTED -> APPROVED_BY_MANAGER,
+     * Aprova a solicitação de férias. Transitions REQUESTED -> APPROVED_BY_MANAGER,
      * or APPROVED_BY_MANAGER -> APPROVED_BY_HR.
      *
      * @param string $approverId
@@ -272,7 +272,7 @@ class VacationRequest implements
     }
 
     /**
-     * Rejects the vacation request with justification.
+     * Rejeita a solicitação de férias com justificativa formal.
      */
     public function reject(string $approverId, string $reason): void
     {
@@ -298,6 +298,35 @@ class VacationRequest implements
         $this->approverId = $cleanApprover;
         $this->approvedAt = new DateTimeImmutable();
         $this->rejectionReason = $cleanReason;
+    }
+
+    /**
+     * Cancela a solicitação de férias.
+     *
+     * @param string $requesterId ID do colaborador solicitante ou gestor
+     * @param string|null $reason Motivo do cancelamento (opcional)
+     * @throws InvalidOperationException se o status atual não permitir cancelamento
+     * @throws ValidationException se o identificador do solicitante for inválido
+     */
+    public function cancel(string $requesterId, ?string $reason = null): void
+    {
+        if (!$this->status->canTransitionTo(VacationStatus::CANCELLED)) {
+            throw InvalidOperationException::invalidState(
+                'VacationRequest',
+                $this->status->value,
+                'cancel'
+            );
+        }
+
+        $cleanRequester = trim($requesterId);
+        if ($cleanRequester === '') {
+            throw ValidationException::forField('requester_id', 'O ID do solicitante do cancelamento não pode ser vazio.');
+        }
+
+        $this->status = VacationStatus::CANCELLED;
+        if ($reason !== null && trim($reason) !== '') {
+            $this->rejectionReason = trim($reason);
+        }
     }
 
     public function startVacation(): void

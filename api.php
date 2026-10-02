@@ -58,7 +58,7 @@ try {
 function handleEmployees(PDO $pdo, string $method, ?string $id, array $body, string $now): never {
     switch ($method) {
         case 'GET':
-            // Returns employee list adapted for the prototype's table (name, role, dept, work model, status)
+            // Retorna lista de colaboradores adaptada para a tabela do protótipo (nome, cargo, depto, regime, status)
             $rows = $pdo->query(
                 "SELECT e.id, e.full_name, e.email, e.cpf, e.employment_type,
                         e.base_salary_cents, e.is_active, e.admission_date,
@@ -85,7 +85,7 @@ function handleEmployees(PDO $pdo, string $method, ?string $id, array $body, str
             if (empty($body['email']))     err('E-mail obrigatório');
             if (empty($body['tenant_id'])) err('Empresa obrigatória');
 
-            // Get or create a default department/role for the tenant
+            // Obtém ou cria um departamento/cargo padrão para a empresa
             $deptId = ensureDept($pdo, $body['tenant_id'], $body['department'] ?? 'Geral', $now);
             $roleId = ensureRole($pdo, $body['tenant_id'], $body['role_title'] ?? 'Colaborador', $now);
 

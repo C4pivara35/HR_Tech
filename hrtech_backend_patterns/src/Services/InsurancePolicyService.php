@@ -29,7 +29,7 @@ class InsurancePolicyService
     }
 
     /**
-     * Issues a new FinCorp insurance policy for an employee.
+     * Emite uma nova apólice de seguro FinCorp para o colaborador.
      *
      * @param array<string, mixed> $coverageDetails
      * @throws ValidationException
@@ -103,7 +103,7 @@ class InsurancePolicyService
     }
 
     /**
-     * Cancels an active or pending policy with reason recording.
+     * Cancela uma apólice ativa ou pendente com registro formal da justificativa.
      *
      * @throws InvalidOperationException
      */
@@ -125,7 +125,7 @@ class InsurancePolicyService
     }
 
     /**
-     * Renews the policy coverage until a new end date.
+     * Renova a cobertura da apólice até uma nova data de vencimento.
      *
      * @throws InvalidOperationException
      */

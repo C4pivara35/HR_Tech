@@ -7,7 +7,7 @@ namespace HrTech\Lps\Enums;
 /**
  * Enum TenantSegment
  *
- * Market segment classification for tenants in the Software Product Line (LPS).
+ * Classificação de segmento de mercado para empresas na Linha de Produção de Software (LPS).
  * Determines default feature toggles, compliance workflows, and strategy profiles.
  *
  * @package HrTech\Lps\Enums
@@ -20,7 +20,7 @@ enum TenantSegment: string
     case FINANCEIRO = 'financeiro';
 
     /**
-     * Human-readable label for the market segment.
+     * Rótulo legível para o segmento de mercado.
      */
     public function label(): string
     {
@@ -32,7 +32,7 @@ enum TenantSegment: string
     }
 
     /**
-     * Default LPS feature configuration for this market segment.
+     * Configuração padrão de recursos da LPS para este segmento de mercado.
      *
      * @return array<string, bool>
      */

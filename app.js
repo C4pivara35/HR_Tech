@@ -443,7 +443,7 @@ async function handleSaveCollaborator(event) {
 function renderTimeLogsTable() {
   const tbody = document.getElementById('timeLogsBody');
   if (!tbody) {
-    // Try building the table if the section exists
+    // Tenta renderizar a tabela caso a seção exista na página
     const section = document.getElementById('tela-8');
     if (!section) return;
     const existingCard = section.querySelectorAll('.card')[1];

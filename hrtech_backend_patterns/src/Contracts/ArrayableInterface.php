@@ -7,12 +7,12 @@ namespace HrTech\Contracts;
 /**
  * Interface ArrayableInterface
  *
- * Contract for objects that can be represented as an associative array.
+ * Contrato para objetos que podem ser representados como um array associativo.
  */
 interface ArrayableInterface
 {
     /**
-     * Returns the instance represented as an associative array.
+     * Retorna a instância representada como um array associativo.
      *
      * @return array<string, mixed>
      */

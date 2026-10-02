@@ -10,7 +10,7 @@ use HrTech\Domain\Enums\VacationStatus;
 /**
  * Interface VacationRepositoryInterface
  *
- * Contract for relational persistence and lifecycle updates of CLT vacation requests.
+ * Contrato para persistência relacional e atualização do ciclo de vida de solicitações de férias CLT.
  *
  * @package HrTech\Repositories\Contracts
  * @author Valentin (Membro 4 — CRUD 7: Gestão de Férias)

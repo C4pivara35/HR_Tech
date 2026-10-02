@@ -48,7 +48,7 @@ enum BenefitType: string
     }
 
     /**
-     * Whether the benefit allows payroll salary deduction (coparticipação / desconto legal).
+     * Indica se o benefício permite desconto em folha de pagamento (coparticipação / desconto legal).
      */
     public function isDeductible(): bool
     {

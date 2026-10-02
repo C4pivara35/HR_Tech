@@ -13,7 +13,7 @@ namespace HrTech\Patterns\TemplateMethod\Importer;
 //
 // Subclasses concretas:
 //   - CsvImporter   → lê arquivo CSV de relógio de ponto
-//   - JsonImporter  → lê arquivo JSON de ponto eletrônico
+//   - JsonImporter  → lê arquivo JSON de ponto eletrôúnico
 //   - ApiImporter   → recebe payload de API com autenticação
 //
 // Elementos do Template Method neste arquivo:

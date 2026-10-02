@@ -15,7 +15,7 @@ use PDO;
 /**
  * Class TenantRepository
  *
- * SQLite PDO implementation for persistence and retrieval of Tenant entities.
+ * Implementação SQLite PDO para persistência e recuperação de empresas clientes (Tenants).
  *
  * @package HrTech\Repositories
  * @author Fernando Lopes Duarte (Membro 1 — CRUD 1: Gestão de Tenants)

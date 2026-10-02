@@ -10,7 +10,7 @@ use Throwable;
 
 /**
  * Root domain exception for HRTech Core.
- * Carries structured context metadata for logging and LGPD audit trails.
+ * Armazena metadados contextuais estruturados para logs e trilha de auditoria LGPD.
  */
 class HrTechException extends Exception implements JsonSerializable
 {
@@ -35,7 +35,7 @@ class HrTechException extends Exception implements JsonSerializable
     }
 
     /**
-     * Adds contextual data and returns a clone.
+     * Adiciona dados contextuais e retorna um clone imutável.
      *
      * @param array<string, mixed> $context
      */

@@ -14,7 +14,7 @@ use PDO;
 /**
  * Class BenefitRepository
  *
- * SQLite PDO implementation for persistence and retrieval of Benefit catalog packages.
+ * Implementação SQLite PDO para persistência e recuperação do catálogo de pacotes de benefícios.
  *
  * @package HrTech\Repositories
  * @author Valentin (Membro 4 — CRUD 8: Gestão de Benefícios)

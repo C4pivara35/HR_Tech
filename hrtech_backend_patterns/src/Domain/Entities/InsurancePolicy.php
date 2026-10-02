@@ -143,7 +143,7 @@ class InsurancePolicy implements
     }
 
     /**
-     * Calculates the projected annual premium cost (12 monthly premiums).
+     * Calcula o custo anual projetado do prêmio (12 parcelas mensais).
      */
     public function calculateAnnualPremium(): Money
     {
@@ -187,7 +187,7 @@ class InsurancePolicy implements
     }
 
     /**
-     * Cancels an active or pending policy with reason recording.
+     * Cancela uma apólice ativa ou pendente com registro formal da justificativa.
      *
      * @throws InvalidOperationException
      * @throws ValidationException
@@ -229,7 +229,7 @@ class InsurancePolicy implements
     }
 
     /**
-     * Renews the policy coverage until a new end date.
+     * Renova a cobertura da apólice até uma nova data de vencimento.
      */
     public function renew(DateTimeImmutable $newEndDate, ?Money $newMonthlyPremium = null): void
     {

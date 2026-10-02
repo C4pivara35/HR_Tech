@@ -7,12 +7,12 @@ namespace HrTech\Patterns\TemplateMethod\Report;
 /**
  * Class PdfReportGenerator
  *
- * Generates formatted text-based PDF/print layout compliance reports with formal title headers,
- * tabular data columns with box-drawing borders, pagination markers, and total summary sections.
+ * Gera relatórios formais de conformidade em leiaute PDF/impressão com cabeçalho institucional,
+ * colunas tabulares alinhadas, marcadores de paginação e seções de totais consolidados.
  */
 class PdfReportGenerator extends ReportGeneratorTemplate
 {
-    private const int DEFAULT_PAGE_SIZE = 25;
+    private const DEFAULT_PAGE_SIZE = 25;
 
     /**
      * Stored record count for footer rendering.
@@ -20,7 +20,7 @@ class PdfReportGenerator extends ReportGeneratorTemplate
     private int $lastRecordCount = 0;
 
     /**
-     * Formats official PDF document header banner and column headers.
+     * Formata o banner de cabeçalho do documento oficial e as colunas.
      *
      * @param array<string, mixed> $options
      * @return array<string, mixed>
@@ -40,7 +40,7 @@ class PdfReportGenerator extends ReportGeneratorTemplate
     }
 
     /**
-     * Formats records into aligned tabular columns with pagination indicators.
+     * Formata registros em colunas tabulares alinhadas com indicadores de paginação.
      *
      * @param array<int, array<string, mixed>> $filteredData
      * @param array<string, mixed> $options
@@ -106,7 +106,7 @@ class PdfReportGenerator extends ReportGeneratorTemplate
     }
 
     /**
-     * Formats summary footer and compliance disclaimer.
+     * Formata o rodapé de resumo e o termo de responsabilidade e conformidade.
      *
      * @param array<string, mixed> $options
      * @return array<string, mixed>
@@ -152,7 +152,7 @@ class PdfReportGenerator extends ReportGeneratorTemplate
 
         $output[] = '';
         $output[] = str_repeat('-', $width);
-        $output[] = sprintf('SUMMARY TOTALS: %d Record(s) Processed', $f['total_records'] ?? 0);
+        $output[] = sprintf('RESUMO DE TOTAIS: %d Registro(s) Processado(s)', $f['total_records'] ?? 0);
         $output[] = 'Notice: ' . ($f['summary_notes'] ?? '');
         $output[] = 'Digital Certificate Seal: ' . ($f['hash_signature'] ?? '');
         $output[] = $divider;

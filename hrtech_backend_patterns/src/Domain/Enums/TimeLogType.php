@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace HrTech\Domain\Enums;
 
 /**
- * Punch/clock types for time tracking (Portaria 671/2021 MTE).
+ * Tipos de marcação de ponto eletrôúnico sob a Portaria 671/2021 MTE.
  */
 enum TimeLogType: string
 {
@@ -29,7 +29,7 @@ enum TimeLogType: string
     }
 
     /**
-     * Whether the punch represents beginning a period of work.
+     * Indica se a batida representa o início de um período de trabalho.
      */
     public function isEntry(): bool
     {
@@ -37,7 +37,7 @@ enum TimeLogType: string
     }
 
     /**
-     * Whether the punch represents ending a period of work.
+     * Indica se a batida representa o término de um período de trabalho.
      */
     public function isExit(): bool
     {

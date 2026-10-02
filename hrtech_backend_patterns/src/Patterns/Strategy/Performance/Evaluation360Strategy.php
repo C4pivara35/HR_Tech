@@ -39,11 +39,11 @@ class Evaluation360Strategy implements PerformanceStrategyInterface
     // -------------------------------------------------------
 
     /** Peso padrão da autoavaliação: 15% */
-    public const float DEFAULT_SELF_WEIGHT    = 0.15;
+    public const DEFAULT_SELF_WEIGHT    = 0.15;
     /** Peso padrão da avaliação de pares: 35% */
-    public const float DEFAULT_PEER_WEIGHT    = 0.35;
+    public const DEFAULT_PEER_WEIGHT    = 0.35;
     /** Peso padrão da avaliação do gestor: 50% */
-    public const float DEFAULT_MANAGER_WEIGHT = 0.50;
+    public const DEFAULT_MANAGER_WEIGHT = 0.50;
 
     /**
      * @param float $weightSelf    Peso da autoavaliação (padrão 0,15 = 15%)
@@ -58,7 +58,7 @@ class Evaluation360Strategy implements PerformanceStrategyInterface
     }
 
     /**
-     * MÉTODO DA INTERFACE (Strategy): Calcula o score 360° composto ponderado.
+     * MÉTODO DA INTERFACE (Strategy): Calcula o score 360º° composto ponderado.
      *
      * O array $metrics deve conter:
      *   'self'    => 4.2             → autoavaliação (escala Likert 1-5, 1-10 ou 0-100)
@@ -97,7 +97,7 @@ class Evaluation360Strategy implements PerformanceStrategyInterface
 
     /**
      * Calcula a média das notas dos pares avaliadores.
-     * Aceita: número único, ou array de notas individuais de cada par.
+     * Aceita: número úúnico, ou array de notas individuais de cada par.
      *
      * @param mixed $peers Nota única ou array de notas dos pares
      * @return float Score médio dos pares normalizado (0,0 a 100,0)

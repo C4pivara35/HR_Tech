@@ -174,7 +174,7 @@ class Role implements
     }
 
     /**
-     * Evaluates whether this role possesses a given permission.
+     * Avalia se este cargo possui uma determinada permissão.
      * Supports exact match, superuser wildcard '*', and prefix wildcards 'prefix.*'.
      */
     public function hasPermission(string $permission): bool
@@ -208,7 +208,7 @@ class Role implements
     }
 
     /**
-     * Determines whether this role has superior authority over another role.
+     * Determina se este cargo possui alçada hierárquica superior a outro cargo.
      */
     public function canManage(Role $otherRole): bool
     {

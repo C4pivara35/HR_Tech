@@ -10,7 +10,7 @@ use HrTech\Domain\Entities\EquipmentASO;
 /**
  * Interface EquipmentASORepositoryInterface
  *
- * Contract for relational persistence and expiration querying of NR-6 PPE and NR-7 ASO records.
+ * Contrato para persistência relacional e consulta de validade de registros de EPIs (NR-6) e ASO (NR-7).
  *
  * @package HrTech\Repositories\Contracts
  * @author Nicholas (Membro 5 — CRUD 9: Controle de EPIs e ASO)

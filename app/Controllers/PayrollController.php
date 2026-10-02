@@ -20,7 +20,7 @@ class PayrollController {
         $stmt->execute([$activeTenantId]);
         $employees = $stmt->fetchAll();
 
-        // Calculate simulation for each employee using Template Method & Strategy
+        // Calcula simulação para cada colaborador usando Template Method e Strategy
         $payrolls = [];
         $totalGross = 0;
         $totalNet   = 0;

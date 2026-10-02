@@ -7,7 +7,7 @@ namespace HrTech\Exceptions;
 use Throwable;
 
 /**
- * Thrown when domain or input data validation invariants are violated.
+ * Lançada quando invariantes de domínio ou validações de entrada são violadas.
  */
 class ValidationException extends HrTechException
 {
@@ -76,7 +76,7 @@ class ValidationException extends HrTechException
     }
 
     /**
-     * Returns the first error message, either for a specific field or overall.
+     * Retorna a primeira mensagem de erro, seja de um campo específico ou geral.
      */
     public function getFirstError(?string $field = null): ?string
     {

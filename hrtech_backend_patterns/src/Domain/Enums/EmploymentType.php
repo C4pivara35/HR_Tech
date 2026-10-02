@@ -38,7 +38,7 @@ enum EmploymentType: string
     }
 
     /**
-     * Whether employee is entitled to 1/3 constitutional vacation bonus.
+     * Indica se o colaborador tem direito constitucional ao 1/3 de abono de férias.
      */
     public function hasVacationBonus(): bool
     {

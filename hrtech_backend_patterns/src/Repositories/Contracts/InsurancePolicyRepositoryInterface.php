@@ -10,7 +10,7 @@ use HrTech\Domain\Enums\PolicyStatus;
 /**
  * Interface InsurancePolicyRepositoryInterface
  *
- * Contract for relational persistence and retrieval of FinCorp Broker insurance policies.
+ * Contrato para persistência relacional e recuperação de apólices de seguro do Portal do Corretor FinCorp.
  *
  * @package HrTech\Repositories\Contracts
  * @author Nicholas (Membro 5 — CRUD 10: Apólices FinCorp)

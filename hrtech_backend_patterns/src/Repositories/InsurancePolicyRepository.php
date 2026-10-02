@@ -16,7 +16,7 @@ use PDO;
 /**
  * Class InsurancePolicyRepository
  *
- * SQLite PDO implementation for persistence and management of FinCorp Broker insurance policies.
+ * Implementação SQLite PDO para persistência e gestão de apólices de seguro do Portal FinCorp.
  *
  * @package HrTech\Repositories
  * @author Nicholas (Membro 5 — CRUD 10: Apólices FinCorp)

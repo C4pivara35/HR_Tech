@@ -10,7 +10,7 @@ use HrTech\Domain\Entities\TimeLog;
 /**
  * Interface TimeLogRepositoryInterface
  *
- * Contract for append-only relational persistence and cryptographic chain verification
+ * Contrato para persistência relacional imutável (append-only) e verificação da cadeia criptográfica
  * of Portaria 671 electronic time logs.
  *
  * @package HrTech\Repositories\Contracts

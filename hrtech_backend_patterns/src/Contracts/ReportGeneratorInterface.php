@@ -7,7 +7,7 @@ namespace HrTech\Contracts;
 /**
  * Interface ReportGeneratorInterface
  *
- * Contract for generating standardized HR and compliance reports in various formats.
+ * Contrato para geração de relatórios de RH e conformidade em múltiplos formatos.
  */
 interface ReportGeneratorInterface
 {

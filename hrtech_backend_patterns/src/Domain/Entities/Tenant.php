@@ -20,7 +20,7 @@ use JsonSerializable;
  * Class Tenant
  *
  * Represents a multi-tenant client enterprise within HRTech Core.
- * Acts as the top-level isolation container for all organizational domain data.
+ * Atua como container mestre de isolamento para todos os dados organizacionais do domínio.
  */
 class Tenant implements
     IdentifiableInterface,
@@ -42,7 +42,7 @@ class Tenant implements
     private array $moduleLicenses;
 
     /**
-     * @param string $id Unique tenant identifier.
+     * @param string $id Identificador único do tenant.
      * @param Cnpj|string $cnpj CNPJ Value Object or digits.
      * @param string $corporateName Razão Social.
      * @param string $tradingName Nome Fantasia.
@@ -92,7 +92,7 @@ class Tenant implements
     }
 
     /**
-     * Named factory for creating a new active tenant.
+     * Fábrica nomeada para criar uma nova empresa ativa.
      *
      * @param string $id
      * @param Cnpj|string $cnpj
@@ -160,7 +160,7 @@ class Tenant implements
     }
 
     /**
-     * Licenses a new feature module for this tenant.
+     * Licencia um novo módulo de funcionalidade para esta empresa.
      */
     public function addModule(string $module): void
     {
@@ -201,7 +201,7 @@ class Tenant implements
     }
 
     /**
-     * Activates the tenant account.
+     * Ativa a conta da empresa contratante.
      */
     public function activate(): void
     {
@@ -210,7 +210,7 @@ class Tenant implements
     }
 
     /**
-     * Deactivates the tenant account, suspending access for all associated users.
+     * Desativa a conta da empresa, suspendendo o acesso de todos os usuários vinculados.
      */
     public function deactivate(): void
     {

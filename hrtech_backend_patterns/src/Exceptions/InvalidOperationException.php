@@ -7,7 +7,7 @@ namespace HrTech\Exceptions;
 use Throwable;
 
 /**
- * Thrown when an illegal business operation or invalid lifecycle state transition is attempted.
+ * Lançada quando uma operação de negócio ilegal ou transição inválida de ciclo de vida é tentada.
  */
 class InvalidOperationException extends HrTechException
 {

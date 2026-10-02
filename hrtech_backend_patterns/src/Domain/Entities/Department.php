@@ -19,7 +19,7 @@ use JsonSerializable;
 /**
  * Class Department
  *
- * Represents an organizational department, cost center, and managerial hierarchy.
+ * Representa um departamento organizacional, centro de custo e hierarquia de gestão.
  */
 class Department implements
     IdentifiableInterface,
@@ -152,7 +152,7 @@ class Department implements
     }
 
     /**
-     * Assigns a manager to this department.
+     * Atribui um gestor responsável a este departamento.
      */
     public function assignManager(string $employeeId): void
     {
@@ -166,7 +166,7 @@ class Department implements
     }
 
     /**
-     * Removes the assigned department manager.
+     * Remove o gestor vinculado ao departamento.
      */
     public function removeManager(): void
     {

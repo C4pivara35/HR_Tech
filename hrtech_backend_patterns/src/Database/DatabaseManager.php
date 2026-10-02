@@ -13,9 +13,9 @@ use Throwable;
 /**
  * Class DatabaseManager
  *
- * High-performance SQLite PDO connection manager and schema orchestrator.
- * Implements Singleton pattern with full support for in-memory and persistent storage,
- * atomic transactions, foreign keys enforcement, and migration execution.
+ * Gerenciador de conexão SQLite PDO de alto desempenho e orquestrador de esquema.
+ * Implementa o padrão Singleton com suporte completo a banco em memória e armazenamento persistente,
+ * transações atômicas ACID, aplicação de chaves estrangeiras e execução de migrações.
  *
  * @author Fernando Lopes Duarte (Relational Database Layer Lead)
  */
@@ -26,7 +26,7 @@ class DatabaseManager implements SingletonInterface
     private string $databasePath;
 
     /**
-     * Protected constructor to prevent direct instantiation.
+     * Construtor protegido para evitar instanciação direta (Padrão Singleton).
      */
     protected function __construct(string $databasePath)
     {
@@ -35,24 +35,24 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Prevent cloning.
+     * Impede a clonagem da instância Singleton.
      */
     protected function __clone()
     {
     }
 
     /**
-     * Prevent unserialization.
+     * Impede a desserialização da instância Singleton.
      */
     public function __wakeup(): void
     {
-        throw new RuntimeException('Cannot unserialize singleton DatabaseManager instance.');
+        throw new RuntimeException('Não é permitido desserializar a instância Singleton do DatabaseManager.');
     }
 
     /**
-     * Returns or creates the singleton DatabaseManager instance.
+     * Retorna ou cria a instância Singleton do DatabaseManager.
      *
-     * @param string|null $databasePath Optional path to SQLite file or ':memory:'
+     * @param string|null $databasePath Caminho opcional para o arquivo SQLite ou ':memory:'
      * @return static
      */
     public static function getInstance(?string $databasePath = null): static
@@ -61,7 +61,7 @@ class DatabaseManager implements SingletonInterface
             $defaultPath = $databasePath ?? dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'database.sqlite';
             self::$instance = new self($defaultPath);
         } elseif ($databasePath !== null && self::$instance->getDatabasePath() !== $databasePath) {
-            // Re-initialize if explicit different path requested (e.g. switching to :memory: for tests)
+            // Reinicializa caso um caminho diferente seja requisitado (ex.: alternando para :memory: nos testes)
             self::$instance = new self($databasePath);
         }
 
@@ -70,7 +70,7 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Resets the singleton instance (useful for clean testing isolation).
+     * Reseta a instância Singleton (útil para isolamento nos testes).
      */
     public static function resetInstance(): void
     {
@@ -78,7 +78,7 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Creates and configures the PDO SQLite connection.
+     * Cria e configura a conexão PDO SQLite com PRAGMAS otimizados.
      */
     private function createPdoConnection(string $path): PDO
     {
@@ -89,7 +89,7 @@ class DatabaseManager implements SingletonInterface
             PDO::ATTR_EMULATE_PREPARES => false,
         ]);
 
-        // Enforce SQLite Foreign Keys and performance settings
+        // Aplica chaves estrangeiras rígidas no SQLite e configurações de desempenho (WAL)
         $pdo->exec('PRAGMA foreign_keys = ON;');
         if ($path !== ':memory:') {
             $pdo->exec('PRAGMA journal_mode = WAL;');
@@ -100,7 +100,7 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Returns the underlying PDO connection.
+     * Retorna a conexão PDO subjacente.
      */
     public function getConnection(): PDO
     {
@@ -108,7 +108,7 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Returns the active database path.
+     * Retorna o caminho do banco de dados ativo.
      */
     public function getDatabasePath(): string
     {
@@ -127,7 +127,7 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Commits the active transaction.
+     * Efetua o commit da transação ativa.
      */
     public function commit(): bool
     {
@@ -138,7 +138,7 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Rolls back the active transaction.
+     * Efetua o rollback da transação ativa.
      */
     public function rollBack(): bool
     {
@@ -149,7 +149,7 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Checks if a transaction is currently active.
+     * Verifica se há uma transação ativa no momento.
      */
     public function inTransaction(): bool
     {
@@ -158,7 +158,7 @@ class DatabaseManager implements SingletonInterface
 
     /**
      * Executes a callback within a managed transaction.
-     * Automatically commits on success and rolls back on exception.
+     * Efetua commit automático em caso de sucesso e rollback caso ocorra exceção.
      *
      * @template T
      * @param callable(PDO): T $callback
@@ -190,7 +190,7 @@ class DatabaseManager implements SingletonInterface
     }
 
     /**
-     * Creates all required relational tables and indexes if they do not already exist.
+     * Cria todas as tabelas relacionais e índices necessários caso ainda não existam.
      */
     public function createTables(): void
     {
@@ -313,7 +313,7 @@ class DatabaseManager implements SingletonInterface
                 FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
             );",
 
-            // 8. Vacation Requests Table (CLT Art. 129-145)
+            // 8. Tabela de Solicitações de Férias (Artigos 129 a 145 da CLT)
             "CREATE TABLE IF NOT EXISTS vacation_requests (
                 id TEXT PRIMARY KEY NOT NULL,
                 tenant_id TEXT NOT NULL,
@@ -346,7 +346,7 @@ class DatabaseManager implements SingletonInterface
                 FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE
             );",
 
-            // 10. Equipment and ASO Table (NR-6 and NR-7)
+            // 10. Tabela de EPIs e Atestados Médicos ASO (NR-6 e NR-7)
             "CREATE TABLE IF NOT EXISTS equipment_aso (
                 id TEXT PRIMARY KEY NOT NULL,
                 tenant_id TEXT NOT NULL,
@@ -367,7 +367,7 @@ class DatabaseManager implements SingletonInterface
                 FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
             );",
 
-            // 11. Insurance Policies Table (FinCorp Broker Portal)
+            // 11. Tabela de Apólices de Seguros (Portal do Corretor FinCorp)
             "CREATE TABLE IF NOT EXISTS insurance_policies (
                 id TEXT PRIMARY KEY NOT NULL,
                 tenant_id TEXT NOT NULL,
@@ -405,7 +405,7 @@ class DatabaseManager implements SingletonInterface
                 FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE
             );",
 
-            // Indexes for Multi-Tenant performance and query isolation
+            // Índices de alta performance para isolamento multi-tenant e velocidade de consulta
             "CREATE INDEX IF NOT EXISTS idx_users_tenant ON users (tenant_id, username);",
             "CREATE INDEX IF NOT EXISTS idx_employees_tenant_cpf ON employees (tenant_id, cpf);",
             "CREATE INDEX IF NOT EXISTS idx_time_logs_tenant_emp ON time_logs (tenant_id, employee_id, timestamp);",

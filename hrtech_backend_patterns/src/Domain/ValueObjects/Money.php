@@ -11,7 +11,7 @@ use Stringable;
 
 /**
  * Money Value Object.
- * Immutable fixed-point integer-cents representation for monetary arithmetic.
+ * Representação imutável de centavos inteiros para aritmética monetária sem erros de arredondamento.
  */
 readonly class Money implements Stringable, JsonSerializable
 {
@@ -19,7 +19,7 @@ readonly class Money implements Stringable, JsonSerializable
     public string $currency;
 
     /**
-     * @throws ValidationException if currency format is invalid
+     * @throws ValidationException se currency format is invalid
      */
     public function __construct(int $cents, string $currency = 'BRL')
     {
@@ -79,7 +79,7 @@ readonly class Money implements Stringable, JsonSerializable
     }
 
     /**
-     * Asserts that both Money instances share the exact same currency code.
+     * Garante que ambas as instâncias de Money compartilhem o mesmo código de moeda.
      *
      * @throws InvalidOperationException
      */
@@ -126,7 +126,7 @@ readonly class Money implements Stringable, JsonSerializable
     }
 
     /**
-     * Calculates percentage of this amount (e.g. 10.0 for 10%).
+     * Calcula o percentual deste valor monetário (ex.: 10.0 para 10%).
      */
     public function percentage(float $percentage, int $roundingMode = PHP_ROUND_HALF_UP): self
     {
@@ -139,7 +139,7 @@ readonly class Money implements Stringable, JsonSerializable
      *
      * @param int[] $ratios
      * @return self[]
-     * @throws InvalidOperationException if ratio sum is <= 0
+     * @throws InvalidOperationException se ratio sum is <= 0
      */
     public function allocate(array $ratios): array
     {

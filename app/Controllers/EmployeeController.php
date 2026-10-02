@@ -28,7 +28,7 @@ class EmployeeController {
         $stmt->execute([$activeTenantId]);
         $employees = $stmt->fetchAll();
 
-        // Fetch departments and roles for the add modal
+        // Busca departamentos e cargos para o modal de cadastro
         $deptStmt = $this->pdo->prepare("SELECT * FROM departments WHERE tenant_id = ? AND is_active = 1");
         $deptStmt->execute([$activeTenantId]);
         $departments = $deptStmt->fetchAll();

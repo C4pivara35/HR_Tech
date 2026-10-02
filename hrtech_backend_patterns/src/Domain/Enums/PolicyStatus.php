@@ -41,7 +41,7 @@ enum PolicyStatus: string
     }
 
     /**
-     * Whether the policy provides active insurance coverage for claims.
+     * Indica se a apólice oferece cobertura securitária ativa para sinistros.
      */
     public function canCoverClaim(): bool
     {

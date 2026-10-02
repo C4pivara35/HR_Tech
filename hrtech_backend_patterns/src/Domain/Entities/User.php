@@ -20,7 +20,7 @@ use JsonSerializable;
 /**
  * Class User
  *
- * Authentication principal and RBAC identity within a tenant.
+ * Entidade principal de autenticação e controle de acesso RBAC dentro de uma empresa.
  */
 class User implements
     IdentifiableInterface,
@@ -166,7 +166,7 @@ class User implements
     }
 
     /**
-     * Authenticates user: requires active status and valid password.
+     * Autentica o usuário: exige status ativo e senha válida.
      */
     public function authenticate(string $plainPassword): bool
     {
@@ -258,7 +258,7 @@ class User implements
     }
 
     /**
-     * Checks if this user's role has authority to manage another user.
+     * Verifica se o perfil deste usuário possui alçada para gerenciar outro usuário.
      */
     public function canManage(User $otherUser): bool
     {
@@ -266,7 +266,7 @@ class User implements
     }
 
     /**
-     * Checks if this user has HR or administrative role.
+     * Verifica se este usuário possui perfil administrativo ou de RH.
      */
     public function isHr(): bool
     {

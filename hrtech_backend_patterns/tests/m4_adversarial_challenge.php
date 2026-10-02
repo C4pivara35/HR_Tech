@@ -104,11 +104,11 @@ final class AdversarialChallengeRunner
     public function summary(): int
     {
         echo "\n" . str_repeat('=', 70) . "\n";
-        echo "\033[1;37mADVERSARIAL CHALLENGE EXECUTION SUMMARY\033[0m\n";
+        echo "\033[1;37mADVERSARIAL CHALLENGE EXECUTION RESUMO\033[0m\n";
         echo str_repeat('=', 70) . "\n";
         echo "Total Stress Tests : {$this->totalTests}\n";
-        echo "Passed             : \033[32m{$this->passedTests}\033[0m\n";
-        echo "Failed             : " . ($this->failedTests > 0 ? "\033[31m{$this->failedTests}\033[0m" : "0") . "\n";
+        echo "Aprovadas        : \033[32m{$this->passedTests}\033[0m\n";
+        echo "Falhas           : " . ($this->failedTests > 0 ? "\033[31m{$this->failedTests}\033[0m" : "0") . "\n";
 
         if ($this->failedTests > 0) {
             echo "\n\033[1;31mADVERSARIAL FAILURES SURFACED:\033[0m\n";
@@ -161,7 +161,7 @@ $p4 = $timeServ->recordPunch('p4', 't-crypto', 'emp-1', $now->modify('+9 hours')
 
 $c->assert($timeServ->verifyTamperProofChain('t-crypto', 'emp-1'), 'Valid 4-punch chain initially verifies as true');
 
-// Attack 1A: Alter timestamp in punch #2 directly in database
+// Ataque 1A: Altera o timestamp da batida #2 diretamente no banco de dados
 $pdo->exec("UPDATE time_logs SET timestamp = '2026-04-01T12:05:00+00:00' WHERE id = 'p2'");
 $tamperDetected1A = false;
 try {
@@ -219,7 +219,7 @@ $vServ = new VacationService($vRepo, $eRepo);
 $adjRepo = new TimeAdjustmentRepository($db);
 $adjServ = new TimeAdjustmentService($adjRepo);
 
-// Seed Alpha Employee & User
+// Insere Colaborador e Usuário da empresa Alpha
 $empAlpha = $eServ->hireEmployee(
     'emp-alpha-1', 't-alpha', '111.222.333-96', 'Alice Alpha', 'alice@alpha.com',
     '11911111111', '1990-01-01', '2022-01-01', 'dept-a', 'role-a', 8000, 'CLT'
@@ -247,7 +247,7 @@ try {
 }
 $c->assert(!$pwdChanged, 'Tenant Beta cannot alter Tenant Alpha user password');
 
-// Attack 2D: Alpha employee requests vacation; Beta attempts to approve it
+// Ataque 2D: Colaborador da Alpha solicita férias; Beta tenta aprovar indevidamente
 $vacAlpha = $vServ->requestVacation(
     'vac-alpha-1', 't-alpha', 'emp-alpha-1',
     (new DateTimeImmutable())->modify('+30 days'),
@@ -277,7 +277,7 @@ try {
 }
 $c->assert(!$betaApprovedAdj, 'Tenant Beta cannot approve Tenant Alpha time adjustment request');
 
-// Attack 2F: Cross-Tenant Same CPF Re-use (CPF should be allowed in Beta if it exists in Alpha)
+// Ataque 2F: Reuso de mesmo CPF entre tenants diferentes (permitido em Beta se existe em Alpha)
 $empBetaSameCpf = null;
 try {
     $empBetaSameCpf = $eServ->hireEmployee(
@@ -348,7 +348,7 @@ $c->assert(
 $ftm->removeTenantFeature('t-tech-override-2', 'bank_of_hours');
 
 // 4C: Overtime Strategy Resolution Under Override
-// If Tech tenant overrides bank_of_hours to false, resolveOvertimeStrategy should return Standard50Strategy
+// Se empresa Tech sobrepõe bank_of_hours para false, resolveOvertimeStrategy deve retornar Standard50Strategy
 $tTechEntity = new Tenant(
     id: 't-tech-override-3',
     cnpj: '01.200.000/0001-06',
@@ -396,7 +396,7 @@ $c->assert(!$checkCaYesterday['allowed'] && $checkCaYesterday['code'] === 'PPE_C
 // ==========================================================================
 $c->section('Business Service Invariants & Failure Modes');
 
-// 5A: Insufficient vacation days throws ValidationException
+// 5A: Saldo insuficiente de dias de férias lança ValidationException
 $vacFailed = false;
 try {
     // empAlpha has 30 days. Request 35 days.
@@ -420,7 +420,7 @@ try {
 }
 $c->assert($cnpjFailed, 'Registering tenant with already registered CNPJ strictly throws ValidationException');
 
-// 5C: Non-existent Tenant in UserService throws TenantNotFoundException or returns null
+// 5C: Empresa inexistente no UserService lança TenantNotFoundException ou retorna null
 $c->assert($tServ->getTenantByCnpj('01.300.000/0001-70') === null, 'Querying non-existent valid CNPJ returns null safely');
 $notFoundThrew = false;
 try {

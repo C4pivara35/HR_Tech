@@ -41,7 +41,7 @@ class TransportationVoucherStrategy implements BenefitDiscountStrategyInterface
     // -------------------------------------------------------
 
     /** Percentual máximo de desconto do vale transporte: 6% do salário base mensal (Lei 7.418/85) */
-    public const float STATUTORY_SALARY_CAP_PERCENTAGE = 0.06;
+    public const STATUTORY_SALARY_CAP_PERCENTAGE = 0.06;
 
     /**
      * MÉTODO DA INTERFACE (Strategy): Calcula o desconto do Vale Transporte.

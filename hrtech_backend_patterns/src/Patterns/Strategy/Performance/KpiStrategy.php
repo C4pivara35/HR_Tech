@@ -101,7 +101,7 @@ class KpiStrategy implements PerformanceStrategyInterface
     }
 
     /**
-     * Avalia o atingimento de um único KPI (retorna ratio de 0,0 a maxCap).
+     * Avalia o atingimento de um úúnico KPI (retorna ratio de 0,0 a maxCap).
      *
      * Para indicadores onde "menor é melhor" (ex: taxa de defeitos):
      *   - Se ultrapassou o gatilho máximo: score zero (falhou)

@@ -7,7 +7,7 @@ namespace HrTech\Exceptions;
 use Throwable;
 
 /**
- * Thrown when a tenant cannot be located by ID, CNPJ, or domain.
+ * Lançada quando uma empresa (tenant) não é localizada por ID, CNPJ ou domínio.
  */
 class TenantNotFoundException extends HrTechException
 {

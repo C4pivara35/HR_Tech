@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace HrTech\Domain\Enums;
 
 /**
- * Status of employee vacation scheduling and lifecycle (Art. 129 a 138 CLT).
+ * Status do fluxo de solicitação de férias do colaborador (Art. 129 a 138 da CLT).
  */
 enum VacationStatus: string
 {
@@ -46,7 +46,7 @@ enum VacationStatus: string
     }
 
     /**
-     * Validates legal workflow transitions for vacation requests.
+     * Valida as transições legais de fluxo de trabalho para solicitações de férias.
      */
     public function canTransitionTo(VacationStatus $next): bool
     {

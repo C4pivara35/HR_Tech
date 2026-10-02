@@ -10,7 +10,7 @@ use HrTech\Domain\Enums\BenefitType;
 /**
  * Interface BenefitRepositoryInterface
  *
- * Contract for relational persistence and retrieval of corporate benefits (VR, VA, VT, Health, etc.).
+ * Contrato para persistência relacional e recuperação de benefícios corporativos (VR, VA, VT, Saúde, etc.).
  *
  * @package HrTech\Repositories\Contracts
  * @author Valentin (Membro 4 — CRUD 8: Gestão de Benefícios)

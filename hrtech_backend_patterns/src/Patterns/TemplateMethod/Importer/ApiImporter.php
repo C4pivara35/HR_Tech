@@ -14,8 +14,8 @@ use HrTech\Exceptions\ValidationException;
 /**
  * Class ApiImporter
  *
- * Importer for API ingest endpoints receiving structured electronic punch payloads.
- * Enforces mandatory Bearer token or API key authentication checks before ingesting records.
+ * Importador para endpoints de API que recebem payloads de marcações de ponto eletrôúnico.
+ * Exige e valida autenticação via Bearer token ou chave de API antes de processar os registros.
  */
 class ApiImporter extends TimeLogImporterTemplate
 {
@@ -42,7 +42,7 @@ class ApiImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Opens and authenticates the incoming API payload.
+     * Abre e autentica a carga de dados (payload) recebida via API.
      *
      * @param string $source JSON-encoded payload containing auth credentials and punch data.
      * @return array<string, mixed>
@@ -89,7 +89,7 @@ class ApiImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Extracts Bearer token from header array, auth object, or root payload.
+     * Extrai o Bearer token do cabeçalho de autenticação, objeto auth ou payload raiz.
      *
      * @param array<string, mixed> $payload
      * @return string|null
@@ -148,7 +148,7 @@ class ApiImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Parses biometric punch records from authenticated API payload.
+     * Processa registros de ponto biométrico a partir do payload autenticado da API.
      *
      * @param mixed $handle
      * @return array<int, array<string, mixed>>
@@ -206,7 +206,7 @@ class ApiImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Converts imported summary records into domain TimeLog entity instances.
+     * Converte registros importados em instâncias de entidades TimeLog de domínio.
      *
      * @param array<string, mixed> $importSummary
      * @param string $tenantId

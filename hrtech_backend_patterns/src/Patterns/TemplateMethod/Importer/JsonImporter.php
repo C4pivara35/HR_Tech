@@ -13,8 +13,8 @@ use HrTech\Exceptions\ValidationException;
 /**
  * Class JsonImporter
  *
- * Importer for JSON-formatted biometric punch payloads and API dump files.
- * Validates payload schema, normalizes field aliases, and converts to domain TimeLog structures.
+ * Importador para payloads JSON de marcações biométricas e arquivos de dump de API.
+ * Valida o esquema do payload, normaliza aliases de campos e converte para entidades TimeLog.
  */
 class JsonImporter extends TimeLogImporterTemplate
 {
@@ -49,7 +49,7 @@ class JsonImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Extracts and normalizes punch records from decoded JSON payload.
+     * Extrai e normaliza registros de ponto a partir do payload JSON decodificado.
      *
      * @param mixed $handle
      * @return array<int, array<string, mixed>>
@@ -107,7 +107,7 @@ class JsonImporter extends TimeLogImporterTemplate
     }
 
     /**
-     * Converts imported summary records into domain TimeLog entity instances.
+     * Converte registros importados em instâncias de entidades TimeLog de domínio.
      *
      * @param array<string, mixed> $importSummary
      * @param string $tenantId

@@ -41,7 +41,7 @@ class InsuranceController {
         $cov   = (float)($_POST['coverage_amount'] ?? 1000000);
         $prem  = (float)($_POST['monthly_premium'] ?? 2500);
 
-        // Fetch an employee ID for the policy
+        // Busca o ID do colaborador para a apólice
         $empStmt = $this->pdo->prepare("SELECT id FROM employees WHERE tenant_id = ? LIMIT 1");
         $empStmt->execute([$activeTenantId]);
         $empId = $empStmt->fetchColumn() ?: 'emp-lucas';

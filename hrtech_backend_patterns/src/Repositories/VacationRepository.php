@@ -15,7 +15,7 @@ use PDO;
 /**
  * Class VacationRepository
  *
- * SQLite PDO implementation for persistence and state updates of VacationRequest entities.
+ * Implementação SQLite PDO para persistência e atualização de status de solicitações de férias.
  *
  * @package HrTech\Repositories
  * @author Valentin (Membro 4 — CRUD 7: Gestão de Férias)

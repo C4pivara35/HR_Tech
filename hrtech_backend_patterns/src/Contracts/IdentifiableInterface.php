@@ -12,7 +12,7 @@ namespace HrTech\Contracts;
 interface IdentifiableInterface
 {
     /**
-     * Returns the unique string identifier for the entity (e.g. UUID, ULID, or string ID).
+     * Retorna o identificador úúnico da entidade (ex.: UUID, ULID ou ID alfanumérico).
      *
      * @return string
      */

@@ -16,7 +16,7 @@ use PDO;
 /**
  * Class EmployeeRepository
  *
- * SQLite PDO implementation for persistence and retrieval of Employee entities.
+ * Implementação SQLite PDO para persistência e recuperação de Colaboradores.
  *
  * @package HrTech\Repositories
  * @author Andryus (Membro 2 — CRUD 3: Cadastro de Colaboradores)

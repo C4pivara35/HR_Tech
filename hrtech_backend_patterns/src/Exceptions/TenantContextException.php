@@ -7,7 +7,7 @@ namespace HrTech\Exceptions;
 use Throwable;
 
 /**
- * Thrown when multi-tenant boundaries or isolation contexts are violated.
+ * Lançada quando limites de isolamento multi-tenant ou contextos de empresa são violados.
  */
 class TenantContextException extends HrTechException
 {

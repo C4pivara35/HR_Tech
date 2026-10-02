@@ -7,22 +7,22 @@ namespace HrTech\Contracts;
 /**
  * Interface OvertimeStrategyInterface
  *
- * Defines the contract for overtime compensation calculation strategies.
- * Supports standard CLT surcharges (50%, 100%) and compensatory bank hours.
+ * Define o contrato para estratégias de cálculo de compensação de horas extras.
+ * Suporta adicionais da CLT (50%, 100%) e compensação em banco de horas.
  */
 interface OvertimeStrategyInterface
 {
     /**
-     * Calculates the total overtime monetary compensation.
+     * Calcula o valor monetário total da remuneração de horas extras.
      *
      * @param float $hourlyRate The regular hourly wage of the employee.
-     * @param float $overtimeHours Number of overtime hours worked.
+     * @param float $overtimeHours Quantidade de horas extras trabalhadas.
      * @return float The calculated monetary overtime compensation (in BRL).
      */
     public function calculateOvertime(float $hourlyRate, float $overtimeHours): float;
 
     /**
-     * Returns a human-readable legal and operational description of the strategy.
+     * Retorna a descrição legal e operacional legível desta estratégia.
      *
      * @return string Description of the calculation rule and legal basis.
      */

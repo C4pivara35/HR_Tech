@@ -15,7 +15,7 @@ use HrTech\Repositories\Contracts\EquipmentASORepositoryInterface;
  * Class EquipmentASOService
  *
  * Domain service managing occupational safety gear (NR-6 CA validation),
- * medical health certificates (NR-7 ASO), expiration alerts, and equipment returns.
+ * atestados médicos de saúde ocupacional (ASO NR-7), alertas de vencimento e devolução de equipamentos.
  *
  * @package HrTech\Services
  * @author Nicholas (Membro 5 — CRUD 9: Controle de EPIs e ASO)
@@ -28,7 +28,7 @@ class EquipmentASOService
     }
 
     /**
-     * Delivers PPE equipment to an employee with NR-6 CA certification details.
+     * Registra a entrega de EPI ao colaborador com os dados do Certificado de Aprovação (NR-6).
      *
      * @throws ValidationException
      */

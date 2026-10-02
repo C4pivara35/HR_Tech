@@ -34,7 +34,7 @@ class Sunday100Strategy implements OvertimeStrategyInterface
     // Diferente do Standard50Strategy (1,5×) e BankHoursStrategy (0×).
     // -------------------------------------------------------
     /** Multiplicador de hora extra em domingo/feriado: 100% + 100% adicional = 2,0× */
-    public const float SURCHARGE_MULTIPLIER = 2.0;
+    public const SURCHARGE_MULTIPLIER = 2.0;
 
     /**
      * MÉTODO DA INTERFACE (Strategy): Calcula o valor da hora extra em domingo/feriado.

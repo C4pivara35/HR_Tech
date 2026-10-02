@@ -20,7 +20,7 @@ use JsonSerializable;
  * Class EquipmentASO
  *
  * Manages personal protective equipment (EPI - NR-6) and occupational health medical
- * examinations (ASO / PCMSO - NR-7) with CA number and medical certificate expiration tracking.
+ * exames clínicos (ASO / PCMSO sob NR-7) com Certificado de Aprovação (CA) e controle de vencimento.
  */
 class EquipmentASO implements
     IdentifiableInterface,
@@ -75,7 +75,7 @@ class EquipmentASO implements
     }
 
     /**
-     * Checks whether the PPE Certificado de Aprovação (CA) is expired relative to reference date.
+     * Verifica se o Certificado de Aprovação (CA) do EPI está vencido em relação à data de referência.
      */
     public function isCaExpired(?DateTimeImmutable $referenceDate = null): bool
     {
@@ -90,7 +90,7 @@ class EquipmentASO implements
     }
 
     /**
-     * Checks whether the ASO medical certificate is expired relative to reference date.
+     * Verifica se o Atestado de Saúde Ocupacional (ASO) está vencido em relação à data de referência.
      */
     public function isExamExpired(?DateTimeImmutable $referenceDate = null): bool
     {
@@ -139,7 +139,7 @@ class EquipmentASO implements
     }
 
     /**
-     * Records the return or decommissioning of the equipment.
+     * Registra a devolução ou desativação do equipamento de proteção.
      *
      * @param DateTimeImmutable $returnDate
      * @throws ValidationException
@@ -166,7 +166,7 @@ class EquipmentASO implements
     }
 
     /**
-     * Checks if equipment is currently in the custody of the employee (delivered and not returned).
+     * Verifica se o equipamento está atualmente sob a posse do colaborador (entregue e não devolvido).
      */
     public function isEquipmentActive(): bool
     {
@@ -182,7 +182,7 @@ class EquipmentASO implements
     }
 
     /**
-     * Determines whether employee is medically certified fit and within exam validity.
+     * Determina se o colaborador está clinicamente apto e dentro do prazo de validade do exame médico.
      */
     public function isFitForWork(?DateTimeImmutable $referenceDate = null): bool
     {

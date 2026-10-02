@@ -12,9 +12,9 @@ namespace HrTech\Contracts;
 interface JsonableInterface
 {
     /**
-     * Converts the object to its JSON representation.
+     * Converte o objeto para sua representação JSON.
      *
-     * @param int $options Bitmask of JSON_* flags (defaults to unescaped slashes and unicode).
+     * @param int $options Bitmask of JSON_* flags (defaults to unescaped slashes and uúnicode).
      * @return string
      */
     public function toJson(int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE): string;

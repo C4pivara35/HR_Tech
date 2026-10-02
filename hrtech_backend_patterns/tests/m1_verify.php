@@ -104,22 +104,22 @@ final class M1TestRunner
     public function printSummary(): int
     {
         echo "\n" . str_repeat('=', 65) . "\n";
-        echo "\033[1;37mMILESTONE 1 VERIFICATION SUMMARY\033[0m\n";
+        echo "\033[1;37mMILESTONE 1 VERIFICATION RESUMO\033[0m\n";
         echo str_repeat('=', 65) . "\n";
-        echo "Total Assertions : {$this->totalAssertions}\n";
-        echo "Passed           : \033[32m{$this->passedAssertions}\033[0m\n";
-        echo "Failed           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
+        echo "Total de Asserções : {$this->totalAssertions}\n";
+        echo "Aprovadas        : \033[32m{$this->passedAssertions}\033[0m\n";
+        echo "Falhas           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
 
         if ($this->failedAssertions > 0) {
             echo "\n\033[1;31mFAILED TESTS:\033[0m\n";
             foreach ($this->failures as $failure) {
                 echo "  - {$failure}\n";
             }
-            echo "\n\033[1;31mRESULT: VERIFICATION FAILED\033[0m\n";
+            echo "\n\033[1;31mRESULTADO: VERIFICAÇÃO FALHOU\033[0m\n";
             return 1;
         }
 
-        echo "\n\033[1;32mRESULT: ALL MILESTONE 1 VERIFICATIONS PASSED (100%)\033[0m\n";
+        echo "\n\033[1;32mRESULTADO: TODAS AS VERIFICAÇÕES DO MILESTONE 1 FORAM APROVADAS (100%)\033[0m\n";
         return 0;
     }
 }

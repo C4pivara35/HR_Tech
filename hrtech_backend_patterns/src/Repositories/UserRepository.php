@@ -14,7 +14,7 @@ use PDO;
 /**
  * Class UserRepository
  *
- * SQLite PDO implementation for persistence and retrieval of User entities with multi-tenant scoping.
+ * Implementação SQLite PDO para persistência e recuperação de Usuários com escopo multi-tenant.
  *
  * @package HrTech\Repositories
  * @author Fernando Lopes Duarte (Membro 1 — CRUD 2: Gestão de Usuários e RBAC)

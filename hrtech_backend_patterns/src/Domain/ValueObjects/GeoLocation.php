@@ -10,11 +10,11 @@ use Stringable;
 
 /**
  * GeoLocation Value Object.
- * Immutable GPS coordinates with spherical Haversine distance calculations for geofencing.
+ * Coordenadas GPS imutáveis com cálculo esférico de distância Haversine para geofencing.
  */
 readonly class GeoLocation implements Stringable, JsonSerializable
 {
-    private const float EARTH_RADIUS_METERS = 6371000.0;
+    private const EARTH_RADIUS_METERS = 6371000.0;
 
     public float $latitude;
     public float $longitude;
@@ -24,7 +24,7 @@ readonly class GeoLocation implements Stringable, JsonSerializable
      * @param float $latitude Range: -90.0 to +90.0 degrees
      * @param float $longitude Range: -180.0 to +180.0 degrees
      * @param float|null $accuracy Accuracy radius in meters (optional, >= 0.0)
-     * @throws ValidationException if coordinates are out of bounds
+     * @throws ValidationException se coordinates are out of bounds
      */
     public function __construct(float $latitude, float $longitude, ?float $accuracy = null)
     {
@@ -70,7 +70,7 @@ readonly class GeoLocation implements Stringable, JsonSerializable
     }
 
     /**
-     * Calculates great-circle distance to another point in meters using the Haversine formula.
+     * Calcula a distância ortodrômica até outro ponto em metros utilizando a fórmula de Haversine.
      */
     public function distanceTo(GeoLocation $target): float
     {
@@ -101,7 +101,7 @@ readonly class GeoLocation implements Stringable, JsonSerializable
     }
 
     /**
-     * Checks if this point lies within a geofence radius centered at $center.
+     * Verifica se este ponto está dentro do raio de tolerância geográfica centrado em \$center.
      */
     public function isWithinRadius(GeoLocation $center, float $radiusInMeters): bool
     {

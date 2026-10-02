@@ -10,22 +10,22 @@ use DateTimeZone;
 /**
  * Class JsonReportGenerator
  *
- * Generates structured machine-readable JSON analytics and compliance reports
- * featuring execution metadata, ISO-8601 timestamps, aggregated summary analytics, and records.
+ * Gera relatórios analíticos e de conformidade em JSON estruturado para integrações
+ * contendo metadados de execução, carimbos ISO-8601, análises estatísticas agregadas e registros.
  */
 class JsonReportGenerator extends ReportGeneratorTemplate
 {
     private int $recordCount = 0;
 
     /**
-     * Stored body records for aggregation in footer.
+     * Registros armazenados para agregação de totais no rodapé do relatório.
      *
      * @var array<int, array<string, mixed>>
      */
     private array $currentRecords = [];
 
     /**
-     * Formats report metadata including title, execution timestamp, and filter options.
+     * Formata os metadados do relatório incluindo título, carimbo de execução e filtros aplicados.
      *
      * @param array<string, mixed> $options
      * @return array<string, mixed>
@@ -47,7 +47,7 @@ class JsonReportGenerator extends ReportGeneratorTemplate
     }
 
     /**
-     * Formats and retains records for the body payload.
+     * Formata e estrutura os registros para a carga útil principal.
      *
      * @param array<int, array<string, mixed>> $filteredData
      * @param array<string, mixed> $options
@@ -62,7 +62,7 @@ class JsonReportGenerator extends ReportGeneratorTemplate
     }
 
     /**
-     * Formats statistical totals and aggregations for the report footer.
+     * Formata totais estatísticos e agregações para o rodapé do relatório.
      *
      * @param array<string, mixed> $options
      * @return array<string, mixed>

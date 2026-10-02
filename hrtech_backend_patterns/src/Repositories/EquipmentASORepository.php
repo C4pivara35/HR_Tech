@@ -15,7 +15,7 @@ use PDO;
 /**
  * Class EquipmentASORepository
  *
- * SQLite PDO implementation for persistence and compliance tracking of Equipment (NR-6)
+ * Implementação SQLite PDO para persistência e rastreamento de conformidade de EPIs (NR-6)
  * and ASO medical exams (NR-7).
  *
  * @package HrTech\Repositories

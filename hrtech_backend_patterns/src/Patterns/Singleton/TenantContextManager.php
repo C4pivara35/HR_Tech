@@ -20,7 +20,7 @@ namespace HrTech\Patterns\Singleton;
 //   2. __construct() privado — impede "new TenantContextManager()"
 //   3. __clone() privado — impede cópia com clone
 //   4. __wakeup() com exceção — impede recriação por unserialize
-//   5. getInstance() estático — único ponto de acesso global
+//   5. getInstance() estático — úúnico ponto de acesso global
 // ============================================================
 
 use HrTech\Contracts\SingletonInterface;

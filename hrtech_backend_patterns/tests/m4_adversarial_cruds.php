@@ -9,7 +9,7 @@ declare(strict_types=1);
  *  - Suite 1: Cross-Tenant Data Isolation Attacks (Read & Mutation Shielding across all 10 CRUDs)
  *  - Suite 2: Portaria 671 Mutation Rejection & Tamper-Proof Cryptographic Verification
  *  - Suite 3: SQL Injection Payloads in Search, Filter, and ID Lookups
- *  - Suite 4: Foreign Key Cascading & Zero-Orphan Integrity (Tenant & Employee Cascades)
+ *  - Suíte 4: Exclusão em Cascata por Foreign Keys e Integridade Sem Órfãos
  *  - Suite 5: Atomic Transaction Rollback on Simulated Failures
  *  - Suite 6: Malformed Inputs, Extreme Boundary Conditions & Collision Resilience
  *
@@ -148,11 +148,11 @@ final class M4AdversarialHarness
         $peakMem = round(memory_get_peak_usage(true) / 1024 / 1024, 2);
 
         echo "\n" . str_repeat('=', 75) . "\n";
-        echo "\033[1;37mCHALLENGER M4-1: ADVERSARIAL CRUD STRESS TEST SUMMARY\033[0m\n";
+        echo "\033[1;37mCHALLENGER M4-1: ADVERSARIAL CRUD STRESS TEST RESUMO\033[0m\n";
         echo str_repeat('=', 75) . "\n";
-        echo "Total Assertions : {$this->totalAssertions}\n";
-        echo "Passed           : \033[32m{$this->passedAssertions}\033[0m\n";
-        echo "Failed           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
+        echo "Total de Asserções : {$this->totalAssertions}\n";
+        echo "Aprovadas        : \033[32m{$this->passedAssertions}\033[0m\n";
+        echo "Falhas           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
         echo "Execution Time   : {$elapsed} ms\n";
         echo "Peak Memory      : {$peakMem} MB\n";
 
@@ -223,7 +223,7 @@ $attackerTenant = $tenantService->createTenant(
     modules: ['payroll', 'time_tracking']
 );
 
-// Seed Full Entity Tree for Victim Tenant
+// Popula árvore completa de entidades para a empresa de teste
 $victimUser = $userService->createUser(
     id: 'user-victim-1',
     tenantId: 'tenant-victim',
@@ -456,7 +456,7 @@ $harness->assertThrows(function () use ($eqService) {
     $eqService->recordEquipmentReturn('ppe-victim-1', 'tenant-attacker');
 }, InvalidOperationException::class, 'EquipmentASO: Cross-tenant recordEquipmentReturn rejected with InvalidOperationException');
 
-// 1.12 CRUD 10 (Insurance Policies) Cross-Tenant Read Attacks & Mutation Shielding
+// 1.12 CRUD 10 (Apólices de Seguro) Ataques de leitura cruzada e blindagem
 $harness->assertTrue($policyRepo->findById('pol-victim-1', 'tenant-attacker') === null, 'InsurancePolicies: Attacker cannot read victim policy by ID');
 $harness->assertTrue($policyRepo->findByPolicyNumber('VIC-POL-999', 'tenant-attacker') === null, 'InsurancePolicies: Attacker cannot read victim policy by number');
 $harness->assertEquals(0, count($policyRepo->findByEmployee('emp-victim-1', 'tenant-attacker')), 'InsurancePolicies: Attacker cannot read policies by victim employee');
@@ -484,7 +484,7 @@ $harness->assertThrows(function () use ($timeLogService) {
     $timeLogService->deletePunch();
 }, InvalidOperationException::class, 'Portaria 671: Direct deletePunch() strictly prohibited with InvalidOperationException');
 
-// 2.2 Construct a valid multi-punch chain for employee
+// 2.2 Constrói cadeia válida de múltiplas batidas para o colaborador
 $punch2 = $timeLogService->recordPunch(
     id: 'punch-victim-2',
     tenantId: 'tenant-victim',
@@ -505,7 +505,7 @@ $punch3 = $timeLogService->recordPunch(
 
 $harness->assertTrue($timeLogService->verifyTamperProofChain('tenant-victim'), 'Portaria 671: Valid untampered 3-punch chain verifies successfully');
 
-// 2.3 Adversarial direct-database tampering simulation: Alter punch type
+// 2.3 Simulação de adulteração direta no banco: Altera tipo de batida
 $originalType = $punch2->type->value;
 $pdo->exec("UPDATE time_logs SET type = 'exit' WHERE id = 'punch-victim-2'");
 $harness->assertThrows(function () use ($timeLogService) {
@@ -537,7 +537,7 @@ $harness->assertFalse($timeLogService->verifyTamperProofChain('tenant-victim'), 
 $pdo->exec("UPDATE time_logs SET nsr = {$punch2->nsr} WHERE id = 'punch-victim-2'");
 $harness->assertTrue($timeLogService->verifyTamperProofChain('tenant-victim'), 'Tamper Attack 4: Restoring valid NSR re-validates chain');
 
-// 2.7 Adversarial intermediate record deletion simulation: Break cryptographic link between punch 1 and punch 3
+// 2.7 Simulação de exclusão intermediária: Quebra o elo criptográfico entre a batida 1 e a 3
 $pdo->exec("DELETE FROM time_logs WHERE id = 'punch-victim-2'");
 $harness->assertFalse($timeLogService->verifyTamperProofChain('tenant-victim'), 'Tamper Attack 5: Deletion of intermediate punch cleanly causes chain verification to return FALSE');
 $timeLogRepo->save($punch2);
@@ -766,7 +766,7 @@ $harness->assertEquals(0, (int)$pdo->query("SELECT COUNT(*) FROM tenants WHERE i
 $harness->assertEquals(0, (int)$pdo->query("SELECT COUNT(*) FROM departments WHERE id = 'dept-atomic-fail'")->fetchColumn(), 'Transaction: Department record was rolled back');
 $harness->assertEquals(0, (int)$pdo->query("SELECT COUNT(*) FROM employees WHERE id = 'emp-atomic-fail'")->fetchColumn(), 'Transaction: Employee record was rolled back');
 
-// 5.2 Managed rollback when business invariant fails
+// 5.2 Rollback controlado quando invariante de negócio falha
 $harness->assertThrows(function () use ($db, $empRepo, $vacRepo) {
     $db->transaction(function () use ($empRepo, $vacRepo) {
         $emp = $empRepo->findById('emp-victim-1', 'tenant-victim');
@@ -829,19 +829,19 @@ $harness->assertThrows(function () use ($userService) {
     $userService->createUser('u-dup-user', 'tenant-victim', 'victim_admin', 'other@victim.com', 'Pass123!', UserRole::EMPLOYEE);
 }, ValidationException::class, 'Collision: Duplicate username within tenant rejected');
 
-// Duplicate Department Code within same tenant
+// Código duplicado de departamento dentro da mesma empresa
 $harness->assertThrows(function () use ($deptRoleService) {
     $deptRoleService->createDepartment('d-dup-code', 'tenant-victim', 'VIC-ENG', 'Another ENG', 'CC-9');
 }, ValidationException::class, 'Collision: Duplicate department code within tenant rejected');
 
 // 6.6 Cross-tenant identical code/username allowable isolation (Multi-tenant coexistence)
-// Attacker tenant CAN have same department code 'VIC-ENG' because department codes are scoped per tenant
+// Empresa B PODE ter o mesmo código de departamento 'VIC-ENG' porque códigos têm escopo por empresa
 $attackerDept = $deptRoleService->createDepartment(
     'dept-attacker-1', 'tenant-attacker', 'VIC-ENG', 'Attacker Clone Dept', 'CC-ATT'
 );
 $harness->assertEquals('dept-attacker-1', $attackerDept->getId(), 'Multi-tenant Coexistence: Same department code in different tenants is permitted');
 
-// Attacker tenant CAN have user with username 'victim_admin' because usernames are scoped per tenant
+// Empresa B PODE ter usuário com login 'victim_admin' porque logins têm escopo por empresa
 $attackerUserSameName = $userService->createUser(
     'user-attacker-1', 'tenant-attacker', 'victim_admin', 'admin@attacker.com', 'AttackerPass123!', UserRole::TENANT_ADMIN
 );

@@ -7,12 +7,12 @@ declare(strict_types=1);
  *
  * Standalone verification harness designed for PHP 8.3.6 CLI.
  * Rigorously verifies:
- *  - 12 Domain Entities (Tenant, User, Role, Department, Employee, TimeLog,
+ *  - 12 Entidades de Domínio (Tenant, User, Role, Department, Employee, TimeLog,
  *    TimeAdjustmentRequest, VacationRequest, EquipmentASO, Benefit, AuditLog, InsurancePolicy)
  *  - The 3 Milestone 1 adversarial fixes (withContext, Autoloader static/closure classmap & registration, GeoLocation antipodal clamping)
  *  - Cryptographic integrity (TimeLog Portaria 671/2021 SHA-256 chaining, AuditLog SHA-256 chaining & LGPD redaction)
  *  - Complete business calculations (CLT divisors, hourly rates, time bank, vacations, benefits, ASO validity, insurance premiums)
- *  - Multi-tenant boundary isolation and polymorphic interface consistency
+ *  - Isolamento de limites multi-tenant e consistência de interfaces polimórficas
  *  - Validation failure invariants and security constraints
  *
  * Usage: php tests/m2_verify.php
@@ -109,22 +109,22 @@ final class M2TestRunner
     public function printSummary(): int
     {
         echo "\n" . str_repeat('=', 70) . "\n";
-        echo "\033[1;37mMILESTONE 2 VERIFICATION SUMMARY\033[0m\n";
+        echo "\033[1;37mMILESTONE 2 VERIFICATION RESUMO\033[0m\n";
         echo str_repeat('=', 70) . "\n";
-        echo "Total Assertions : {$this->totalAssertions}\n";
-        echo "Passed           : \033[32m{$this->passedAssertions}\033[0m\n";
-        echo "Failed           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
+        echo "Total de Asserções : {$this->totalAssertions}\n";
+        echo "Aprovadas        : \033[32m{$this->passedAssertions}\033[0m\n";
+        echo "Falhas           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
 
         if ($this->failedAssertions > 0) {
             echo "\n\033[1;31mFAILED TESTS:\033[0m\n";
             foreach ($this->failures as $failure) {
                 echo "  - {$failure}\n";
             }
-            echo "\n\033[1;31mRESULT: VERIFICATION FAILED\033[0m\n";
+            echo "\n\033[1;31mRESULTADO: VERIFICAÇÃO FALHOU\033[0m\n";
             return 1;
         }
 
-        echo "\n\033[1;32mRESULT: ALL MILESTONE 2 VERIFICATIONS PASSED (100%)\033[0m\n";
+        echo "\n\033[1;32mRESULTADO: TODAS AS VERIFICAÇÕES DO MILESTONE 2 FORAM APROVADAS (100%)\033[0m\n";
         return 0;
     }
 }
@@ -433,7 +433,7 @@ $runner->assertTrue($roleDev->hasPermission('equipment.request'), 'addPermission
 $roleDev->removePermission('equipment.request');
 $runner->assertFalse($roleDev->hasPermission('equipment.request'), 'removePermission removes permission');
 
-// TenantScopedInterface conformance for Role
+// Conformidade com TenantScopedInterface para o Cargo (Role)
 $runner->assertEquals('tenant-acme', $roleLead->getTenantId(), 'Role returns string tenantId');
 $runner->assertTrue($roleLead->belongsToTenant('tenant-acme'), 'Role belongsToTenant true');
 $runner->assertFalse($roleLead->belongsToTenant('alien-tenant'), 'Role belongsToTenant false for alien tenant');
@@ -921,7 +921,7 @@ $runner->assertFalse($expiredAso->isFitForWork(), 'isFitForWork returns false wh
 // --------------------------------------------------------------------------
 $runner->suite('Domain Entity 10: Benefit (PAT Copay & Statutory 6% VT Cap)');
 
-// Benefit 1: Meal Voucher with 20% copay (PAT)
+// Benefício 1: Vale-Refeição com coparticipação de 20% (PAT)
 $vrTotal = Money::brl(800.00); // R$ 800,00
 $benefitVR = new Benefit(
     id: 'ben-vr-01',
@@ -941,7 +941,7 @@ $runner->assertEquals(160.00, $vrEmployeeContribution->toFloat(), 'Employee copa
 $runner->assertEquals(640.00, $vrEmployerContribution->toFloat(), 'Employer subsidy is 80% of 800.00 = R$ 640,00');
 $runner->assertEquals(800.00, $vrEmployeeContribution->add($vrEmployerContribution)->toFloat(), 'Zero-penny-loss: Employee + Employer == Total Benefit Value');
 
-// Benefit 2: Transportation Voucher with 6% statutory salary cap under Lei 7.418/1985
+// Benefício 2: Vale-Transporte com teto legal de 6% do salário pela Lei 7.418/1985
 $vtTotal = Money::brl(350.00);
 $benefitVT = new Benefit(
     id: 'ben-vt-01',
@@ -1060,7 +1060,7 @@ $runner->assertEquals(500000.00, $policy->getInsuredCapital()->toFloat(), 'Insur
 // Annual premium projection: 12 * 150.00 = 1800.00
 $runner->assertEquals(1800.00, $policy->calculateAnnualPremium()->toFloat(), 'Annual premium is 12 x 150.00 = R$ 1.800,00');
 
-// Active date window checks
+// Validações de janela de datas ativas
 $runner->assertTrue($policy->isActive(new DateTimeImmutable('2026-06-15')), 'Policy isActive within validity window');
 $runner->assertFalse($policy->isActive(new DateTimeImmutable('2025-12-31')), 'Policy isActive false before start date');
 $runner->assertFalse($policy->isActive(new DateTimeImmutable('2027-01-01')), 'Policy isActive false after end date');

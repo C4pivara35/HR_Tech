@@ -5,61 +5,61 @@ declare(strict_types=1);
 namespace HrTech;
 
 /**
- * Class Autoloader
+ * Classe Autoloader
  *
- * Fully compliant PSR-4 autoloader with multi-directory prefix mapping,
- * fallback directories, security filtering, and zero-config static bootstrap.
+ * Autoloader em total conformidade com a PSR-4 com mapeamento de prefixos multi-diretório,
+ * diretórios de fallback, filtros de segurança e bootstrap estático zero-config.
  */
 class Autoloader
 {
     /**
-     * An associative array where the key is a namespace prefix and the value
-     * is an array of base directories for classes in that namespace.
+     * Array associativo onde a chave é o prefixo de namespace e o valor
+ * é um array de diretórios base para classes naquele namespace.
      *
      * @var array<string, array<int, string>>
      */
     private array $prefixes = [];
 
     /**
-     * Fallback directories searched if no mapped prefix resolves the file.
+     * Diretórios de fallback consultados caso nenhum prefixo mapeado resolva o arquivo.
      *
      * @var array<int, string>
      */
     private array $fallbackDirs = [];
 
     /**
-     * Tracking array of all files successfully loaded by this autoloader.
+     * Array de rastreamento de todos os arquivos carregados com sucesso por este autoloader.
      *
      * @var array<string, string>
      */
     private array $loadedFiles = [];
 
     /**
-     * Flag indicating if this autoloader is currently registered in SPL stack.
+     * Sinalizador indicando se este autoloader está registrado na pilha SPL.
      */
     private bool $isRegistered = false;
 
     /**
-     * Map of class names directly to file paths or resolver callables/closures.
+     * Mapeamento direto de nomes de classes para caminhos de arquivos ou callables de resolução.
      *
      * @var array<string, string|callable>
      */
     private array $classMap = [];
 
     /**
-     * Static class map applied globally across autoloader instances.
+     * Mapa de classes estático aplicado globalmente entre instâncias do autoloader.
      *
      * @var array<string, string|callable>
      */
     private static array $staticClassMap = [];
 
     /**
-     * Singleton instance for default bootstrap.
+     * Instância Singleton para bootstrap padrão.
      */
     private static ?self $instance = null;
 
     /**
-     * Reference to the most recently instantiated autoloader.
+     * Referência ao autoloader instanciado mais recentemente.
      */
     private static ?self $lastInstantiated = null;
 
@@ -69,9 +69,9 @@ class Autoloader
     }
 
     /**
-     * Registers loader with SPL autoloader stack.
+     * Registra o loader na pilha de autoloading da SPL.
      *
-     * @param bool $prepend True to prepend to the loader stack, false to append.
+     * @param bool $prepend Verdadeiro para incluir no início da pilha do loader, falso para anexar ao fim.
      * @return $this
      */
     public function registerLoader(bool $prepend = false): self
@@ -85,7 +85,7 @@ class Autoloader
     }
 
     /**
-     * Magically handles instance method calls like $autoloader->register().
+     * Trata dinamicamente chamadas de métodos como \$autoloader->register().
      *
      * @param string $name
      * @param array<int, mixed> $arguments
@@ -180,7 +180,7 @@ class Autoloader
     }
 
     /**
-     * Returns the instance class map.
+     * Retorna o mapa de classes da instância.
      *
      * @return array<string, string|callable>
      */
@@ -201,7 +201,7 @@ class Autoloader
     }
 
     /**
-     * Returns the static class map.
+     * Retorna o mapa de classes estático.
      *
      * @return array<string, string|callable>
      */
@@ -211,7 +211,7 @@ class Autoloader
     }
 
     /**
-     * Unregisters loader from the SPL autoloader stack.
+     * Desregistra o loader da pilha SPL.
      *
      * @return $this
      */
@@ -226,7 +226,7 @@ class Autoloader
     }
 
     /**
-     * Returns whether the autoloader is currently registered.
+     * Retorna se o autoloader está registrado no momento.
      */
     public function isRegistered(): bool
     {
@@ -234,10 +234,10 @@ class Autoloader
     }
 
     /**
-     * Adds a base directory for a namespace prefix.
+     * Adiciona um diretório base para um prefixo de namespace.
      *
      * @param string $prefix The namespace prefix (e.g. "HrTech\\" or "HrTech").
-     * @param string $baseDir A base directory for class files in the namespace.
+     * @param string $baseDir Um diretório base para arquivos de classe no namespace.
      * @param bool $prepend If true, prepend the base directory to the stack.
      * @return $this
      */
@@ -246,7 +246,7 @@ class Autoloader
         // Normalize namespace prefix: trim slashes and ensure trailing backslash
         $prefix = trim($prefix, '\\') . '\\';
 
-        // Normalize base directory: replace slashes with DIRECTORY_SEPARATOR and ensure trailing separator
+        // Normaliza o diretório base: substitui barras por DIRECTORY_SEPARATOR e garante separador final
         $baseDir = rtrim(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $baseDir), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
         if (!isset($this->prefixes[$prefix])) {
@@ -263,7 +263,7 @@ class Autoloader
     }
 
     /**
-     * Adds a fallback directory to search when prefix matching fails.
+     * Adiciona um diretório de fallback para busca quando a correspondência por prefixo falhar.
      *
      * @param string $baseDir
      * @return $this
@@ -280,9 +280,9 @@ class Autoloader
     }
 
     /**
-     * Loads the class file for a given class name.
+     * Carrega o arquivo de classe para um determinado nome de classe.
      *
-     * @param string $class The fully-qualified class name.
+     * @param string $class O nome totalmente qualificado da classe (FQCN).
      * @return string|false The mapped file name on success, or false on failure.
      */
     public function loadClass(string $class): string|false
@@ -348,7 +348,7 @@ class Autoloader
         }
 
         // Backward-walking prefix resolution:
-        // Start from the full class name and strip namespace segments from the right
+        // Inicia a partir do nome completo da classe e remove segmentos de namespace da direita para a esquerda
         $prefix = $class;
         while (false !== ($pos = strrpos($prefix, '\\'))) {
             $prefix = substr($class, 0, $pos + 1);
@@ -376,10 +376,10 @@ class Autoloader
     }
 
     /**
-     * Load the mapped file for a namespace prefix and relative class.
+     * Carrega o arquivo mapeado para o prefixo de namespace e classe relativa.
      *
-     * @param string $prefix The namespace prefix.
-     * @param string $relativeClass The relative class name.
+     * @param string $prefix O prefixo de namespace.
+     * @param string $relativeClass O nome relativo da classe.
      * @return string|false The mapped file name on success, or false on failure.
      */
     protected function loadMappedFile(string $prefix, string $relativeClass): string|false
@@ -403,7 +403,7 @@ class Autoloader
     }
 
     /**
-     * If a file exists, require it from the file system.
+     * Se o arquivo existir, inclui via require do sistema de arquivos.
      *
      * @param string $file The path to the file to require.
      * @return bool True if file exists and was required, false otherwise.
@@ -419,7 +419,7 @@ class Autoloader
     }
 
     /**
-     * Returns the array of registered namespace prefixes and their directories.
+     * Retorna o array de prefixos de namespace registrados e seus respectivos diretórios.
      *
      * @return array<string, array<int, string>>
      */
@@ -429,7 +429,7 @@ class Autoloader
     }
 
     /**
-     * Returns all files loaded by this instance.
+     * Retorna todos os arquivos carregados por esta instância.
      *
      * @return array<string, string>
      */
@@ -440,7 +440,7 @@ class Autoloader
 
     /**
      * Convenience method to register the default application namespaces.
-     * Auto-detects the project root from the location of this Autoloader file.
+     * Detecta automaticamente a raiz do projeto a partir da localização deste arquivo Autoloader.
      *
      * @param string|null $projectRoot Optional project root directory.
      * @return self

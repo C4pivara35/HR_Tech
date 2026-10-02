@@ -23,7 +23,7 @@ $dbManager = DatabaseManager::getInstance(ROOT_DIR . '/hrtech_db.sqlite');
 $dbManager->migrate();
 $pdo = $dbManager->getConnection();
 
-// Global SQL query logger for presentation console
+// Registrador global de consultas SQL para o console de apresentação
 $GLOBALS['SQL_LOGS'] = [];
 $GLOBALS['GOF_PATTERNS_USED'] = [];
 

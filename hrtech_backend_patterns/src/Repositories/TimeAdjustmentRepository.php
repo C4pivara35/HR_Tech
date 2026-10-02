@@ -15,7 +15,7 @@ use PDO;
 /**
  * Class TimeAdjustmentRepository
  *
- * SQLite PDO implementation for persistence and state updates of TimeAdjustmentRequest entities.
+ * Implementação SQLite PDO para persistência e atualização de status de solicitações de ajuste de ponto.
  *
  * @package HrTech\Repositories
  * @author Felipe (Membro 3 — CRUD 6: Ajustes de Ponto)

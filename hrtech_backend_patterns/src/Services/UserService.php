@@ -14,7 +14,7 @@ use HrTech\Repositories\Contracts\UserRepositoryInterface;
  * Class UserService
  *
  * Domain service orchestrating user credentials, RBAC roles, multi-factor authentication,
- * and tenant-isolated user accounts.
+ * e contas de usuários com isolamento multi-tenant.
  *
  * @package HrTech\Services
  * @author Fernando Lopes Duarte (Membro 1 — CRUD 2: Gestão de Usuários e RBAC)
@@ -27,7 +27,7 @@ class UserService
     }
 
     /**
-     * Creates and persists a new User under a specific tenant.
+     * Cria e persiste um novo usuário sob um tenant específico.
      *
      * @throws ValidationException
      */
@@ -72,7 +72,7 @@ class UserService
     }
 
     /**
-     * Authenticates user credentials within a specific tenant context.
+     * Autentica as credenciais do usuário dentro do contexto isolado da empresa.
      */
     public function authenticate(string $username, string $plainPassword, string $tenantId): ?User
     {
@@ -105,7 +105,7 @@ class UserService
     }
 
     /**
-     * Changes user password verifying the previous password.
+     * Altera a senha do usuário verificando a senha anterior.
      *
      * @throws InvalidOperationException
      */

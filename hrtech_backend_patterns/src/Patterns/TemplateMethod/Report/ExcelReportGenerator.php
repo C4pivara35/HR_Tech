@@ -7,8 +7,8 @@ namespace HrTech\Patterns\TemplateMethod\Report;
 /**
  * Class ExcelReportGenerator
  *
- * Generates structured CSV/TSV spreadsheet datasets with delimited column headers,
- * sanitized data rows, and calculated summary/totals rows suitable for spreadsheet import.
+ * Gera conjuntos de dados tabulares em CSV/TSV com cabeçalhos delimitados,
+ * linhas de dados sanitizadas e linhas de totalizadores calculados para importação em planilhas.
  */
 class ExcelReportGenerator extends ReportGeneratorTemplate
 {
@@ -29,7 +29,7 @@ class ExcelReportGenerator extends ReportGeneratorTemplate
     private int $totalRowCount = 0;
 
     /**
-     * Formats delimited column headers for spreadsheet import.
+     * Formata cabeçalhos de coluna delimitados para importação em planilhas.
      *
      * @param array<string, mixed> $options
      * @return string
@@ -48,7 +48,7 @@ class ExcelReportGenerator extends ReportGeneratorTemplate
     }
 
     /**
-     * Formats data records into delimited rows, calculating numeric sums for totals.
+     * Formata registros de dados em linhas delimitadas, calculando somas numéricas para os totais.
      *
      * @param array<int, array<string, mixed>> $filteredData
      * @param array<string, mixed> $options
@@ -89,7 +89,7 @@ class ExcelReportGenerator extends ReportGeneratorTemplate
     }
 
     /**
-     * Formats calculated summary totals row for the bottom of the spreadsheet.
+     * Formata a linha de resumo com totais calculados para o rodapé da planilha.
      *
      * @param array<string, mixed> $options
      * @return string
@@ -120,7 +120,7 @@ class ExcelReportGenerator extends ReportGeneratorTemplate
     }
 
     /**
-     * Assembles headers, body records, and calculated summary row.
+     * Monta o cabeçalho, os registros de dados e a linha de totais calculados.
      *
      * @param mixed $headers
      * @param mixed $body
@@ -153,7 +153,7 @@ class ExcelReportGenerator extends ReportGeneratorTemplate
     }
 
     /**
-     * Formats an array of values into a standard RFC 4180 CSV line.
+     * Formata um array de valores em uma linha CSV padronizada conforme a RFC 4180.
      *
      * @param array<int, string> $fields
      * @param string $delimiter

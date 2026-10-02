@@ -45,7 +45,7 @@ enum AdjustmentStatus: string
     }
 
     /**
-     * Indicates whether the status is terminal (cannot be transitioned further).
+     * Indica se o status é terminal (não pode sofrer novas transições).
      */
     public function isFinal(): bool
     {

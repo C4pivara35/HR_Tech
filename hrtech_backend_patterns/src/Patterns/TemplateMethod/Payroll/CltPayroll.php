@@ -42,7 +42,7 @@ class CltPayroll extends PayrollCalculatorTemplate
      *
      * @var array<int, array{limit: float, rate: float}>
      */
-    public const array INSS_BRACKETS = [
+    public const INSS_BRACKETS = [
         ['limit' => 1412.00, 'rate' => 0.075], // Até R$ 1.412,00 → 7,5%
         ['limit' => 2666.68, 'rate' => 0.09],  // Até R$ 2.666,68 → 9,0%
         ['limit' => 4000.03, 'rate' => 0.12],  // Até R$ 4.000,03 → 12,0%
@@ -57,7 +57,7 @@ class CltPayroll extends PayrollCalculatorTemplate
      *
      * @var array<int, array{limit: float, rate: float, deduction: float}>
      */
-    public const array IRRF_BRACKETS = [
+    public const IRRF_BRACKETS = [
         ['limit' => 2259.20, 'rate' => 0.0,   'deduction' => 0.0],      // Isento
         ['limit' => 2826.65, 'rate' => 0.075, 'deduction' => 169.44],   // 7,5%
         ['limit' => 3751.05, 'rate' => 0.15,  'deduction' => 381.44],   // 15%
@@ -66,7 +66,7 @@ class CltPayroll extends PayrollCalculatorTemplate
     ];
 
     /** Valor de dedução por dependente no IRRF (R$ 189,59 por dependente) */
-    public const float DEPENDENT_DEDUCTION_AMOUNT = 189.59;
+    public const DEPENDENT_DEDUCTION_AMOUNT = 189.59;
 
     /**
      * Dados da folha atual, salvo pelo gancho beforeCalculation().

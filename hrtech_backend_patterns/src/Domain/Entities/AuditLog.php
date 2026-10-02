@@ -18,9 +18,9 @@ use JsonSerializable;
 /**
  * Class AuditLog
  *
- * Immutable AuditLog Entity.
- * Implements LGPD compliance tracking with tamper-evident SHA-256 cryptographic
- * hash chaining across tenant audit entries.
+ * Entidade imutável AuditLog.
+ * Implementa trilha de auditoria em conformidade com a LGPD com encadeamento criptográfico
+ * SHA-256 inviolável entre os registros da empresa.
  */
 readonly class AuditLog implements
     IdentifiableInterface,
@@ -31,22 +31,22 @@ readonly class AuditLog implements
     JsonableInterface,
     JsonSerializable
 {
-    public const string GENESIS_HASH = '0000000000000000000000000000000000000000000000000000000000000000';
+    public const GENESIS_HASH = '0000000000000000000000000000000000000000000000000000000000000000';
 
     /**
-     * @param string $id Unique UUID / event identifier
-     * @param string $tenantId Tenant multi-tenant boundary
-     * @param string $actorUserId User / service identity executing the operation
-     * @param string $action Audit action type (e.g., 'CREATE', 'UPDATE', 'DELETE', 'EXPORT_LGPD')
-     * @param string $entityType Target domain entity class or category (e.g., 'Employee', 'Benefit')
-     * @param string $entityId Primary key of target entity
-     * @param array<string, mixed> $previousState Pre-mutation state (sensitive fields sanitized)
-     * @param array<string, mixed> $newState Post-mutation state (sensitive fields sanitized)
-     * @param string $ipAddress Client IP address (IPv4 / IPv6)
-     * @param string $userAgent Client HTTP user-agent or CLI runner identification
-     * @param DateTimeImmutable $timestamp Timestamp of occurrence (UTC)
-     * @param string|null $previousHash SHA-256 hash of previous block in tenant's audit chain
-     * @param string $integrityHash SHA-256 tamper-evident hash certifying entry integrity
+     * @param string $id Identificador único UUID do evento de auditoria
+     * @param string $tenantId Identificador do tenant (isolamento multi-tenant)
+     * @param string $actorUserId Usuário ou serviço que executou a operação
+     * @param string $action Tipo de ação de auditoria (ex.: 'CREATE', 'UPDATE', 'DELETE', 'EXPORT_LGPD')
+     * @param string $entityType Classe ou categoria da entidade afetada (ex.: 'Employee', 'Benefit')
+     * @param string $entityId Chave primária da entidade afetada
+     * @param array<string, mixed> $previousState Estado anterior à alteração (dados sensíveis sanitizados)
+     * @param array<string, mixed> $newState Estado posterior à alteração (dados sensíveis sanitizados)
+     * @param string $ipAddress Endereço IP de origem (IPv4 / IPv6)
+     * @param string $userAgent Identificação do User-Agent HTTP do cliente ou executor CLI
+     * @param DateTimeImmutable $timestamp Carimbo de data/hora da ocorrência (UTC)
+     * @param string|null $previousHash Hash SHA-256 do bloco anterior na cadeia de auditoria da empresa
+     * @param string $integrityHash Hash SHA-256 inviolável certificando a integridade do registro
      */
     public function __construct(
         public string $id,
@@ -67,7 +67,7 @@ readonly class AuditLog implements
     }
 
     /**
-     * Factory method to construct and cryptographically seal an immutable audit entry.
+     * Método fábrica para instanciar e selar criptograficamente um registro imutável de auditoria.
      * Automatically calculates the integrityHash from payload attributes.
      *
      * @param array<string, mixed> $previousState
@@ -139,7 +139,7 @@ readonly class AuditLog implements
     }
 
     /**
-     * Generates canonical SHA-256 integrity hash for this entry.
+     * Gera o hash canônico de integridade SHA-256 para este registro.
      */
     public function generateHash(?string $previousHash = null): string
     {
@@ -160,7 +160,7 @@ readonly class AuditLog implements
     }
 
     /**
-     * Verifies that the record has not been tampered with.
+     * Verifica que o registro não foi adulterado.
      */
     public function verifyIntegrity(?string $previousHash = null): bool
     {

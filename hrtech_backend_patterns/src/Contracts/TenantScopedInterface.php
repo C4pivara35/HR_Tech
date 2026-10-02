@@ -8,19 +8,19 @@ namespace HrTech\Contracts;
  * Interface TenantScopedInterface
  *
  * Enforces tenant boundary isolation. Implementers are explicitly bound
- * to a specific tenant and cannot be accessed across tenant boundaries.
+ * a um tenant específico e não pode ser acessada fora dos limites da empresa.
  */
 interface TenantScopedInterface
 {
     /**
-     * Returns the tenant identifier to which this entity belongs.
+     * Retorna o identificador do tenant (empresa) ao qual esta entidade pertence.
      *
      * @return string
      */
     public function getTenantId(): string;
 
     /**
-     * Checks whether this entity belongs to the specified tenant.
+     * Verifica se esta entidade pertence à empresa especificada.
      *
      * @param string $tenantId
      * @return bool

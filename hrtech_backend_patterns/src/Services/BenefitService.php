@@ -28,7 +28,7 @@ class BenefitService
     }
 
     /**
-     * Registers a new corporate benefit into the tenant catalog.
+     * Cadastra um novo benefício corporativo no catálogo do tenant.
      *
      * @throws ValidationException
      */

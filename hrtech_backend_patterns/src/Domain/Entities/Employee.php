@@ -24,7 +24,7 @@ use JsonSerializable;
  * Class Employee
  *
  * Core employment record encapsulating personal data, labor contract,
- * salary structure, time bank, and vacation rights under Brazilian labor regulations.
+ * estrutura salarial, banco de horas e direitos de férias pela legislação brasileira.
  */
 class Employee implements
     IdentifiableInterface,
@@ -155,7 +155,7 @@ class Employee implements
     }
 
     /**
-     * Alias for getFullName() ensuring contract compatibility with PayrollCalculatorTemplate payslip assembly.
+     * Alias para getFullName() garantindo compatibilidade com o montador de holerites PayrollCalculatorTemplate.
      */
     public function getName(): string
     {
@@ -237,7 +237,7 @@ class Employee implements
     // --------------------------------------------------------------------------
 
     /**
-     * Adjusts the employee's base salary.
+     * Reajusta o salário-base do colaborador.
      */
     public function adjustSalary(Money $newSalary, string $reason = ''): void
     {
@@ -268,7 +268,7 @@ class Employee implements
     // --------------------------------------------------------------------------
 
     /**
-     * Records delta minutes into the time bank (positive for credit, negative for debit).
+     * Registra variação em minutos no banco de horas (positivo para crédito, negativo para débito).
      */
     public function recordBankHours(int $minutes, string $reason = ''): void
     {
@@ -277,7 +277,7 @@ class Employee implements
     }
 
     /**
-     * Credits overtime minutes into the time bank.
+     * Credita minutos de horas extras no banco de horas.
      */
     public function creditBankHours(int $minutes, string $reason = ''): void
     {
@@ -301,7 +301,7 @@ class Employee implements
     }
 
     /**
-     * Formats the time bank balance as signed '+HH:MM' or '-HH:MM'.
+     * Formata o saldo do banco de horas com sinal no padrão '+HH:MM' ou '-HH:MM'.
      */
     public function getBankHoursBalanceFormatted(): string
     {
@@ -314,7 +314,7 @@ class Employee implements
     }
 
     /**
-     * Returns time bank balance in decimal hours.
+     * Retorna o saldo do banco de horas em horas decimais.
      */
     public function getBankHoursInHours(): float
     {
@@ -383,7 +383,7 @@ class Employee implements
     // --------------------------------------------------------------------------
 
     /**
-     * Returns standard monthly working hours based on Brazilian labor regulation:
+     * Retorna o divisor mensal padrão de horas conforme a legislação trabalhista brasileira:
      * 44 weekly hours -> 220 monthly divisor (CLT Art. 64)
      * 30 weekly hours -> 150 monthly divisor
      */
@@ -394,7 +394,7 @@ class Employee implements
     }
 
     /**
-     * Calculates the employee's regular hourly rate in BRL float.
+     * Calcula o valor da hora normal de trabalho do colaborador em reais (BRL).
      */
     public function getHourlyRate(): float
     {
@@ -412,7 +412,7 @@ class Employee implements
     // --------------------------------------------------------------------------
 
     /**
-     * Calculates employee age in completed years.
+     * Calcula a idade do colaborador em anos completos.
      */
     public function getAge(?DateTimeImmutable $referenceDate = null): int
     {
@@ -421,7 +421,7 @@ class Employee implements
     }
 
     /**
-     * Calculates tenure at the company in full months.
+     * Calcula o tempo de empresa do colaborador em meses completos.
      */
     public function getTenureInMonths(?DateTimeImmutable $referenceDate = null): int
     {

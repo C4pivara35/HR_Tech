@@ -6,11 +6,11 @@ declare(strict_types=1);
  * HRTech Core Backend — Master CLI Demonstration Runner
  *
  * Comprehensive end-to-end demonstration showcasing:
- *  - Stage 1: CLI Bootstrap & Clean SQLite Database Initialization
+ *  - Stage 1: CLI Bootstrap & Clean SQLite Inicialização do Banco de Dados
  *  - Stage 2: 8 Design Patterns (2 Singletons, 3 Template Methods, 3 Strategies)
- *  - Stage 3: 10 Student CRUD Operations across 5 Engineering Members
- *  - Stage 4: Software Product Line (LPS) Variability Engine (Tech, Indústria, Financeiro)
- *  - Stage 5: Execution Dashboard, Database Row Metrics & System Diagnostics
+ *  - Stage 3: 10 Operações de CRUD dos 5 Integrantes da Equipe
+ *  - Stage 4: Motor de Variabilidade da Linha de Produção de Software (LPS) (Tech, Indústria, Financeiro)
+ *  - Etapa 5: Painel de Execução, Métricas de Linhas do Banco e Diagnósticos
  *
  * Requirements: PHP 8.3.6 CLI (Zero external dependencies)
  * Usage: php run_demo.php
@@ -18,7 +18,7 @@ declare(strict_types=1);
  * @author Equipe de Engenharia HRTech
  */
 
-// Start execution timer and memory tracking
+// Inicia o cronômetro de execução e rastreamento de memória
 $startTime = microtime(true);
 $startMemory = memory_get_usage(true);
 
@@ -165,22 +165,22 @@ use HrTech\Services\VacationService;
 
 // Print Master Banner
 Terminal::banner(
-    'HRTECH CORE — MASTER ARCHITECTURE & LPS CLI RUNNER',
-    '8 Design Patterns | 10 Student CRUDs (5 Members) | LPS Variability Engine'
+    'HRTECH CORE — EXECUTOR DE DEMONSTRAÇÃO E LPS',
+    '8 Padrões GoF | 10 CRUDs dos 5 Alunos | Motor de Variabilidade LPS'
 );
 
 $stepCount = 0;
 
 // ==========================================================================
-// STAGE 1: CLI Bootstrap & SQLite Database Initialization
+// ETAPA 1: Inicialização CLI e Banco de Dados SQLite
 // ==========================================================================
-Terminal::stageHeader(1, 'CLI Bootstrapping & SQLite Relational Schema', 'Establishing zero-config autoloader and clean database state');
+Terminal::stageHeader(1, 'Inicialização CLI e Esquema Relacional SQLite', 'Carregando autoloader e inicializando banco de dados limpo');
 
-Terminal::subHeader('Environment & Runtime Diagnostics');
+Terminal::subHeader('Diagnóstico de Ambiente e Execução');
 Terminal::info('PHP Runtime', PHP_VERSION . ' (' . PHP_SAPI . ')');
-Terminal::info('Host Operating System', PHP_OS . ' ' . php_uname('r'));
-Terminal::info('Memory Limit', ini_get('memory_limit'));
-Terminal::info('Execution Timestamp', date('Y-m-d H:i:s T'));
+Terminal::info('Sistema Operacional', PHP_OS . ' ' . php_uname('r'));
+Terminal::info('Limite de Memória', ini_get('memory_limit'));
+Terminal::info('Carimbo de Data/Hora', date('Y-m-d H:i:s T'));
 
 $dbPath = __DIR__ . '/database.sqlite';
 DatabaseManager::resetInstance();
@@ -192,36 +192,36 @@ $fkStatus = (int)$pdo->query('PRAGMA foreign_keys;')->fetchColumn();
 $journalMode = (string)$pdo->query('PRAGMA journal_mode;')->fetchColumn();
 $sqliteVer = (string)$pdo->query('SELECT sqlite_version();')->fetchColumn();
 
-Terminal::subHeader('Database Initialization');
-Terminal::info('Target Database', $dbPath);
-Terminal::info('SQLite Engine Version', $sqliteVer);
+Terminal::subHeader('Inicialização do Banco de Dados');
+Terminal::info('Banco de Dados Alvo', $dbPath);
+Terminal::info('Versão do SQLite', $sqliteVer);
 Terminal::info('PRAGMA foreign_keys', $fkStatus === 1 ? '1 (STRICTLY ENFORCED)' : '0 (DISABLED)');
 Terminal::info('PRAGMA journal_mode', strtoupper($journalMode));
 
 $tables = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name;")->fetchAll(PDO::FETCH_COLUMN);
 $indexes = $pdo->query("SELECT name FROM sqlite_master WHERE type='index' AND name NOT LIKE 'sqlite_%' ORDER BY name;")->fetchAll(PDO::FETCH_COLUMN);
 
-Terminal::pass('Reset database executed: 12 relational tables created');
-Terminal::pass('11 multi-tenant indexes configured for query isolation');
-Terminal::info('Created Tables (' . count($tables) . ')', implode(', ', $tables));
-Terminal::info('Created Indexes (' . count($indexes) . ')', count($indexes) . ' indexes active');
+Terminal::pass('Banco resetado: 12 tabelas relacionais criadas com sucesso');
+Terminal::pass('11 índices multi-tenant configurados para isolamento');
+Terminal::info('Tabelas Criadas (' . count($tables) . ')', implode(', ', $tables));
+Terminal::info('Índices Criados (' . count($indexes) . ')', count($indexes) . ' índices ativos');
 $stepCount++;
 
 // ==========================================================================
-// STAGE 2: Demonstration of All 8 Design Patterns
+// ETAPA 2: Demonstração de Todos os 8 Padrões de Projeto
 // ==========================================================================
-Terminal::stageHeader(2, 'Demonstration of All 8 Design Patterns', '2 Singletons, 3 Template Methods, 3 Strategies');
+Terminal::stageHeader(2, 'Demonstração de Todos os 8 Padrões de Projeto', '2 Singletons, 3 Template Methods, 3 Strategies');
 
 // --------------------------------------------------------------------------
 // Pattern 1: TenantContextManager (Singleton)
 // --------------------------------------------------------------------------
-Terminal::subHeader('Pattern 1/8: TenantContextManager (Singleton Pattern)');
+Terminal::subHeader('Padrão 1/8: TenantContextManager (Padrão Singleton)');
 TenantContextManager::resetInstance();
 $ctx1 = TenantContextManager::getInstance();
 $ctx2 = TenantContextManager::getInstance();
 
 $isIdentical = ($ctx1 === $ctx2);
-Terminal::pass('Singleton Invariance Verified: TenantContextManager::getInstance() returns exact identical instance');
+Terminal::pass('Invariância do Singleton verificada: TenantContextManager::getInstance() retorna a mesma instância');
 
 $demoTenant = new Tenant(
     id: 'tenant-demo-corp',
@@ -231,20 +231,20 @@ $demoTenant = new Tenant(
     segment: 'tech'
 );
 $ctx1->setActiveTenant($demoTenant);
-Terminal::info('Active Tenant Bound', $ctx1->getActiveTenantId() . ' (' . $demoTenant->getTradingName() . ')');
+Terminal::info('Empresa Ativa Vinculada', $ctx1->getActiveTenantId() . ' (' . $demoTenant->getTradingName() . ')');
 
 // Test scoped runInContext
 $scopedResult = $ctx1->runInContext('tenant-temporary-scope', function () use ($ctx1) {
     return $ctx1->getActiveTenantId();
 });
-Terminal::pass("runInContext() executed inside scope: '{$scopedResult}'");
-Terminal::pass("Context successfully restored after closure: '{$ctx1->getActiveTenantId()}'");
+Terminal::pass("runInContext() executado com escopo: '{$scopedResult}'");
+Terminal::pass("Contexto restaurado com sucesso após execução: '{$ctx1->getActiveTenantId()}'");
 $stepCount++;
 
 // --------------------------------------------------------------------------
 // Pattern 2: AuditLogger (Singleton & Tamper-Evident SHA-256 Chain)
 // --------------------------------------------------------------------------
-Terminal::subHeader('Pattern 2/8: AuditLogger (Singleton & Cryptographic Hash Chain)');
+Terminal::subHeader('Padrão 2/8: AuditLogger (Singleton e Trilha Criptográfica SHA-256)');
 AuditLogger::resetInstance();
 $auditLogger = AuditLogger::getInstance();
 
@@ -420,7 +420,7 @@ $stepCount++;
 // ==========================================================================
 // STAGE 3: Demonstration of 10 Student CRUD Operations (5 Members)
 // ==========================================================================
-Terminal::stageHeader(3, '10 Student CRUD Operations across 5 Engineering Members', 'Executing business services and verifying database persistence');
+Terminal::stageHeader(3, '10 Operações de CRUD dos 5 Integrantes da Equipe', 'Executando serviços de negócio e persistência no banco');
 
 // Instantiate Repositories
 $tenantRepo = new TenantRepository($db);
@@ -728,9 +728,9 @@ Terminal::pass("CRUD 10 (Nicholas): Policy Endorsed & Renewed: Extended until {$
 $stepCount++;
 
 // ==========================================================================
-// STAGE 4: Software Product Line (LPS) Variability Engine
+// ETAPA 4: Motor de Variabilidade da Linha de Produção de Software (LPS)
 // ==========================================================================
-Terminal::stageHeader(4, 'Software Product Line (LPS) Variability Engine', 'Executing domain variability rules across Tech, Indústria and Financeiro');
+Terminal::stageHeader(4, 'Motor de Variabilidade da Linha de Produção de Software (LPS)', 'Executando regras de variabilidade entre Tech, Indústria e Financeiro');
 
 $toggleManager = FeatureToggleManager::getInstance();
 $lpsEngine = new LpsVariabilityEngine($toggleManager);
@@ -821,9 +821,9 @@ $stepCount++;
 // ==========================================================================
 // STAGE 5: Execution Dashboard & Relational Metrics
 // ==========================================================================
-Terminal::stageHeader(5, 'Execution Dashboard & Database Diagnostics', 'Compiling relational metrics, memory utilization and final verdict');
+Terminal::stageHeader(5, 'Painel de Execução e Diagnósticos do Banco de Dados', 'Compilando métricas relacionais, uso de memória e veredito final');
 
-Terminal::subHeader('Relational Database Table Population (12 Tables)');
+Terminal::subHeader('População das Tabelas do Banco Relacional (12 Tables)');
 $tableCounts = [];
 foreach ($tables as $table) {
     $count = (int)$pdo->query("SELECT COUNT(*) FROM {$table};")->fetchColumn();
@@ -851,14 +851,14 @@ $elapsedMs = round((microtime(true) - $startTime) * 1000, 2);
 $peakMemMb = round(memory_get_peak_usage(true) / 1024 / 1024, 2);
 
 echo "\n" . Terminal::DIM . str_repeat('─', 80) . Terminal::RESET . "\n";
-Terminal::info('Execution Time', "{$elapsedMs} ms");
-Terminal::info('Peak Memory Usage', "{$peakMemMb} MB");
-Terminal::info('Demonstration Stages', '5 of 5 Stages Completed');
-Terminal::info('Design Patterns Demonstrated', '8 of 8 Patterns (2 Singleton, 3 Template Method, 3 Strategy)');
-Terminal::info('Student CRUD Modules Executed', '10 of 10 Modules (Fernando, Andryus, Felipe, Valentin, Nicholas)');
-Terminal::info('LPS Profiles Demonstrated', '3 of 3 Profiles (Tech, Indústria, Financeiro)');
-Terminal::info('Database Integrity', '12 Tables Populated | 11 Multi-Tenant Indexes Active | Foreign Keys Strict');
+Terminal::info('Tempo de Execução', "{$elapsedMs} ms");
+Terminal::info('Pico de Uso de Memória', "{$peakMemMb} MB");
+Terminal::info('Etapas de Demonstração', '5 of 5 Etapas Concluídas');
+Terminal::info('Padrões de Projeto Demonstrados', '8 of 8 Patterns (2 Singleton, 3 Template Method, 3 Strategy)');
+Terminal::info('Módulos CRUD Executados', '10 of 10 Modules (Fernando, Andryus, Felipe, Valentin, Nicholas)');
+Terminal::info('Perfis LPS Demonstrados', '3 of 3 Profiles (Tech, Indústria, Financeiro)');
+Terminal::info('Integridade do Banco de Dados', '12 Tabelas Populadas | 11 Índices Multi-Tenant Ativos | Chaves Estrangeiras Rígidas');
 
-echo "\n" . Terminal::BG_GREEN . Terminal::WHITE . Terminal::BOLD . " DEMO COMPLETE: ALL 8 PATTERNS, 10 CRUDS & LPS VARIABILITY PASSED (100%) " . Terminal::RESET . "\n\n";
+echo "\n" . Terminal::BG_GREEN . Terminal::WHITE . Terminal::BOLD . " DEMONSTRAÇÃO CONCLUÍDA: TODOS OS 8 PADRÕES, 10 CRUDS E LPS APROVADOS (100%) " . Terminal::RESET . "\n\n";
 
 exit(0);

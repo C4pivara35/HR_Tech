@@ -10,7 +10,7 @@ use HrTech\Domain\Entities\Role;
 /**
  * Interface DepartmentRoleRepositoryInterface
  *
- * Contract for relational persistence and retrieval of Department and Role organizational entities.
+ * Contrato para persistência relacional e recuperação de entidades organizacionais de Departamento e Cargo.
  *
  * @package HrTech\Repositories\Contracts
  * @author Andryus (Membro 2 — CRUD 4: Gestão de Cargos e Departamentos)

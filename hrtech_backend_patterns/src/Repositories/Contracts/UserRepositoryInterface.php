@@ -9,7 +9,7 @@ use HrTech\Domain\Entities\User;
 /**
  * Interface UserRepositoryInterface
  *
- * Contract for relational persistence and retrieval of User entities under tenant isolation.
+ * Contrato para persistência relacional e recuperação de Usuários com isolamento multi-tenant.
  *
  * @package HrTech\Repositories\Contracts
  * @author Fernando Lopes Duarte (Membro 1 — CRUD 2: Gestão de Usuários e RBAC)

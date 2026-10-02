@@ -13,7 +13,7 @@ namespace HrTech\Patterns\Singleton;
 // Como identificar o Singleton neste arquivo:
 //   1. Atributo estático privado ($instance) armazena a única instância
 //   2. Construtor privado impede criação com "new AuditLogger()"
-//   3. Método estático getInstance() é o único ponto de criação/acesso
+//   3. Método estático getInstance() é o úúnico ponto de criação/acesso
 //   4. __clone() e __wakeup() bloqueiam cópias indevidas
 // ============================================================
 

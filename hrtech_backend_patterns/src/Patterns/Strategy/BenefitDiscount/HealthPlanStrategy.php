@@ -45,7 +45,7 @@ class HealthPlanStrategy implements BenefitDiscountStrategyInterface
      *
      * @var array<int, array{max_age: int, rate: float}>
      */
-    public const array DEFAULT_AGE_BRACKETS = [
+    public const DEFAULT_AGE_BRACKETS = [
         ['max_age' =>  18, 'rate' => 0.00], //  0 a 18 anos: sem adicional por idade
         ['max_age' =>  28, 'rate' => 0.05], // 19 a 28 anos: +5% sobre o valor do benefício
         ['max_age' =>  38, 'rate' => 0.10], // 29 a 38 anos: +10%

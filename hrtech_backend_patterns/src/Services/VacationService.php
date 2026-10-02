@@ -95,7 +95,7 @@ class VacationService
     }
 
     /**
-     * Approves vacation request and deducts vacation balance if employee repository is configured.
+     * Aprova a solicitação de férias e debita o saldo do colaborador de forma atômica.
      *
      * @throws InvalidOperationException
      */
@@ -143,15 +143,15 @@ class VacationService
     }
 
     /**
-     * Cancels vacation request (requester only).
+     * Cancela uma solicitação de férias (permitido ao colaborador solicitante ou gestor).
      *
-     * @throws InvalidOperationException
+     * @throws InvalidOperationException se a solicitação não for encontrada ou não puder ser cancelada
      */
     public function cancelVacation(string $id, string $tenantId, string $requesterId): VacationRequest
     {
         $request = $this->getVacationRequest($id, $tenantId);
         if ($request === null) {
-            throw new InvalidOperationException("Vacation request '{$id}' not found in tenant '{$tenantId}'.");
+            throw new InvalidOperationException("Solicitação de férias '{$id}' não encontrada na empresa '{$tenantId}'.");
         }
 
         $request->cancel($requesterId);

@@ -12,7 +12,7 @@ use RuntimeException;
 /**
  * Class FeatureToggleManager
  *
- * Centralized feature toggle orchestrator for the Software Product Line (LPS).
+ * Orquestrador central de Feature Flags para a Linha de Produção de Software (LPS).
  * Implements Singleton pattern with hierarchical resolution:
  * Tenant Override > Segment Default > Global Default.
  *
@@ -63,7 +63,7 @@ class FeatureToggleManager implements SingletonInterface
     }
 
     /**
-     * Registers baseline features and loads segment defaults from TenantSegment enum.
+     * Registra as funcionalidades base e carrega os padrões por segmento do enum TenantSegment.
      */
     private function initializeDefaultCatalog(): void
     {
@@ -94,7 +94,7 @@ class FeatureToggleManager implements SingletonInterface
     }
 
     /**
-     * Registers a new feature flag with optional segment defaults and global default.
+     * Registra uma nova feature flag com padrões por segmento e padrão global opcional.
      *
      * @param string $feature Feature identifier key.
      * @param string $description Feature functional purpose.
@@ -120,7 +120,7 @@ class FeatureToggleManager implements SingletonInterface
     }
 
     /**
-     * Sets a tenant-specific override for a feature flag.
+     * Define uma sobreposição (override) específica de empresa para uma feature flag.
      */
     public function setTenantFeature(string $tenantId, string $feature, bool $enabled): void
     {
@@ -140,7 +140,7 @@ class FeatureToggleManager implements SingletonInterface
     }
 
     /**
-     * Returns all overrides defined for a given tenant.
+     * Retorna todas as sobreposições definidas para a empresa informada.
      *
      * @return array<string, bool>
      */
@@ -151,7 +151,7 @@ class FeatureToggleManager implements SingletonInterface
     }
 
     /**
-     * Clears tenant overrides (for one tenant or all tenants).
+     * Limpa as sobreposições de funcionalidade de um tenant ou de todos os tenants.
      */
     public function clearTenantOverrides(?string $tenantId = null): void
     {
@@ -163,7 +163,7 @@ class FeatureToggleManager implements SingletonInterface
     }
 
     /**
-     * Sets a segment-level default for a feature.
+     * Define o valor padrão a nível de segmento para uma funcionalidade.
      */
     public function setSegmentDefault(TenantSegment|string $segment, string $feature, bool $enabled): void
     {

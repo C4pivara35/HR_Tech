@@ -38,7 +38,7 @@ class MealVoucherStrategy implements BenefitDiscountStrategyInterface
     // -------------------------------------------------------
 
     /** Percentual máximo legal de desconto do PAT: 20% do valor do benefício */
-    public const float PAT_MAX_LEGAL_DEDUCTION_PERCENTAGE = 0.20;
+    public const PAT_MAX_LEGAL_DEDUCTION_PERCENTAGE = 0.20;
 
     /**
      * @param float $fixedNominalCopay Valor fixo de copagamento em R$ (0,0 = usa o da entidade Benefit)

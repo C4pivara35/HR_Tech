@@ -15,7 +15,7 @@ use PDO;
 /**
  * Class DepartmentRoleRepository
  *
- * SQLite PDO implementation for persistence and retrieval of Department and Role entities.
+ * Implementação SQLite PDO para persistência e recuperação de Departamentos e Cargos.
  *
  * @package HrTech\Repositories
  * @author Andryus (Membro 2 — CRUD 4: Gestão de Cargos e Departamentos)

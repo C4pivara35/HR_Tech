@@ -26,9 +26,9 @@ use HrTech\Patterns\Strategy\Performance\OkrStrategy;
 /**
  * Class LpsVariabilityEngine
  *
- * Domain business rule resolver and strategy dispatcher for the Software Product Line.
+ * Resolvedor de regras de negócio e despachante de estratégias para a Linha de Produção de Software.
  * Dynamically resolves operational eligibility, regulatory compliance (NR-6, NR-7, Portaria 671),
- * and polymorphic strategy pattern instantiation based on tenant profiles.
+ * e instanciação polimórfica de padrões Strategy com base no perfil de cada empresa.
  *
  * @package HrTech\Lps
  * @author Fernando Lopes Duarte (LPS Architecture Lead)
@@ -62,7 +62,7 @@ class LpsVariabilityEngine
     }
 
     /**
-     * Checks if a feature flag is active for the given tenant or segment context.
+     * Verifica se uma feature flag está ativa para o contexto do tenant ou segmento.
      */
     public function isFeatureActive(string $feature, Tenant|TenantSegment|string $tenantOrSegment): bool
     {
@@ -194,7 +194,7 @@ class LpsVariabilityEngine
     }
 
     /**
-     * Validates electronic time punch eligibility.
+     * Valida a elegibilidade da marcação de ponto eletrôúnico.
      * In Financeiro: strictly requires biometric verification.
      *
      * @return array{allowed: bool, reason: string}
@@ -218,7 +218,7 @@ class LpsVariabilityEngine
     }
 
     /**
-     * Factory dispatcher for Overtime Compensation Strategy.
+     * Fábrica despachante da Estratégia de Compensação de Horas Extras.
      */
     public function resolveOvertimeStrategy(
         Tenant|TenantSegment|string $tenant,
@@ -254,7 +254,7 @@ class LpsVariabilityEngine
     }
 
     /**
-     * Factory dispatcher for Benefit Discount Strategy.
+     * Fábrica despachante da Estratégia de Desconto de Benefícios.
      */
     public function resolveBenefitDiscountStrategy(
         Tenant|TenantSegment|string $tenant,

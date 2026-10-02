@@ -50,7 +50,7 @@ enum UserRole: string
     }
 
     /**
-     * Checks if this role has authority over another role.
+     * Verifica se este perfil possui hierarquia superior a outro perfil.
      */
     public function canManage(UserRole $targetRole): bool
     {
@@ -58,7 +58,7 @@ enum UserRole: string
     }
 
     /**
-     * Indicates whether the role has administrative access.
+     * Indica se o perfil possui acesso administrativo.
      */
     public function isAdministrative(): bool
     {
@@ -66,7 +66,7 @@ enum UserRole: string
     }
 
     /**
-     * Indicates whether the role has HR management authority.
+     * Indica se o perfil possui alçada de gestão de RH.
      */
     public function isHr(): bool
     {
@@ -74,7 +74,7 @@ enum UserRole: string
     }
 
     /**
-     * Indicates whether the role is an external user (e.g. insurance broker).
+     * Indica se o perfil é de usuário externo (ex.: corretor de seguros).
      */
     public function isExternal(): bool
     {
@@ -82,7 +82,7 @@ enum UserRole: string
     }
 
     /**
-     * Returns an array of all scalar values.
+     * Retorna um array com todos os valores escalares do enum.
      *
      * @return string[]
      */
@@ -92,7 +92,7 @@ enum UserRole: string
     }
 
     /**
-     * Returns an associative array of [value => label].
+     * Retorna um array associativo no formato [valor => rótulo].
      *
      * @return array<string, string>
      */

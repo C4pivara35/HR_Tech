@@ -12,7 +12,7 @@ namespace HrTech\Contracts;
 interface TimeLogImporterInterface
 {
     /**
-     * Imports time clock records from the given source identifier/payload.
+     * Importa registros de ponto eletrôúnico a partir do identificador ou payload de origem.
      *
      * @param string $source File path, JSON string, or API endpoint identifier.
      * @return array<string, mixed> Summary of import operation including processed records.

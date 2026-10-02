@@ -20,7 +20,7 @@ use JsonSerializable;
  *
  * Corporate benefit package entity.
  * Represents meal vouchers (VR), food vouchers (VA), transport vouchers (VT),
- * medical plans, dental plans, life insurance, and gym allowances.
+ * planos de saúde, odontológicos, seguro de vida corporativo e auxílio-alimentação.
  *
  * Implements employee copay / cost share calculations adhering to Brazilian labor
  * law and corporate policies (e.g. PAT 20% cap, VT 6% base salary cap).
@@ -113,7 +113,7 @@ class Benefit implements
     }
 
     /**
-     * Calculates the monthly employee copay / contribution.
+     * Calcula a coparticipação/contribuição mensal do colaborador.
      * Guarantees exact integer-cent rounding via Money value object.
      */
     public function calculateEmployeeContribution(): Money
@@ -126,7 +126,7 @@ class Benefit implements
     }
 
     /**
-     * Calculates the monthly employer subsidy / contribution.
+     * Calcula o subsídio mensal custeado pela empresa.
      * Preserves exact zero-penny-loss invariant:
      * employerContribution = totalValue - employeeContribution.
      */
@@ -137,7 +137,7 @@ class Benefit implements
     }
 
     /**
-     * Calculates effective payroll deduction for a specific employee salary,
+     * Calcula o desconto efetivo em folha para o salário do colaborador,
      * applying statutory caps (e.g. VT 6% salary cap under Lei 7.418/1985).
      *
      * @param Money $baseSalary Base gross monthly salary of the collaborator

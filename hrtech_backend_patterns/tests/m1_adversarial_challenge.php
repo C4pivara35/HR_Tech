@@ -475,7 +475,7 @@ class EmpiricalAdversarialHarness
             );
         }
 
-        // Stress with non-ASCII and Unicode characters
+        // Teste de estresse com caracteres não-ASCII e Unicode
         $nonAsciiInput = "529.982.247-25\u{00A0}\u{200B}"; // non-breaking space and zero-width space
         $cleanNonAscii = Cpf::clean($nonAsciiInput);
         $this->record(
@@ -686,7 +686,7 @@ class EmpiricalAdversarialHarness
     }
 
     // --------------------------------------------------------------------------
-    // EXECUTION RUNNER & REPORT GENERATOR
+    // EXECUTOR DE TESTES E GERADOR DE RELATÓRIO
     // --------------------------------------------------------------------------
     public function runAll(): array
     {
@@ -716,7 +716,7 @@ class EmpiricalAdversarialHarness
         $peakMem = memory_get_peak_usage(true) / 1024 / 1024;
 
         echo "\n\033[1;37m=================================================================\033[0m\n";
-        echo "\033[1;37m ADVERSARIAL CHALLENGE EXECUTION SUMMARY\033[0m\n";
+        echo "\033[1;37m ADVERSARIAL CHALLENGE EXECUTION RESUMO\033[0m\n";
         echo "\033[1;37m=================================================================\033[0m\n";
         echo "Total Empirical Tests Run : \033[1;33m{$this->totalTests}\033[0m\n";
         echo "Passed Assertions         : \033[1;32m{$this->passedTests}\033[0m\n";

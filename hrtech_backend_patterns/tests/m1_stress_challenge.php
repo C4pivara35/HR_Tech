@@ -17,7 +17,7 @@ declare(strict_types=1);
  */
 
 namespace HrTech\Domain\Entities {
-    // Test stub for Milestone 1 template method execution (Employee entity is scheduled for M2)
+    // Stub de teste para execução do template method no Milestone 1
     if (!class_exists('HrTech\Domain\Entities\Employee')) {
         class Employee {
             public function __construct(
@@ -138,11 +138,11 @@ final class EmpiricalChallengeRunner
     public function printSummary(): int
     {
         echo "\n" . str_repeat('=', 65) . "\n";
-        echo "\033[1;37mEMPIRICAL ADVERSARIAL CHALLENGE SUMMARY\033[0m\n";
+        echo "\033[1;37mEMPIRICAL ADVERSARIAL CHALLENGE RESUMO\033[0m\n";
         echo str_repeat('=', 65) . "\n";
-        echo "Total Assertions : {$this->totalAssertions}\n";
-        echo "Passed           : \033[32m{$this->passedAssertions}\033[0m\n";
-        echo "Failed           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
+        echo "Total de Asserções : {$this->totalAssertions}\n";
+        echo "Aprovadas        : \033[32m{$this->passedAssertions}\033[0m\n";
+        echo "Falhas           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
 
         if (!empty($this->statistics)) {
             echo "\n\033[1;36mEmpirical Statistics Collected:\033[0m\n";
@@ -406,7 +406,7 @@ $expectedPoleDist = M_PI * 6371000.0;
 $runner->assertCloseTo($expectedPoleDist, $poleDist, 1.0, "North Pole to South Pole distance matches pi * R (~20,015,087m)");
 
 // Polar Singularity / Longitudinal Degeneracy
-// At latitude 90, any longitude points to the same physical pole. Distance must be ~0.
+// Na latitude 90, qualquer longitude aponta para o mesmo polo físico. A distância deve ser ~0.
 $northPoleOtherLon = new GeoLocation(90.0, 180.0);
 $poleDegeneracyDist = $northPole->distanceTo($northPoleOtherLon);
 $runner->assertCloseTo(0.0, $poleDegeneracyDist, 0.001, "North Pole (90, 0) to North Pole (90, 180) distance is 0.0m");
@@ -735,7 +735,7 @@ $spExactOpposite = new GeoLocation(23.550520, 133.366692);
 $spAntiDist = $spAntipode->distanceTo($spExactOpposite);
 $runner->assertCloseTo($expectedPoleDist, $spAntiDist, 1.0, "SP antipodal distance matches pi * R");
 
-// Measure and report antipodal numerical stability across 1,000 randomized antipodal pairs
+// Mede e relata a estabilidade numérica entre 1.000 pares antipodais aleatórios
 $antipodalPairsTested = 1000;
 $nanAntipodalCount = 0;
 
@@ -758,7 +758,7 @@ for ($i = 0; $i < $antipodalPairsTested; $i++) {
 $runner->statistics['Antipodal Coordinate Pairs Tested'] = $antipodalPairsTested;
 $runner->statistics['Antipodal Pairs Returning NAN (Unclamped haversineA)'] = $nanAntipodalCount;
 
-// Note: We record this as a measured empirical statistic for the challenge report
+// Nota: Registramos isso como uma métrica empírica medida para o relatório do desafio
 if ($nanAntipodalCount > 0) {
     echo "  \033[33m⚠ NOTICE:\033[0m Encountered {$nanAntipodalCount}/{$antipodalPairsTested} antipodal pairs producing NAN due to unclamped sqrt(1 - haversineA) floating-point roundoff.\n";
 } else {

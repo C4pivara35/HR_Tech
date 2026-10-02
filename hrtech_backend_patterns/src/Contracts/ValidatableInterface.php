@@ -14,7 +14,7 @@ use HrTech\Exceptions\ValidationException;
 interface ValidatableInterface
 {
     /**
-     * Validates the internal domain state and invariant rules.
+     * Valida o estado interno de domínio e regras de invariância.
      *
      * @throws ValidationException When domain validation rules are violated.
      * @return void

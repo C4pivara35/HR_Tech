@@ -17,7 +17,7 @@ declare(strict_types=1);
  *      * BenefitDiscount: TransportationVoucherStrategy, HealthPlanStrategy, MealVoucherStrategy
  *      * Performance: OkrStrategy, Evaluation360Strategy, KpiStrategy
  *  - Cryptographic integrity (AuditLog SHA-256 block chaining, tamper detection, Portaria 671 hashes)
- *  - Integration between Patterns and the 12 Milestone 2 Domain Entities
+ *  - Integração entre os Padrões e as 12 Entidades de Domínio
  *
  * Usage: php tests/m3_verify.php
  */
@@ -162,22 +162,22 @@ final class M3TestRunner
     public function printSummary(): int
     {
         echo "\n" . str_repeat('=', 70) . "\n";
-        echo "\033[1;37mMILESTONE 3 VERIFICATION SUMMARY\033[0m\n";
+        echo "\033[1;37mMILESTONE 3 VERIFICATION RESUMO\033[0m\n";
         echo str_repeat('=', 70) . "\n";
-        echo "Total Assertions : {$this->totalAssertions}\n";
-        echo "Passed           : \033[32m{$this->passedAssertions}\033[0m\n";
-        echo "Failed           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
+        echo "Total de Asserções : {$this->totalAssertions}\n";
+        echo "Aprovadas        : \033[32m{$this->passedAssertions}\033[0m\n";
+        echo "Falhas           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "0") . "\n";
 
         if ($this->failedAssertions > 0) {
             echo "\n\033[1;31mFAILED TESTS:\033[0m\n";
             foreach ($this->failures as $failure) {
                 echo "  • {$failure}\n";
             }
-            echo "\n\033[1;31mRESULT: VERIFICATION FAILED\033[0m\n";
+            echo "\n\033[1;31mRESULTADO: VERIFICAÇÃO FALHOU\033[0m\n";
             return 1;
         }
 
-        echo "\n\033[1;32mRESULT: ALL MILESTONE 3 VERIFICATIONS PASSED (100%)\033[0m\n\n";
+        echo "\n\033[1;32mRESULTADO: TODAS AS VERIFICAÇÕES DO MILESTONE 3 FORAM APROVADAS (100%)\033[0m\n\n";
         return 0;
     }
 }
@@ -284,7 +284,7 @@ $mgr1->clearContext();
 $runner->assertFalse($mgr1->hasActiveTenant(), 'clearContext() removes active tenant');
 $runner->assertEquals(null, $mgr1->getActiveTenant(), 'getActiveTenant() is null after clearContext');
 
-// Scoped execution with runInContext
+// Execução com escopo isolado via runInContext
 $mgr1->setActiveTenant('tenant-outer');
 $runner->assertEquals('tenant-outer', $mgr1->getActiveTenantId(), 'Active tenant is outer before runInContext');
 
@@ -295,7 +295,7 @@ $result = $mgr1->runInContext('tenant-scoped', function () use ($mgr1, $runner) 
 $runner->assertEquals(42, $result, 'runInContext returns callback return value');
 $runner->assertEquals('tenant-outer', $mgr1->getActiveTenantId(), 'runInContext restores original tenant after completion');
 
-// Scoped execution restores even on thrown exception
+// Restauração do escopo mesmo após lançamento de exceção
 try {
     $mgr1->runInContext('tenant-broken', function () {
         throw new \RuntimeException('Scoped boom');
@@ -486,7 +486,7 @@ $runner->assertThrows(
     'CltPayroll throws ValidationException when evaluating a PJ contractor'
 );
 
-// Standard CLT execution with overtime & dependents
+// Execução padrão CLT com horas extras e dependentes
 $cltData = [
     'overtime_amount' => 500.00,
     'bonus' => 300.00,
@@ -716,7 +716,7 @@ $pdfOutput = $pdfGen->generate($reportData, [
 $runner->assertTrue(str_contains($pdfOutput, 'PAYROLL AUDIT REPORT'), 'PdfReportGenerator includes uppercase title');
 $runner->assertTrue(str_contains($pdfOutput, 'HRTech Global'), 'PdfReportGenerator includes company header');
 $runner->assertTrue(str_contains($pdfOutput, 'Alice Silva'), 'PdfReportGenerator includes Alice Silva');
-$runner->assertTrue(str_contains($pdfOutput, 'SUMMARY TOTALS: 4 Record(s) Processed'), 'PdfReportGenerator footer includes record count');
+$runner->assertTrue(str_contains($pdfOutput, 'RESUMO DE TOTAIS: 4 Registro(s) Processado(s)'), 'PdfReportGenerator footer includes record count');
 $runner->assertTrue(str_contains($pdfOutput, '--- Page 1 of 1 ---'), 'PdfReportGenerator includes pagination indicator');
 
 // Filter check in PDF generator
@@ -729,7 +729,7 @@ $filteredPdf = $pdfGen->generate($reportData, [
 $runner->assertTrue(str_contains($filteredPdf, 'Alice Silva'), 'Filtered PDF contains IT member Alice');
 $runner->assertTrue(str_contains($filteredPdf, 'Carla Lima'), 'Filtered PDF contains IT member Carla');
 $runner->assertFalse(str_contains($filteredPdf, 'Bob Santos'), 'Filtered PDF excludes Finance member Bob');
-$runner->assertTrue(str_contains($filteredPdf, 'SUMMARY TOTALS: 2 Record(s) Processed'), 'Filtered PDF reflects 2 records');
+$runner->assertTrue(str_contains($filteredPdf, 'RESUMO DE TOTAIS: 2 Registro(s) Processado(s)'), 'Filtered PDF reflects 2 records');
 
 // --- Excel Report Generator ---
 $excelGen = new ExcelReportGenerator();
@@ -780,7 +780,7 @@ $pay50 = $strat50->calculateOvertime($hourlyWage, 10.0);
 $runner->assertEquals(450.00, $pay50, 'Standard50Strategy: 30.00/h * 1.5 * 10h = 450.00');
 $runner->assertEquals(0.0, $strat50->calculateOvertime($hourlyWage, 0.0), 'Standard50Strategy returns 0.0 for 0 hours');
 $runner->assertEquals(0.0, $strat50->calculateOvertime($hourlyWage, -5.0), 'Standard50Strategy returns 0.0 for negative hours');
-$runner->assertTrue(str_contains($strat50->getDescription(), 'Art. 59 §1 of CLT'), 'Standard50Strategy description cites Art. 59 §1 CLT');
+$runner->assertTrue(str_contains($strat50->getDescription(), 'Art. 59 §1'), 'Standard50Strategy description cites Art. 59 §1 CLT');
 
 // Sunday 100%
 $strat100 = new Sunday100Strategy();
@@ -797,7 +797,7 @@ $runner->assertEquals(0.0, $payBank, 'BankHoursStrategy monetary overtime compen
 $minutesCredited = $stratBank->calculateBankMinutes(10.0);
 $runner->assertEquals(900, $minutesCredited, 'BankHoursStrategy calculates 900 credited bank minutes (10h * 60 * 1.5)');
 $runner->assertEquals(1.5, $stratBank->getCreditFactor(), 'BankHoursStrategy credit factor is 1.5');
-$runner->assertTrue(str_contains($stratBank->getDescription(), 'Art. 59 §2 of CLT'), 'BankHoursStrategy description cites Art. 59 §2 CLT');
+$runner->assertTrue(str_contains($stratBank->getDescription(), 'Art. 59 §2'), 'BankHoursStrategy description cites Art. 59 §2 CLT');
 
 // ==========================================================================
 // 9. SUITE: Strategy Pattern — Benefit Discount Calculations
@@ -825,7 +825,7 @@ $employeeBenefitTest = new Employee(
 $vtStrategy = new TransportationVoucherStrategy();
 $runner->assertEquals(BenefitType::TRANSPORTATION->value, $vtStrategy->getBenefitType(), 'VT Strategy applies to TRANSPORTATION');
 
-// Scenario A: Benefit value (350.00) > 6% salary cap (180.00) -> Employee pays cap (180.00)
+// Cenário A: Valor do benefício (350,00) > teto de 6% (180,00) -> Empregado paga o teto (180,00)
 $expensiveVt = new Benefit(
     id: 'BEN-VT-EXP',
     tenantId: 'tenant-corp',
@@ -838,7 +838,7 @@ $expensiveVt = new Benefit(
 $discountA = $vtStrategy->calculateDiscount($employeeBenefitTest, $expensiveVt);
 $runner->assertEquals(180.00, $discountA, 'VT Strategy caps deduction at 6% of basic salary (180.00 vs 350.00 cost)');
 
-// Scenario B: Benefit value (120.00) < 6% salary cap (180.00) -> Employee pays actual value (120.00)
+// Cenário B: Valor do benefício (120,00) < teto de 6% (180,00) -> Empregado paga o valor real (120,00)
 $cheapVt = new Benefit(
     id: 'BEN-VT-CHEAP',
     tenantId: 'tenant-corp',
@@ -981,7 +981,7 @@ AuditLogger::resetInstance();
 $contextMgr = TenantContextManager::getInstance();
 $auditLogger = AuditLogger::getInstance();
 
-// 1. Configure active multi-tenant enterprise boundary
+// 1. Configura o contexto ativo da empresa multi-tenant
 $acmeTenant = new Tenant(
     id: 'tenant-acme-corp',
     cnpj: '00.360.305/0001-04',
@@ -1000,7 +1000,7 @@ $auditLogger->log(
     payload: ['status' => 'ACTIVE', 'cnpj' => $acmeTenant->getCnpj()->getFormatted()]
 );
 
-// 3. Create Department, Role, and Employee within active tenant context
+// 3. Cria Departamento, Cargo e Colaborador dentro do contexto ativo da empresa
 $dept = new Department(
     id: 'DEP-ENG-01',
     tenantId: $contextMgr->getActiveTenantId(),

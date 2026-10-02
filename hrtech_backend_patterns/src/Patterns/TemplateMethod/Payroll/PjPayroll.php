@@ -32,10 +32,10 @@ use HrTech\Exceptions\ValidationException;
 class PjPayroll extends PayrollCalculatorTemplate
 {
     /** Alíquota padrão de retenção do IRRF para PJ: 1,5% (IN RFB 1.234/2012) */
-    public const float STANDARD_IRRF_WITHHOLDING_RATE = 0.015;
+    public const STANDARD_IRRF_WITHHOLDING_RATE = 0.015;
 
     /** Alíquota CSRF = PIS (0,65%) + COFINS (3,0%) + CSLL (1,0%) = 4,65% */
-    public const float STANDARD_CSRF_WITHHOLDING_RATE = 0.0465;
+    public const STANDARD_CSRF_WITHHOLDING_RATE = 0.0465;
 
     /**
      * Dados da folha atual (salvo pelo gancho beforeCalculation).

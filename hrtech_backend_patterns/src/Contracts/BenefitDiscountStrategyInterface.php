@@ -10,13 +10,13 @@ use HrTech\Domain\Entities\Benefit;
 /**
  * Interface BenefitDiscountStrategyInterface
  *
- * Defines the contract for benefit discount and copayment calculation strategies.
- * Supports statutory caps (VT 6%, PAT 20%) and corporate benefit rules.
+ * Define o contrato para estratégias de cálculo de desconto e coparticipação de benefícios.
+ * Suporta limites legais (VT 6%, PAT 20%) e regras de benefícios corporativos.
  */
 interface BenefitDiscountStrategyInterface
 {
     /**
-     * Calculates the deductible employee contribution for a specific benefit.
+     * Calcula a contribuição descontada do colaborador para um benefício específico.
      *
      * @param Employee $employee The employee receiving the benefit.
      * @param Benefit $benefit The benefit configuration and values.
@@ -25,7 +25,7 @@ interface BenefitDiscountStrategyInterface
     public function calculateDiscount(Employee $employee, Benefit $benefit): float;
 
     /**
-     * Returns the benefit type identifier this strategy applies to.
+     * Retorna o identificador do tipo de benefício ao qual esta estratégia se aplica.
      *
      * @return string Benefit type identifier (e.g. 'TRANSPORTATION', 'HEALTH_PLAN', 'MEAL_VOUCHER').
      */

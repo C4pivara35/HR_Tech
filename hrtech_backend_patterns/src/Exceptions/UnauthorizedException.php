@@ -7,7 +7,7 @@ namespace HrTech\Exceptions;
 use Throwable;
 
 /**
- * Thrown when authentication or authorization permissions are insufficient.
+ * Lançada quando credenciais de autenticação ou permissões de acesso são insuficientes.
  */
 class UnauthorizedException extends HrTechException
 {

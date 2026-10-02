@@ -10,7 +10,7 @@ use HrTech\Domain\ValueObjects\Cnpj;
 /**
  * Interface TenantRepositoryInterface
  *
- * Contract for relational persistence and retrieval of Tenant entities.
+ * Contrato para persistência relacional e recuperação de empresas clientes (Tenants).
  *
  * @package HrTech\Repositories\Contracts
  * @author Fernando Lopes Duarte (Membro 1 — CRUD 1: Gestão de Tenants)

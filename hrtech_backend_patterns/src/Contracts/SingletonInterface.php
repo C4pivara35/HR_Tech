@@ -13,14 +13,14 @@ namespace HrTech\Contracts;
 interface SingletonInterface
 {
     /**
-     * Returns the unique singleton instance.
+     * Retorna a instância única do Singleton.
      *
      * @return static
      */
     public static function getInstance(): static;
 
     /**
-     * Resets the singleton instance to null (for test isolation and context teardown).
+     * Reseta a instância Singleton para null (para isolamento em testes).
      *
      * @return void
      */

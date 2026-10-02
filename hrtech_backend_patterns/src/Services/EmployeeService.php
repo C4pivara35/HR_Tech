@@ -17,7 +17,7 @@ use HrTech\Repositories\Contracts\EmployeeRepositoryInterface;
  * Class EmployeeService
  *
  * Domain service orchestrating collaborator hiring, salary adjustments, departmental transfers,
- * bank of hours ledger updates, and labor termination.
+ * movimentações no saldo de banco de horas e rescisão contratual.
  *
  * @package HrTech\Services
  * @author Andryus (Membro 2 — CRUD 3: Cadastro de Colaboradores)

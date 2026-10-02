@@ -29,7 +29,7 @@ class TimeLogService
     }
 
     /**
-     * Records an immutable electronic time punch conforming to Portaria 671/2021 MTE.
+     * Registra uma marcação de ponto eletrôúnico imutável conforme a Portaria 671/2021 MTE.
      *
      * @throws ValidationException
      */
@@ -43,10 +43,10 @@ class TimeLogService
     ): TimeLog {
         $logType = $type instanceof TimeLogType ? $type : TimeLogType::from($type);
 
-        // Atomic NSR increment for this tenant
+        // Incremento atômico de NSR para este tenant
         $nextNsr = $this->repository->getLatestNsr($tenantId) + 1;
 
-        // Obtain cryptographic link to last punch for this employee
+        // Obtém o elo criptográfico para a última batida registrada deste colaborador
         $lastPunch = $this->repository->findLastByEmployee($employeeId, $tenantId);
         $previousHash = $lastPunch?->signatureHash ?? TimeLog::GENESIS_PREVIOUS_HASH;
 
@@ -84,7 +84,7 @@ class TimeLogService
     }
 
     /**
-     * Verifies the cryptographic chain integrity of all punches in the tenant ledger.
+     * Verifica a integridade da cadeia criptográfica de todas as batidas de ponto da empresa.
      */
     public function verifyTamperProofChain(string $tenantId, ?string $employeeId = null): bool
     {

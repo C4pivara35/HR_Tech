@@ -10,7 +10,7 @@ use HrTech\Domain\Enums\AdjustmentStatus;
 /**
  * Interface TimeAdjustmentRepositoryInterface
  *
- * Contract for relational persistence and workflow state updates of time adjustment requests.
+ * Contrato para persistência relacional e atualização de estados do fluxo de solicitações de ajuste de ponto.
  *
  * @package HrTech\Repositories\Contracts
  * @author Felipe (Membro 3 — CRUD 6: Ajustes de Ponto)

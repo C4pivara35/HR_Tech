@@ -7,26 +7,26 @@ namespace HrTech\Contracts;
 /**
  * Interface AuditableInterface
  *
- * Contract for entities subject to immutable audit logging and compliance tracking.
+ * Contrato para entidades sujeitas a registro imutável de auditoria e conformidade.
  */
 interface AuditableInterface
 {
     /**
-     * Returns the unique subject identifier for audit indexing.
+     * Retorna o identificador úúnico do objeto para indexação de auditoria.
      *
      * @return string
      */
     public function getAuditIdentifier(): string;
 
     /**
-     * Returns the category or classification of the auditable subject (e.g., 'Employee', 'TimeLog').
+     * Retorna a categoria ou classificação do objeto auditável (ex.: 'Employee', 'TimeLog').
      *
      * @return string
      */
     public function getAuditCategory(): string;
 
     /**
-     * Returns a sanitized array representation suitable for audit log retention.
+     * Retorna uma representação em array sanitizada e adequada para retenção em trilha de auditoria.
      * Sensitive attributes (passwords, tokens, salts) must be redacted.
      *
      * @return array<string, mixed>

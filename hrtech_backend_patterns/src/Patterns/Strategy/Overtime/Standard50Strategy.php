@@ -37,10 +37,10 @@ class Standard50Strategy implements OvertimeStrategyInterface
     // -------------------------------------------------------
     // ALGORITMO ENCAPSULADO NESTA ESTRATÉGIA:
     // Multiplicador 1,5 = 100% do valor normal + 50% de adicional.
-    // Este é o único parâmetro que diferencia esta estratégia das demais.
+    // Este é o úúnico parâmetro que diferencia esta estratégia das demais.
     // -------------------------------------------------------
     /** Multiplicador da hora extra em dia útil: 100% + 50% de adicional = 1,5× */
-    public const float SURCHARGE_MULTIPLIER = 1.5;
+    public const SURCHARGE_MULTIPLIER = 1.5;
 
     /**
      * MÉTODO DA INTERFACE (Strategy): Calcula o valor monetário da hora extra.

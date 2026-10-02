@@ -11,7 +11,7 @@ declare(strict_types=1);
  *  - Suite 3: Indústria Work Eligibility Adversarial Edge Cases (NR-6 / NR-7)
  *  - Suite 4: Tech and Financeiro Work Eligibility Waiver & Adversarial Inversion
  *  - Suite 5: Financeiro Biometric Punch Enforcement (Portaria 671) & Token Guarding
- *  - Suite 6: Polymorphic Strategy Dispatch (Overtime, Performance Bonus & Benefit Deductions)
+ *  - Suíte 6: Despacho Polimórfico de Strategies (Horas Extras, Bônus e Benefícios)
  *  - Suite 7: High-Throughput Fuzzing, Invariant Verification & Memory Profiling (10,000+ evaluations)
  *
  * Usage: php tests/m4_adversarial_lps.php
@@ -421,7 +421,7 @@ final class M4AdversarialLpsHarness
             'LpsVariabilityEngine reflects Tenant Alpha override of bank_of_hours = FALSE'
         );
 
-        // 2.2 Strict Tenant Isolation (Beta must NOT be affected)
+        // 2.2 Isolamento Estrito de Tenants (Beta NÃO deve ser afetada)
         $this->assertTrue(
             $mgr->isFeatureEnabled('bank_of_hours', tenant: $tenantB),
             'Tenant Beta remains isolated and retains Tech segment default bank_of_hours = TRUE'
@@ -489,7 +489,7 @@ final class M4AdversarialLpsHarness
         $this->assertFalse($mgr->isFeatureEnabled('generative_ai_assistant', segment: TenantSegment::INDUSTRIA), 'Custom feature inactive in Indústria');
         $this->assertTrue($mgr->isFeatureEnabled('generative_ai_assistant', segment: TenantSegment::FINANCEIRO), 'Custom feature active in Financeiro');
 
-        // Override custom feature for Indústria tenant
+        // Sobrepõe funcionalidade customizada para empresa da Indústria
         $mgr->setTenantFeature('tenant-ind', 'generative_ai_assistant', true);
         $this->assertTrue(
             $mgr->isFeatureEnabled('generative_ai_assistant', tenant: $tenantInd),
@@ -777,7 +777,7 @@ final class M4AdversarialLpsHarness
         );
         $this->assertEquals('ASO_UNFIT', $resDcUnfit['code'], 'Inverted Tech returns ASO_UNFIT');
 
-        // 4.4 Adversarial Inversion: Financeiro Tenant with Physical Vault / Armored Logistics
+        // 4.4 Inversão Adversarial: Empresa do Financeiro com Transporte e Cofres
         $vaultTenant = new Tenant(id: 'tenant-vault', cnpj: self::makeCnpj('77888999'), corporateName: 'Vault Logistics S.A.', tradingName: 'VaultCorp', segment: 'financeiro');
         FeatureToggleManager::getInstance()->setTenantFeature('tenant-vault', 'risk_ppe_required', true);
 
@@ -841,7 +841,7 @@ final class M4AdversarialLpsHarness
             'Financeiro punch with biometric verification is ACCEPTED'
         );
 
-        // 5.2 Tech and Indústria Baselines: Biometrics Optional (allowed by default)
+        // 5.2 Padrões Tech e Indústria: Biometria Opcional (permitido por padrão)
         $techPunch = $engine->validateTimePunch($punch, TenantSegment::TECH, biometricVerified: false);
         $this->assertTrue($techPunch['allowed'], 'Tech segment accepts electronic punch without biometric token');
 
@@ -855,7 +855,7 @@ final class M4AdversarialLpsHarness
             TenantSegment $seg,
             ?string $biometricToken
         ): void {
-            // Token must be present, non-empty, and carry verified cryptographic signature
+            // O token deve estar presente, preenchido e conter assinatura criptográfica válida
             $isBiometricValid = ($biometricToken !== null && strlen($biometricToken) >= 16 && str_starts_with($biometricToken, 'bio_token_'));
             $res = $eng->validateTimePunch($p, $seg, biometricVerified: $isBiometricValid);
 
@@ -959,7 +959,7 @@ final class M4AdversarialLpsHarness
         $finOtWeekday = $engine->resolveOvertimeStrategy(TenantSegment::FINANCEIRO, isSundayOrHoliday: false);
         $this->assertTrue($finOtWeekday instanceof Standard50Strategy, 'Financeiro weekday resolves to Standard50Strategy');
 
-        // Overtime Tenant Overrides
+        // Sobreposições de Horas Extras por Empresa
         $techPayoutTenant = new Tenant(id: 't-tech-payout', cnpj: self::makeCnpj('10111222'), corporateName: 'Tech Payout Ltda', tradingName: 'TechPay', segment: 'tech');
         FeatureToggleManager::getInstance()->setTenantFeature('t-tech-payout', 'bank_of_hours', false);
         $switchedOt = $engine->resolveOvertimeStrategy($techPayoutTenant, isSundayOrHoliday: false);
@@ -970,7 +970,7 @@ final class M4AdversarialLpsHarness
         $switchedIndOt = $engine->resolveOvertimeStrategy($indBankTenant, isSundayOrHoliday: true);
         $this->assertTrue($switchedIndOt instanceof BankHoursStrategy, 'Indústria tenant enabling bank_of_hours switches to BankHoursStrategy');
 
-        // Boundary conditions for overtime calculations
+        // Condições de contorno para cálculos de horas extras
         $this->assertEquals(0.0, $indOtWeekday->calculateOvertime(0.0, 5.0), 'Standard50Strategy with 0.0 hourly rate yields 0.00');
         $this->assertEquals(0.0, $indOtWeekday->calculateOvertime(50.0, 0.0), 'Standard50Strategy with 0.0 hours yields 0.00');
         $this->assertEquals(0.0, $indOtWeekday->calculateOvertime(-10.0, 5.0), 'Standard50Strategy with negative rate yields 0.00');
@@ -1202,10 +1202,10 @@ final class M4AdversarialLpsHarness
             // 3. Biometric punch invariant
             $punchAllowedWithoutBio = $engine->validateTimePunch($dummyPunch, $tenant, biometricVerified: false)['allowed'];
             if ($isBio && $punchAllowedWithoutBio) {
-                continue; // Invariant violation: biometric mandatory cannot allow unverified punch!
+                continue; // Violação de invariante: biometria obrigatória não pode permitir batida sem verificação!
             }
             if (!$isBio && !$punchAllowedWithoutBio) {
-                continue; // Invariant violation: biometric optional cannot block unverified punch!
+                continue; // Violação de invariante: biometria opcional não pode bloquear batida sem biometria!
             }
 
             // 4. Work eligibility invariant
@@ -1230,7 +1230,7 @@ final class M4AdversarialLpsHarness
     }
 
     // ==========================================================================
-    // EXECUTION RUNNER & ANSI SUMMARY
+    // EXECUTION RUNNER & ANSI RESUMO
     // ==========================================================================
     public function run(): int
     {
@@ -1250,11 +1250,11 @@ final class M4AdversarialLpsHarness
         $peakMem = memory_get_peak_usage(true) / 1024 / 1024;
 
         echo "\n" . str_repeat('=', 70) . "\n";
-        echo "\033[1;37mM4 ADVERSARIAL LPS VARIABILITY VERIFICATION SUMMARY\033[0m\n";
+        echo "\033[1;37mM4 ADVERSARIAL LPS VARIABILITY VERIFICATION RESUMO\033[0m\n";
         echo str_repeat('=', 70) . "\n";
-        echo "Total Assertions : \033[1;33m{$this->totalAssertions}\033[0m\n";
-        echo "Passed           : \033[32m{$this->passedAssertions}\033[0m\n";
-        echo "Failed           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "\033[32m0\033[0m") . "\n";
+        echo "Total de Asserções : \033[1;33m{$this->totalAssertions}\033[0m\n";
+        echo "Aprovadas        : \033[32m{$this->passedAssertions}\033[0m\n";
+        echo "Falhas           : " . ($this->failedAssertions > 0 ? "\033[31m{$this->failedAssertions}\033[0m" : "\033[32m0\033[0m") . "\n";
         echo sprintf("Elapsed Time     : %.3f seconds\n", $elapsed);
         echo sprintf("Peak Memory      : %.2f MB\n", $peakMem);
 
