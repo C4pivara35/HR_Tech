@@ -106,6 +106,7 @@ class EmployeeRepository implements EmployeeRepositoryInterface
 
     public function save(Employee $employee): bool
     {
+        // [Trilha Arquitetural: 5. Prepared Statement PDO — Injeção de Parâmetros e Prevenção de SQL Injection (Compatível SQLite/MySQL)]
         $stmt = $this->pdo->prepare(
             'INSERT INTO employees (
                 id, tenant_id, cpf, full_name, email, phone, birth_date, admission_date,

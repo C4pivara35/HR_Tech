@@ -41,15 +41,17 @@ class TimeLogService
         TimeLogType|string $type,
         GeoLocation $location
     ): TimeLog {
+        // [Trilha Arquitetural: 1. Validação de Invariantes de Enum e Tipos de Batida]
         $logType = $type instanceof TimeLogType ? $type : TimeLogType::from($type);
 
-        // Incremento atômico de NSR para este tenant
+        // [Trilha Arquitetural: 2. Sequenciamento Atômico de NSR (Número Sequencial de Registro - Portaria 671)]
         $nextNsr = $this->repository->getLatestNsr($tenantId) + 1;
 
-        // Obtém o elo criptográfico para a última batida registrada deste colaborador
+        // [Trilha Arquitetural: 3. Encadeamento Criptográfico SHA-256 (Ledger com a Batida Anterior)]
         $lastPunch = $this->repository->findLastByEmployee($employeeId, $tenantId);
         $previousHash = $lastPunch?->signatureHash ?? TimeLog::GENESIS_PREVIOUS_HASH;
 
+        // [Trilha Arquitetural: 4. Construção da Entidade Imutável TimeLog com Hash SHA-256]
         $timeLog = new TimeLog(
             id: $id,
             tenantId: $tenantId,
@@ -61,6 +63,7 @@ class TimeLogService
             previousHash: $previousHash
         );
 
+        // [Trilha Arquitetural: 5. Persistência no Repositório Relacional (Tabela time_logs)]
         $this->repository->save($timeLog);
 
         return $timeLog;

@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 
 echo "\n📦 ========================================================\n";
-echo "    INICIANDO O EMPACO TAMENTO DO COMPONENTE DE REUSO\n";
+echo "    INICIANDO O EMPACOTAMENTO DO COMPONENTE DE REUSO\n";
 echo " ========================================================\n\n";
 
 $baseDir    = __DIR__;
@@ -83,6 +83,6 @@ if (!ini_get('phar.readonly')) {
     echo "ℹ️  Nota: phar.readonly ativo no php.ini (artefato distribuível mantido em dist/ e Zip).\n";
 }
 
-echo "\n🎉 EMPACO TAMENTO CONCLUÍDO COM SUCESSO!\n";
+echo "\n🎉 EMPACOTAMENTO CONCLUÍDO COM SUCESSO!\n";
 echo "   O componente de reuso está pronto para distribuição em dist/\n\n";
 exit(0);

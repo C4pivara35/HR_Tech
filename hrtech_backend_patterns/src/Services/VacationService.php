@@ -103,12 +103,14 @@ class VacationService
     {
         $request = $this->getVacationRequest($id, $tenantId);
         if ($request === null) {
-            throw new InvalidOperationException("Vacation request '{$id}' not found in tenant '{$tenantId}'.");
+            throw new InvalidOperationException("Solicitação de férias '{$id}' não encontrada na empresa '{$tenantId}'.");
         }
 
+        // [Trilha Arquitetural: 4. Transição de Estado da Entidade de Domínio (REQUESTED -> APPROVED)]
         $request->approve($approverId);
         $this->repository->update($request);
 
+        // [Trilha Arquitetural: 5. Débito Atômico do Saldo de Férias na Entidade Employee]
         if ($this->employeeRepository !== null) {
             $employee = $this->employeeRepository->findById($request->employeeId, $tenantId);
             if ($employee !== null) {

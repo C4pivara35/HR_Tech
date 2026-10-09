@@ -30,7 +30,7 @@ class EmployeeService
     }
 
     /**
-     * Hires a new collaborator under CLT or contractual regime.
+     * Contrata e cadastra um novo colaborador no sistema.
      *
      * @throws ValidationException
      */
@@ -48,12 +48,15 @@ class EmployeeService
         Money|float|int $baseSalary,
         EmploymentType|string $employmentType
     ): Employee {
+        // [Trilha Arquitetural: 1. Validação de Invariantes de Domínio via Value Object Cpf (Módulo 11)]
         $cpfVo = $cpf instanceof Cpf ? $cpf : new Cpf($cpf);
 
+        // [Trilha Arquitetural: 2. Verificação de Regras de Negócio e Unicidade por Tenant]
         if ($this->repository->existsCpf($cpfVo, $tenantId)) {
-            throw ValidationException::forField('cpf', "Employee with CPF '{$cpfVo->getFormatted()}' already exists in this tenant.");
+            throw ValidationException::forField('cpf', "Colaborador com CPF '{$cpfVo->getFormatted()}' já está cadastrado nesta empresa.");
         }
 
+        // [Trilha Arquitetural: 3. Construção da Entidade com Saldo Inicial de Férias e Banco de Horas]
         $employee = new Employee(
             id: $id,
             tenantId: $tenantId,
@@ -72,6 +75,7 @@ class EmployeeService
             bankHoursMinutes: 0
         );
 
+        // [Trilha Arquitetural: 4. Persistência no Repositório Relacional (Tabela employees)]
         $this->repository->save($employee);
 
         return $employee;

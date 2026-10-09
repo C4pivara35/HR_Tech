@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-// ============================================================
-// HRTech Core — API REST conectando o protótipo ao SQLite real
-// ============================================================
+// ==============================================================================
+// HRTech Core — API REST e Controlador de Persistência Relacional
+// Conecta os formulários da interface (Frontend) ao Banco de Dados Relacional
+// ==============================================================================
 
 define('BACKEND_BASE', __DIR__ . '/hrtech_backend_patterns');
 require_once BACKEND_BASE . '/src/Autoloader.php';
@@ -13,12 +14,14 @@ $loader = new Autoloader();
 $loader->addNamespace('HrTech', BACKEND_BASE . '/src');
 $loader->register();
 
+// [Trilha de Execução - Passo 1: Inicialização da Conexão Singleton]
+// Reutiliza a mesma instância PDO ativa em todo o ciclo de vida da requisição (Compatível com SQLite / MySQL)
 use HrTech\Database\DatabaseManager;
 $db  = DatabaseManager::getInstance(__DIR__ . '/hrtech_db.sqlite');
 $db->migrate();
 $pdo = $db->getConnection();
 
-// Headers JSON + CORS
+// Headers JSON + CORS para consumo do Frontend (app.js / Fetch API)
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
@@ -26,6 +29,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
+// [Trilha de Execução - Passo 2: Roteamento e Desserialização do Payload]
 $method   = $_SERVER['REQUEST_METHOD'];
 $resource = $_GET['resource'] ?? '';
 $id       = $_GET['id'] ?? null;
@@ -40,6 +44,7 @@ function respond(mixed $data, int $code = 200): never {
 function err(string $msg, int $code = 400): never { respond(['error' => $msg], $code); }
 
 try {
+    // [Trilha de Execução - Passo 3: Despacho Polimórfico para os Controladores de Recursos]
     match ($resource) {
         'employees'   => handleEmployees($pdo, $method, $id, $body, $now),
         'tenants'     => handleTenants($pdo, $method, $id, $body, $now),
@@ -54,11 +59,11 @@ try {
     err($e->getMessage(), 500);
 }
 
-// ------------------------------------------------------------------ EMPLOYEES
+// ------------------------------------------------------------------ EMPLOYEES (CRUD 3: Colaboradores - Andryus)
 function handleEmployees(PDO $pdo, string $method, ?string $id, array $body, string $now): never {
     switch ($method) {
         case 'GET':
-            // Retorna lista de colaboradores adaptada para a tabela do protótipo (nome, cargo, depto, regime, status)
+            // [Trilha de Execução: Leitura com Junções Relacionais INNER/LEFT JOIN]
             $rows = $pdo->query(
                 "SELECT e.id, e.full_name, e.email, e.cpf, e.employment_type,
                         e.base_salary_cents, e.is_active, e.admission_date,
@@ -73,31 +78,35 @@ function handleEmployees(PDO $pdo, string $method, ?string $id, array $body, str
                  WHERE e.is_active = 1
                  ORDER BY e.created_at DESC"
             )->fetchAll();
-            // Convert cents to reais
             foreach ($rows as &$row) {
                 $row['base_salary'] = round(($row['base_salary_cents'] ?? 0) / 100, 2);
             }
             respond($rows);
 
         case 'POST':
+            // [Trilha de Execução - Passo 1: Validação de Contrato dos Campos Obrigatórios]
             if (empty($body['full_name'])) err('Nome obrigatório');
             if (empty($body['cpf']))       err('CPF obrigatório');
             if (empty($body['email']))     err('E-mail obrigatório');
             if (empty($body['tenant_id'])) err('Empresa obrigatória');
 
-            // Obtém ou cria um departamento/cargo padrão para a empresa
+            // [Trilha de Execução - Passo 2: Resolução Relacional de Chaves Estrangeiras (FKs)]
             $deptId = ensureDept($pdo, $body['tenant_id'], $body['department'] ?? 'Geral', $now);
             $roleId = ensureRole($pdo, $body['tenant_id'], $body['role_title'] ?? 'Colaborador', $now);
 
-            $newId = uniqid('emp-', true);
-            $stmt  = $pdo->prepare(
+            // [Trilha de Execução - Passo 3: Encapsulamento de Centavos Inteiros para Evitar Erros de Ponto Flutuante]
+            $salCents = (int)(((float)str_replace(',', '.', (string)($body['base_salary'] ?? '0'))) * 100);
+            $newId    = uniqid('emp-', true);
+
+            // [Trilha de Execução - Passo 4: Persistência Relacional via Prepared Statement (Prevenção de SQL Injection)]
+            $stmt = $pdo->prepare(
                 "INSERT INTO employees
                     (id, tenant_id, cpf, full_name, email, phone, birth_date, admission_date,
                      department_id, role_id, base_salary_cents, employment_type, is_active,
                      vacation_days_balance, bank_hours_balance, created_at)
                  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,1,30,0,?)"
             );
-            $salCents = (int)(((float)str_replace(',', '.', (string)($body['base_salary'] ?? '0'))) * 100);
+            // [Trilha de Execução - Passo 5: Injeção no Banco Relacional (Tabela employees com 30 dias de saldo inicial)]
             $stmt->execute([
                 $newId,
                 $body['tenant_id'],
@@ -125,6 +134,7 @@ function handleEmployees(PDO $pdo, string $method, ?string $id, array $body, str
             ], 201);
 
         case 'PUT':
+            // [Trilha de Execução: Atualização Atômica via UPDATE Prepared Statement]
             if (!$id) err('ID obrigatório');
             $deptId = ensureDept($pdo, $body['tenant_id'] ?? '', $body['department'] ?? 'Geral', $now);
             $roleId = ensureRole($pdo, $body['tenant_id'] ?? '', $body['role_title'] ?? 'Colaborador', $now);
@@ -135,6 +145,7 @@ function handleEmployees(PDO $pdo, string $method, ?string $id, array $body, str
             respond(['success' => true]);
 
         case 'DELETE':
+            // [Trilha de Execução: Soft Delete Preservando Histórico de Folha e Ponto]
             if (!$id) err('ID obrigatório');
             $pdo->prepare("UPDATE employees SET is_active = 0, updated_at = ? WHERE id = ?")->execute([$now, $id]);
             respond(['success' => true]);
@@ -167,7 +178,7 @@ function ensureRole(PDO $pdo, string $tenantId, string $name, string $now): stri
     return $newId;
 }
 
-// ------------------------------------------------------------------ TENANTS
+// ------------------------------------------------------------------ TENANTS (CRUD 1: Empresas / Multi-Tenancy - Fernando)
 function handleTenants(PDO $pdo, string $method, ?string $id, array $body, string $now): never {
     switch ($method) {
         case 'GET':
@@ -175,24 +186,28 @@ function handleTenants(PDO $pdo, string $method, ?string $id, array $body, strin
             respond($rows);
 
         case 'POST':
+            // [Trilha de Execução - Passo 1: Validação de Contrato & Sanitização de CNPJ]
             if (empty($body['name'])) err('Razão social obrigatória');
             if (empty($body['cnpj'])) err('CNPJ obrigatório');
-            // Check duplicate CNPJ
+            $cleanCnpj = preg_replace('/\D/', '', $body['cnpj']);
+
+            // [Trilha de Execução - Passo 2: Verificação de Unicidade no Escopo Global]
             $check = $pdo->prepare("SELECT id FROM tenants WHERE cnpj = ?");
-            $check->execute([preg_replace('/\D/', '', $body['cnpj'])]);
+            $check->execute([$cleanCnpj]);
             if ($check->fetch()) err('CNPJ já cadastrado');
 
+            // [Trilha de Execução - Passo 3: Injeção Relacional com Licenciamento de Módulos (LPS)]
             $newId = uniqid('ten-', true);
             $pdo->prepare(
                 "INSERT INTO tenants (id, cnpj, corporate_name, trading_name, segment, is_active, module_licenses, created_at)
                  VALUES (?,?,?,?,?,1,?,?)"
             )->execute([
                 $newId,
-                preg_replace('/\D/', '', $body['cnpj']),
+                $cleanCnpj,
                 $body['name'],
                 $body['trading_name'] ?? $body['name'],
                 $body['segment'] ?? 'tech',
-                json_encode(['time_tracking', 'payroll', 'benefits']),
+                json_encode(['time_tracking', 'payroll', 'benefits', 'safety']),
                 $now,
             ]);
             $t = $pdo->prepare("SELECT * FROM tenants WHERE id = ?");
@@ -208,7 +223,7 @@ function handleTenants(PDO $pdo, string $method, ?string $id, array $body, strin
     }
 }
 
-// ------------------------------------------------------------------ TIME LOGS
+// ------------------------------------------------------------------ TIME LOGS (CRUD 5: Ponto Eletrônico Portaria 671 - Felipe)
 function handleTimeLogs(PDO $pdo, string $method, ?string $id, array $body, string $now): never {
     switch ($method) {
         case 'GET':
@@ -230,19 +245,23 @@ function handleTimeLogs(PDO $pdo, string $method, ?string $id, array $body, stri
             respond($rows);
 
         case 'POST':
+            // [Trilha de Execução - Passo 1: Validação de Contrato]
             if (empty($body['employee_id'])) err('Colaborador obrigatório');
             if (empty($body['tenant_id']))   err('Empresa obrigatória');
 
+            // [Trilha de Execução - Passo 2: Recuperação do NSR e Hash do Registro Anterior (Ledger Encadeado)]
             $prevStmt = $pdo->prepare("SELECT signature_hash, nsr FROM time_logs WHERE employee_id = ? ORDER BY nsr DESC LIMIT 1");
             $prevStmt->execute([$body['employee_id']]);
             $prev = $prevStmt->fetch();
             $prevHash = $prev ? $prev['signature_hash'] : '';
             $nsr      = $prev ? ($prev['nsr'] + 1) : 1;
 
+            // [Trilha de Execução - Passo 3: Geração da Assinatura Criptográfica SHA-256 (Portaria 671/MTE)]
             $logType = $body['log_type'] ?? 'ENTRY';
             $hash    = hash('sha256', $body['employee_id'] . $now . $logType . $prevHash);
             $newId   = uniqid('tl-', true);
 
+            // [Trilha de Execução - Passo 4: Gravação Imutável no Banco de Dados (Tabela time_logs)]
             $pdo->prepare(
                 "INSERT INTO time_logs (id, tenant_id, employee_id, timestamp, type, latitude, longitude, nsr, previous_hash, signature_hash)
                  VALUES (?,?,?,?,?,?,?,?,?,?)"
@@ -269,7 +288,7 @@ function handleTimeLogs(PDO $pdo, string $method, ?string $id, array $body, stri
     }
 }
 
-// ------------------------------------------------------------------ VACATIONS
+// ------------------------------------------------------------------ VACATIONS (CRUD 7: Férias & Concessões - Valentin)
 function handleVacations(PDO $pdo, string $method, ?string $id, array $body, string $now): never {
     switch ($method) {
         case 'GET':
@@ -281,12 +300,15 @@ function handleVacations(PDO $pdo, string $method, ?string $id, array $body, str
             respond($rows);
 
         case 'POST':
+            // [Trilha de Execução - Passo 1: Validação de Período e Saldo de Férias]
             if (empty($body['employee_id'])) err('Colaborador obrigatório');
             if (empty($body['start_date']))  err('Data início obrigatória');
             if (empty($body['end_date']))    err('Data fim obrigatória');
 
             $days  = max(1, (int)($body['days_requested'] ?? 15));
             $newId = uniqid('vac-', true);
+
+            // [Trilha de Execução - Passo 2: Inserção do Requerimento com Status REQUESTED]
             $pdo->prepare(
                 "INSERT INTO vacation_requests
                     (id, tenant_id, employee_id, start_date, end_date, duration_days,
@@ -308,6 +330,7 @@ function handleVacations(PDO $pdo, string $method, ?string $id, array $body, str
             respond(['id' => $newId, 'status' => 'REQUESTED', 'duration_days' => $days], 201);
 
         case 'PUT':
+            // [Trilha de Execução - Passo 3: Aprovação de Férias e Débito Atômico de Saldo]
             if (!$id) err('ID obrigatório');
             $status = strtoupper($body['status'] ?? 'APPROVED');
             $pdo->prepare("UPDATE vacation_requests SET status = ?, approved_at = ? WHERE id = ?")
@@ -323,7 +346,7 @@ function handleVacations(PDO $pdo, string $method, ?string $id, array $body, str
     }
 }
 
-// ------------------------------------------------------------------ BENEFITS
+// ------------------------------------------------------------------ BENEFITS (CRUD 8: Gestão de Benefícios / Strategy - Valentin)
 function handleBenefits(PDO $pdo, string $method, ?string $id, array $body, string $now): never {
     switch ($method) {
         case 'GET':
@@ -335,9 +358,12 @@ function handleBenefits(PDO $pdo, string $method, ?string $id, array $body, stri
             respond($rows);
 
         case 'POST':
+            // [Trilha de Execução - Passo 1: Cadastro de Pacote de Benefício com Coparticipação]
             if (empty($body['provider'])) err('Operadora obrigatória');
             $newId    = uniqid('ben-', true);
             $valCents = (int)(((float)($body['monthly_value'] ?? 0)) * 100);
+
+            // [Trilha de Execução - Passo 2: Persistência Relacional (Tabela benefits)]
             $pdo->prepare(
                 "INSERT INTO benefits (id, tenant_id, type, name, provider, value_cents, employee_cost_share_percentage, is_deductible)
                  VALUES (?,?,?,?,?,?,?,1)"
@@ -356,7 +382,7 @@ function handleBenefits(PDO $pdo, string $method, ?string $id, array $body, stri
     }
 }
 
-// ------------------------------------------------------------------ STATS
+// ------------------------------------------------------------------ STATS (Dashboard / Contadores Agregados)
 function handleStats(PDO $pdo): never {
     respond([
         'tenants'   => (int)$pdo->query("SELECT COUNT(*) FROM tenants WHERE is_active = 1")->fetchColumn(),
@@ -368,7 +394,7 @@ function handleStats(PDO $pdo): never {
     ]);
 }
 
-// ------------------------------------------------------------------ ADJUSTMENTS
+// ------------------------------------------------------------------ ADJUSTMENTS (CRUD 6: Ajustes de Ponto - Felipe)
 function handleAdjustments(PDO $pdo, string $method, ?string $id, array $body, string $now): never {
     switch ($method) {
         case 'GET':
@@ -380,6 +406,7 @@ function handleAdjustments(PDO $pdo, string $method, ?string $id, array $body, s
             respond($rows);
 
         case 'POST':
+            // [Trilha de Execução - Passo 1: Solicitação de Ajuste de Ponto]
             if (empty($body['employee_id'])) err('Colaborador obrigatório');
             $newId = uniqid('adj-', true);
             $pdo->prepare(
@@ -400,6 +427,7 @@ function handleAdjustments(PDO $pdo, string $method, ?string $id, array $body, s
             respond(['id' => $newId, 'status' => 'PENDING'], 201);
 
         case 'PUT':
+            // [Trilha de Execução - Passo 2: Aprovação de Ajuste pelo Gestor]
             if (!$id) err('ID obrigatório');
             $status = strtoupper($body['status'] ?? 'APPROVED');
             $pdo->prepare("UPDATE time_adjustment_requests SET status = ?, approved_at = ? WHERE id = ?")
@@ -409,4 +437,3 @@ function handleAdjustments(PDO $pdo, string $method, ?string $id, array $body, s
         default: err('Método não permitido', 405);
     }
 }
-

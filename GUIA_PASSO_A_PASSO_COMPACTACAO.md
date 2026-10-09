@@ -30,7 +30,7 @@
 ---
 
 ### 🎬 3. Mostrar o Manifesto do Pacote (`composer.json`)
-- Abra o arquivo: [`hrtech_backend_patterns/composer.json`](file:///home/fernando/Documentos/Faculdade/Projeto%20de%20medição%20e%20analise/hrtech_backend_patterns/composer.json)
+- Abra o arquivo: [`hrtech_backend_patterns/composer.json`](file:///d:/Faculdade/Nova%20pasta/HR_Tech/hrtech_backend_patterns/composer.json)
 - **Fala sugerida:**
   > *"Formalizamos nosso componente através do manifesto `composer.json`. Definimos o nome do pacote `hrtech/core-patterns`, a versão `1.0.0`, a licença e o mapa de Autoloading PSR-4 para a namespace `HrTech\`."*
 
@@ -49,15 +49,15 @@
 ---
 
 ### 🎬 5. Mostrar o Reuso e Padrões no Código
-- Abra o arquivo de Trait: [`hrtech_backend_patterns/src/Domain/Traits/EntityBaseTrait.php`](file:///home/fernando/Documentos/Faculdade/Projeto%20de%20medição%20e%20analise/hrtech_backend_patterns/src/Domain/Traits/EntityBaseTrait.php)
-- Abra os Padrões de Projeto: [`hrtech_backend_patterns/src/Patterns/Strategy/`](file:///home/fernando/Documentos/Faculdade/Projeto%20de%20medição%20e%20analise/hrtech_backend_patterns/src/Patterns/Strategy)
+- Abra o arquivo de Trait: [`hrtech_backend_patterns/src/Domain/Traits/EntityBaseTrait.php`](file:///d:/Faculdade/Nova%20pasta/HR_Tech/hrtech_backend_patterns/src/Domain/Traits/EntityBaseTrait.php)
+- Abra os Padrões de Projeto: [`hrtech_backend_patterns/src/Patterns/Strategy/`](file:///d:/Faculdade/Nova%20pasta/HR_Tech/hrtech_backend_patterns/src/Patterns/Strategy)
 - **Fala sugerida:**
   > *"Dentro do pacote empacotado, o código foi desenvolvido com reutilização: utilizamos **Traits** em PHP para abstrair getters/setters comuns e o padrão **Strategy** para desacoplar regras de negócios."*
 
 ---
 
 ### 🎬 6. Encerramento e Validação
-- Mostre a pasta [`dist/`](file:///home/fernando/Documentos/Faculdade/Projeto%20de%20medição%20e%20analise/hrtech_backend_patterns/dist) criada com o pacote distribuível pronto para ser utilizado por outros projetos.
+- Mostre a pasta [`hrtech_backend_patterns/dist/`](file:///d:/Faculdade/Nova%20pasta/HR_Tech/hrtech_backend_patterns/dist) criada com o pacote distribuível pronto para ser utilizado por outros projetos.
 - **Fala sugerida:**
   > *"O componente está empacotado, formalizado e pronto para distribuição. Obrigado!"*
 

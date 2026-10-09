@@ -33,7 +33,7 @@ class TenantService
      * @param string|Cnpj $cnpj
      * @param string $corporateName Razão Social
      * @param string $tradingName Nome Fantasia
-     * @param string $segment Market segment (tech, industria, financeiro)
+     * @param string $segment Segmento de Mercado (tech, industria, financeiro)
      * @param array<int, string> $modules
      * @throws ValidationException
      */
@@ -45,16 +45,19 @@ class TenantService
         string $segment = 'tech',
         array $modules = []
     ): Tenant {
+        // [Trilha Arquitetural: 1. Validação de Invariantes de Domínio via Value Object Cnpj (Módulo 11)]
         $cnpjVo = $cnpj instanceof Cnpj ? $cnpj : new Cnpj($cnpj);
 
+        // [Trilha Arquitetural: 2. Verificação de Unicidade e Regras de Negócio]
         if ($this->repository->exists($id)) {
-            throw ValidationException::forField('id', "Tenant with ID '{$id}' already exists.");
+            throw ValidationException::forField('id', "Tenant com ID '{$id}' já existe no sistema.");
         }
 
         if ($this->repository->existsCnpj($cnpjVo)) {
-            throw ValidationException::forField('cnpj', "Tenant with CNPJ '{$cnpjVo->getFormatted()}' already exists.");
+            throw ValidationException::forField('cnpj', "Tenant com CNPJ '{$cnpjVo->getFormatted()}' já existe no sistema.");
         }
 
+        // [Trilha Arquitetural: 3. Construção da Entidade de Domínio Tenant]
         $tenant = new Tenant(
             id: $id,
             cnpj: $cnpjVo,
@@ -66,6 +69,7 @@ class TenantService
             segment: $segment
         );
 
+        // [Trilha Arquitetural: 4. Persistência no Repositório Relacional (Tabela tenants)]
         $this->repository->save($tenant);
 
         return $tenant;

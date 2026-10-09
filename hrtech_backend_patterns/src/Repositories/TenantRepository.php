@@ -67,6 +67,7 @@ class TenantRepository implements TenantRepositoryInterface
 
     public function save(Tenant $tenant): bool
     {
+        // [Trilha Arquitetural: 5. Prepared Statement PDO — Injeção de Parâmetros e Prevenção de SQL Injection (Compatível SQLite/MySQL)]
         $stmt = $this->pdo->prepare(
             'INSERT INTO tenants (id, cnpj, corporate_name, trading_name, segment, is_active, module_licenses, created_at, updated_at)
              VALUES (:id, :cnpj, :corporate_name, :trading_name, :segment, :is_active, :module_licenses, :created_at, :updated_at)'
