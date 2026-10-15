@@ -1,3 +1,14 @@
+<?php
+/**
+ * View: Dashboard Corporativo
+ * Variáveis injetadas pelo AdminController::dashboard():
+ *
+ * @var int|string $employeeCount
+ * @var int|string $timeLogCount
+ * @var int|string $pendingVacations
+ * @var int|string $benefitCount
+ */
+?>
 <div style="margin-bottom: 24px;">
   <h1 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 6px;">Dashboard Corporativo</h1>
   <p style="color: var(--text-muted); font-size: 14px;">Visão consolidada do tenant ativo e indicadores operacionais em tempo real.</p>
@@ -11,7 +22,7 @@
     </div>
     <div>
       <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">COLABORADORES ATIVOS</span>
-      <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 2px;"><?= $employeeCount ?></h3>
+      <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 2px;"><?= $employeeCount ?? 0 ?></h3>
     </div>
   </div>
 
@@ -21,7 +32,7 @@
     </div>
     <div>
       <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">BATIDAS DE PONTO (671)</span>
-      <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 2px;"><?= $timeLogCount ?></h3>
+      <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 2px;"><?= $timeLogCount ?? 0 ?></h3>
     </div>
   </div>
 
@@ -31,7 +42,7 @@
     </div>
     <div>
       <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">FÉRIAS PENDENTES</span>
-      <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 2px;"><?= $pendingVacations ?></h3>
+      <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 2px;"><?= $pendingVacations ?? 0 ?></h3>
     </div>
   </div>
 
@@ -41,7 +52,7 @@
     </div>
     <div>
       <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">BENEFÍCIOS ATIVOS</span>
-      <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 2px;"><?= $benefitCount ?></h3>
+      <h3 style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 2px;"><?= $benefitCount ?? 0 ?></h3>
     </div>
   </div>
 </div>

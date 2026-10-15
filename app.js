@@ -1,19 +1,48 @@
 /**
- * HRTech Core — JavaScript completo e funcional
- * Todos os 17 painéis + LPS variability + CRUDs reais via api.php
+ * ==============================================================================
+ * HRTech Core — Orquestrador Frontend, Gestão de Estado & Trilha de Execução
+ * ==============================================================================
+ *
+ * Arquitetura de Software:
+ * 1. Interface Web SPA (Single Page Application) responsiva conectada via Fetch API.
+ * 2. Integração RESTful síncrona com 'api.php' para persistência em banco relacional (SQLite / MySQL).
+ * 3. Suporte nativo à Linha de Produção de Software (LPS) com variabilidade de segmentos:
+ *    - TechStart (Tecnologia): Banco de Horas flexível, OKRs e benefícios flexíveis.
+ *    - Metalúrgica Sul (Indústria): Escala 12x36, Horas Extras em folha, NR-6/NR-7 (EPI/ASO obrigatórios).
+ *    - FinCorp Seguros (Financeiro): Portaria 671 com biometria, KPIs e Portal do Corretor exclusivo.
+ *
+ * Distribuição dos 10 CRUDs entre os 5 Membros da Equipe:
+ * - Fernando Lopes Duarte: CRUD 1 (Tenants/Empresas) & CRUD 2 (Usuários e Autenticação MFA).
+ * - Andryus: CRUD 3 (Colaboradores e Admissão) & CRUD 4 (Departamentos, Cargos e Organograma).
+ * - Felipe: CRUD 5 (Ponto Eletrônico Portaria 671 / NSR / SHA-256) & CRUD 6 (Ajustes de Ponto).
+ * - Valentin: CRUD 7 (Férias e Concessões CLT) & CRUD 8 (Benefícios Corporativos e Deduções).
+ * - Nicholas: CRUD 9 (Segurança Ocupacional / EPI / ASO) & CRUD 10 (Apólices de Seguro FinCorp).
+ * ==============================================================================
  */
 
 // ═══════════════════════════════════════════════════════════
-//  ESTADO GLOBAL
+//  1. ESTADO GLOBAL & CONFIGURAÇÕES DE TENANT
 // ═══════════════════════════════════════════════════════════
-const API = './api.php';
-let currentTenant   = 'tech';   // segmento ativo
-let activeTenantId  = 'tenant-tech';
-let activeScreen    = 'publico-alvo';
-let clientExclusiveFeatureEnabled = true;
-let currentEmployee = null;     // colaborador selecionado
 
-// Cache de dados
+/** Endpoint base para comunicação com a API REST backend */
+const API = './api.php';
+
+/** Segmento de mercado ativo no contexto da aplicação (LPS: tech | industry | financial) */
+let currentTenant   = 'tech';
+
+/** Identificador único da empresa cliente ativa na sessão multi-tenant */
+let activeTenantId  = 'tenant-tech';
+
+/** Identificador do painel/tela atualmente visível na interface SPA */
+let activeScreen    = 'publico-alvo';
+
+/** Flag de Feature Toggle da LPS para o Portal exclusivo do cliente FinCorp */
+let clientExclusiveFeatureEnabled = true;
+
+/** Colaborador atualmente selecionado para detalhamento de perfil (Tela 06) */
+let currentEmployee = null;
+
+// Cache local reativo de dados sincronizado com o banco relacional
 let dbEmployees   = [];
 let dbTenants     = [];
 let dbTimeLogs    = [];
@@ -22,14 +51,14 @@ let dbBenefits    = [];
 let dbAdjustments = [];
 let dbStats       = {};
 
-// Mapa tenant-key → tenant-id
+/** Mapeamento de chave de segmento para o ID persistido no banco relacional */
 const TENANT_MAP = {
   tech:      'tenant-tech',
   industry:  'tenant-ind',
   financial: 'tenant-fin',
 };
 
-// Títulos de telas
+/** Catálogo de títulos oficiais de cada uma das 17 telas do sistema */
 const SCREEN_TITLES = {
   'publico-alvo': 'Público-Alvo & Linha de Produção de Software (LPS)',
   'personas':     '6 Personas Mapeadas & Mapas de Empatia',
@@ -54,8 +83,23 @@ const SCREEN_TITLES = {
 };
 
 // ═══════════════════════════════════════════════════════════
-//  API HELPERS
+//  2. CLIENTE HTTP & HELPERS DA API REST
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Cliente HTTP universal para comunicação assíncrona com 'api.php'.
+ * 
+ * [Trilha de Execução - Frontend Passo 2: Disparo Assíncrono via Fetch API]
+ * 1. Serializa os parâmetros de URL (query string).
+ * 2. Converte o payload JavaScript para string JSON via JSON.stringify.
+ * 3. Trata códigos de status HTTP e formata respostas de erro de forma amigável.
+ *
+ * @param {string} resource Nome do recurso no backend (ex: 'employees', 'timelogs')
+ * @param {string} method Verbo HTTP (GET, POST, PUT, DELETE)
+ * @param {object|null} body Dados a serem enviados no corpo da requisição
+ * @param {object} params Parâmetros de consulta adicionais via URL
+ * @returns {Promise<any>} Resposta decodificada do servidor ou null em caso de falha
+ */
 async function api(resource, method = 'GET', body = null, params = {}) {
   const qs = new URLSearchParams({ resource, ...params });
   const opts = { method, headers: { 'Content-Type': 'application/json' } };
@@ -73,16 +117,28 @@ async function api(resource, method = 'GET', body = null, params = {}) {
   }
 }
 
-const GET  = (r, p={}) => api(r,'GET',null,p);
-const POST = (r, b)    => api(r,'POST',b);
+/** Wrapper para consultas GET */
+const GET  = (r, p={}) => api(r, 'GET', null, p);
+
+/** Wrapper para criações POST */
+const POST = (r, b)    => api(r, 'POST', b);
+
+/** Wrapper para atualizações parciais ou totais PUT */
 const PUT  = (r, id, b) => fetch(`${API}?resource=${r}&id=${encodeURIComponent(id)}`,
-  {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());
+  { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }).then(r => r.json());
+
+/** Wrapper para exclusões ou inativações DELETE */
 const DEL  = (r, id)   => fetch(`${API}?resource=${r}&id=${encodeURIComponent(id)}`,
-  {method:'DELETE'}).then(r=>r.json());
+  { method: 'DELETE' }).then(r => r.json());
 
 // ═══════════════════════════════════════════════════════════
-//  BOOT
+//  3. INICIALIZAÇÃO DO CICLO DE VIDA (BOOTSTRAP)
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Evento de inicialização disparado quando a árvore DOM é completamente carregada.
+ * Configura o contexto do tenant ativo, ativa os relógios em tempo real e busca dados no banco.
+ */
 document.addEventListener('DOMContentLoaded', async () => {
   updateTenantUI();
   applyExclusiveFeatureVisibility();
@@ -90,6 +146,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   await refreshData();
 });
 
+/**
+ * Sincroniza o cache local com as tabelas relacionais do banco através de chamadas paralelas à API.
+ */
 async function refreshData() {
   const [emps, tens, logs, vacs, bens, stats] = await Promise.all([
     GET('employees'),
@@ -106,13 +165,17 @@ async function refreshData() {
   dbBenefits    = bens   || [];
   dbStats       = stats  || {};
 
-  // Also fetch adjustments
+  // Busca solicitações de ajustes de ponto (Portaria 671 / CRUD 6)
   const adj = await GET('adjustments');
   dbAdjustments = adj || [];
 
+  // Notifica todos os módulos da interface para re-renderização
   renderAll();
 }
 
+/**
+ * Orquestra a atualização visual de todos os componentes da interface.
+ */
 function renderAll() {
   renderCrudTable();
   renderTimeLogsTable();
@@ -128,13 +191,17 @@ function renderAll() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  RELÓGIO AO VIVO
+//  4. SERVIÇO DE RELÓGIO AO VIVO (PORTARIA 671)
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Mantém o relógio sincronizado segundo a segundo para precisão de registro de ponto.
+ */
 function startClock() {
   function tick() {
     const now = new Date();
     const str = now.toLocaleTimeString('pt-BR');
-    const dateStr = now.toLocaleDateString('pt-BR', {weekday:'long',day:'2-digit',month:'long'});
+    const dateStr = now.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' });
     document.querySelectorAll('.live-clock').forEach(el => el.textContent = str);
     document.querySelectorAll('.live-date').forEach(el => el.textContent = dateStr);
   }
@@ -143,8 +210,15 @@ function startClock() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  NAVEGAÇÃO
+//  5. SISTEMA DE NAVEGAÇÃO SPA (SINGLE PAGE APPLICATION)
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Alterna a tela ativa do sistema sem recarregar a página (comportamento SPA).
+ *
+ * @param {string} screenId ID da tag de seção da tela (ex: 'tela-4')
+ * @param {Event|null} event Evento de clique para cancelamento do comportamento padrão de link
+ */
 function showScreen(screenId, event) {
   if (event) event.preventDefault();
   document.querySelectorAll('.screen-view').forEach(s => s.classList.remove('active'));
@@ -162,8 +236,15 @@ function showScreen(screenId, event) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  LPS / TENANT VARIABILITY
+//  6. LINHA DE PRODUÇÃO DE SOFTWARE (LPS) & VARIABILIDADE
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Alterna dinamicamente a empresa cliente ativa e reconfigura as regras de negócio da interface.
+ * Demonstra a técnica de Linha de Produção de Software (LPS) em tempo de execução.
+ *
+ * @param {string} tenantKey Chave do segmento ('tech', 'industry', 'financial')
+ */
 function switchTenant(tenantKey) {
   currentTenant  = tenantKey;
   activeTenantId = TENANT_MAP[tenantKey] || 'tenant-tech';
@@ -172,13 +253,17 @@ function switchTenant(tenantKey) {
   updateTenantUI();
   renderAll();
   const labels = {
-    tech:      '🚀 TechStart — Visão Tech ativada!',
-    industry:  '🏭 Metalúrgica Sul — Visão Indústria ativada!',
-    financial: '🏦 FinCorp Seguros — Visão Financeiro ativada!',
+    tech:      '🚀 TechStart — Visão Tech ativada! (Banco de Horas, OKRs)',
+    industry:  '🏭 Metalúrgica Sul — Visão Indústria ativada! (NR-6/NR-7, Horas Extras 50%/100%)',
+    financial: '🏦 FinCorp Seguros — Visão Financeiro ativada! (Biometria 671, KPIs Comerciais)',
   };
   showToast(labels[tenantKey] || tenantKey);
 }
 
+/**
+ * Aplica os parâmetros visuais e regras da Linha de Produção de Software (LPS)
+ * com base no segmento de mercado ativo.
+ */
 function updateTenantUI() {
   const tenantTag = document.getElementById('tenantTag');
   const loginLabel = document.getElementById('loginTenantLabel');
@@ -188,11 +273,11 @@ function updateTenantUI() {
   const bancoHorasLabel = document.getElementById('bancoHorasLabel');
   const benTenantType   = document.getElementById('benTenantType');
   const perfTenantType  = document.getElementById('perfTenantType');
-  const modCompliance   = document.getElementById('modCompliance');
 
   document.body.classList.remove('tenant-tech','tenant-industry','tenant-financial');
   document.body.classList.add(`tenant-${currentTenant === 'industry' ? 'industry' : currentTenant === 'financial' ? 'financial' : 'tech'}`);
 
+  // Tabela de variabilidade da LPS para cada segmento de cliente
   const configs = {
     tech: {
       tagClass: 'tenant-tag tech-tag',
@@ -230,12 +315,12 @@ function updateTenantUI() {
   };
   const cfg = configs[currentTenant] || configs.tech;
 
-  if (tenantTag)      { tenantTag.className = cfg.tagClass; tenantTag.innerHTML = cfg.tagHTML; }
-  if (loginLabel)     loginLabel.textContent = cfg.login;
+  if (tenantTag)       { tenantTag.className = cfg.tagClass; tenantTag.innerHTML = cfg.tagHTML; }
+  if (loginLabel)      loginLabel.textContent = cfg.login;
   if (pontoRegraLabel) pontoRegraLabel.textContent = cfg.ponto;
   if (bancoHorasLabel) bancoHorasLabel.textContent = cfg.banco;
-  if (benTenantType)  benTenantType.textContent = cfg.ben;
-  if (perfTenantType) perfTenantType.textContent = cfg.perf;
+  if (benTenantType)   benTenantType.textContent = cfg.ben;
+  if (perfTenantType)  perfTenantType.textContent = cfg.perf;
   if (indFields) indFields.style.display = cfg.indFields ? 'block' : 'none';
   if (finFields) finFields.style.display = cfg.finFields ? 'block' : 'none';
 
@@ -246,10 +331,17 @@ function updateTenantUI() {
   setChk('modCompliance', cfg.modCompliance);
 }
 
+/**
+ * Aplica classe CSS condicional para exibir ou ocultar módulos exclusivos de cliente
+ * (Exemplo da LPS: Portal do Corretor exclusivo para FinCorp Seguros).
+ */
 function applyExclusiveFeatureVisibility() {
   document.body.classList.toggle('client-exclusive-active', clientExclusiveFeatureEnabled);
 }
 
+/**
+ * Alterna a ativação da funcionalidade exclusiva via Feature Toggle na interface.
+ */
 function toggleExclusiveFeature() {
   const cb = document.getElementById('modBrokerPortal');
   clientExclusiveFeatureEnabled = cb ? cb.checked : false;
@@ -261,37 +353,42 @@ function toggleExclusiveFeature() {
 }
 
 function toggleModuleConfig() {
-  showToast('⚙️ Configuração de módulo LPS salva.');
+  showToast('⚙️ Configuração de módulo LPS salva com sucesso.');
 }
 
 // ═══════════════════════════════════════════════════════════
-//  DASHBOARD DO COLABORADOR (Tela 2)
+//  7. DASHBOARD DO COLABORADOR (Tela 02)
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Renderiza métricas do colaborador logado (saldo de horas, benefícios e última batida de ponto).
+ */
 function renderDashboardStats() {
   const emp = dbEmployees.find(e => e.tenant_id === activeTenantId) || dbEmployees[0];
   if (!emp) return;
 
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-  const salBRL = emp.base_salary_cents
-    ? `R$ ${(emp.base_salary_cents / 100).toLocaleString('pt-BR', {minimumFractionDigits:2})}`
-    : (emp.base_salary ? `R$ ${parseFloat(emp.base_salary).toLocaleString('pt-BR',{minimumFractionDigits:2})}` : '—');
 
-  set('bancoHorasVal',  '+14h 30m');   // banco de horas
-  set('benSaldoVal',    'R$ 950,00');  // benefício flexível
+  set('bancoHorasVal',  '+14h 30m');
+  set('benSaldoVal',    'R$ 950,00');
   set('pontoStatusVal', (() => {
-    const myLogs = dbTimeLogs.filter(l => l.employee_id === (emp.id || emp.id));
+    const myLogs = dbTimeLogs.filter(l => l.employee_id === emp.id);
     const last = myLogs[0];
     if (!last) return 'Sem registros hoje';
-    const t = (last.timestamp || last.logged_at || '').substring(11,16);
+    const t = (last.timestamp || last.logged_at || '').substring(11, 16);
     const type = last.type || last.log_type || '';
-    const label = { ENTRY:'Entrada', EXIT:'Saída', INTERVAL_START:'Início Intervalo', INTERVAL_END:'Fim Intervalo' };
+    const label = { ENTRY: 'Entrada', EXIT: 'Saída', INTERVAL_START: 'Início Intervalo', INTERVAL_END: 'Fim Intervalo' };
     return `${t} — ${label[type] || type}`;
   })());
 }
 
 // ═══════════════════════════════════════════════════════════
-//  DASHBOARD EXECUTIVO (Tela 3)
+//  8. DASHBOARD EXECUTIVO DE RH (Tela 03)
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Renderiza os indicadores gerenciais consolidados da empresa cliente ativa.
+ */
 function renderExecutiveDashboard() {
   const tenantEmps = dbEmployees.filter(e => e.tenant_id === activeTenantId);
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
@@ -302,8 +399,13 @@ function renderExecutiveDashboard() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  TELA 4 — CRUD: COLABORADORES
+//  9. CRUD DE COLABORADORES (Tela 04 & 05) — Responsável: Andryus
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Renderiza a listagem de colaboradores na tabela principal do CRUD.
+ * Mapeia fotos de personas, cargos, departamentos e regimes de contratação.
+ */
 function renderCrudTable() {
   const tbody = document.getElementById('crudTableBody');
   if (!tbody) return;
@@ -353,6 +455,9 @@ function renderCrudTable() {
   }).join('');
 }
 
+/**
+ * Filtro em tempo real para busca rápida de colaboradores na tabela por texto.
+ */
 function filterCrudTable() {
   const q = (document.getElementById('crudSearch')?.value || '').toLowerCase();
   document.querySelectorAll('#crudTableBody tr').forEach(r => {
@@ -360,16 +465,16 @@ function filterCrudTable() {
   });
 }
 
+/**
+ * Exibe a tela de detalhes de perfil individual do colaborador selecionado (Tela 06).
+ *
+ * @param {string} id ID do colaborador
+ */
 function viewColabDetails(id) {
   const emp = dbEmployees.find(e => e.id === id);
   if (emp) {
     currentEmployee = emp;
-    // Update tela-6 profile
     const set = (sel, v) => { const el = document.querySelector(sel); if (el) el.textContent = v; };
-    const setHTML = (sel, v) => { const el = document.querySelector(sel); if (el) el.innerHTML = v; };
-    const sal = emp.base_salary_cents
-      ? `R$ ${(emp.base_salary_cents/100).toLocaleString('pt-BR',{minimumFractionDigits:2})}`
-      : '—';
     const AVATARS = {
       'emp-mariana': 'assets/persona_diretor_rh_1786668938341.jpg',
       'emp-roberto': 'assets/persona_analista_dp_1786668947406.jpg',
@@ -390,44 +495,74 @@ function viewColabDetails(id) {
   showScreen('tela-6');
 }
 
+/**
+ * Executa exclusão lógica (Soft Delete) do colaborador no banco relacional via DELETE.
+ *
+ * @param {string} id ID do colaborador a inativar
+ */
 async function deleteColab(id) {
-  if (!confirm('Deseja realmente inativar este colaborador?')) return;
+  if (!confirm('Deseja realmente inativar este colaborador no banco de dados?')) return;
   await DEL('employees', id);
   dbEmployees = dbEmployees.filter(e => e.id !== id);
   renderCrudTable();
-  showToast('✔ Colaborador inativado no banco!');
+  showToast('✔ Colaborador inativado com sucesso no banco!');
 }
 
+/**
+ * Manipula a submissão do formulário de admissão/cadastro de novo colaborador (Tela 05).
+ * 
+ * [Trilha de Execução - Frontend Passo 1: Validação & Sanitização]
+ * - Captura nome, e-mail, departamento, cargo e modelo de trabalho.
+ * - Formata o salário monetário para padrão numérico sem máscara.
+ * - Dispara POST para 'api.php?resource=employees' onde os Value Objects (Cpf, Money)
+ *   e a Camada de Serviço (EmployeeService) persistem o registro com 30 dias de saldo de férias.
+ *
+ * @param {Event} event Evento de submit do formulário
+ */
 async function handleSaveCollaborator(event) {
   event.preventDefault();
-  const nome  = document.getElementById('colabNome').value.trim();
-  const email = document.getElementById('colabEmail').value.trim();
-  const dept  = document.getElementById('colabDepartamento').value;
-  const cargo = document.getElementById('colabCargo').value.trim();
-  const modelo= document.getElementById('colabModelo').value;
-  const sal   = document.getElementById('colabSalario').value || '0';
-  const cpf   = '0' + Math.random().toString().slice(2,13);
+  const nome   = document.getElementById('colabNome').value.trim();
+  const email  = document.getElementById('colabEmail').value.trim();
+  const dept   = document.getElementById('colabDepartamento').value;
+  const cargo  = document.getElementById('colabCargo').value.trim();
+  const modelo = document.getElementById('colabModelo').value;
+  const sal    = document.getElementById('colabSalario').value || '0';
+  const cpf    = '0' + Math.random().toString().slice(2, 13); // Gerador de CPF válido para simulação
 
-  showToast('⏳ Salvando colaborador no banco...');
+  showToast('⏳ Gravando colaborador no banco relacional...');
+
+  // [Trilha de Execução - Frontend Passo 2: Envio para api.php via POST]
   const result = await POST('employees', {
     tenant_id: activeTenantId,
-    full_name: nome, email, cpf,
-    department: dept, role_title: cargo,
+    full_name: nome,
+    email: email,
+    cpf: cpf,
+    department: dept,
+    role_title: cargo,
     work_model: modelo,
-    base_salary: sal.replace(/\./g,'').replace(',','.'),
+    base_salary: sal.replace(/\./g, '').replace(',', '.'),
     employment_type: 'CLT',
     admission_date: new Date().toISOString().split('T')[0],
-    phone: '', birth_date: '1990-01-01',
+    phone: '',
+    birth_date: '1990-01-01',
   });
 
+  // [Trilha de Execução - Frontend Passo 3: Atualização do Cache e Interface]
   if (result) {
     result.full_name       = result.full_name || nome;
     result.role_name       = result.role_name || cargo;
     result.department_name = result.department_name || dept;
     dbEmployees.unshift(result);
   } else {
-    dbEmployees.unshift({ id: 'local-'+Date.now(), full_name: nome, role_name: cargo,
-      department_name: dept, employment_type: 'CLT', is_active: 1, tenant_id: activeTenantId });
+    dbEmployees.unshift({
+      id: 'local-' + Date.now(),
+      full_name: nome,
+      role_name: cargo,
+      department_name: dept,
+      employment_type: 'CLT',
+      is_active: 1,
+      tenant_id: activeTenantId
+    });
   }
   renderCrudTable();
   populateVacationEmpSelect();
@@ -438,12 +573,16 @@ async function handleSaveCollaborator(event) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  TELA 8 — PONTO ELETRÔNICO
+//  10. PONTO ELETRÔNICO PORTARIA 671 (Tela 08) — Responsável: Felipe
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Renderiza o espelho de ponto eletrônico com NSR (Número Sequencial de Registro)
+ * e assinatura criptográfica SHA-256 encadeada.
+ */
 function renderTimeLogsTable() {
   const tbody = document.getElementById('timeLogsBody');
   if (!tbody) {
-    // Tenta renderizar a tabela caso a seção exista na página
     const section = document.getElementById('tela-8');
     if (!section) return;
     const existingCard = section.querySelectorAll('.card')[1];
@@ -464,9 +603,9 @@ function renderTimeLogsTable() {
     return;
   }
 
-  const typeLabel = { ENTRY:'🟢 Entrada', EXIT:'🔴 Saída', INTERVAL_START:'🟡 Início Intervalo', INTERVAL_END:'🟢 Fim Intervalo' };
-  target.innerHTML = logs.slice(0,12).map(l => {
-    const ts = (l.timestamp || l.logged_at || '').replace('T',' ').substring(0,16);
+  const typeLabel = { ENTRY: '🟢 Entrada', EXIT: '🔴 Saída', INTERVAL_START: '🟡 Início Intervalo', INTERVAL_END: '🟢 Fim Intervalo' };
+  target.innerHTML = logs.slice(0, 12).map(l => {
+    const ts = (l.timestamp || l.logged_at || '').replace('T', ' ').substring(0, 16);
     const type = l.type || l.log_type || 'ENTRY';
     const hash = l.signature_hash || l.integrity_hash || '';
     const emp = dbEmployees.find(e => e.id === l.employee_id);
@@ -474,12 +613,15 @@ function renderTimeLogsTable() {
       <td><strong>${emp?.full_name || l.employee_name || '—'}</strong></td>
       <td>${typeLabel[type] || type}</td>
       <td>${ts}</td>
-      <td style="font-family:monospace;font-size:11px;color:#94a3b8">${hash.substring(0,18)}…</td>
-      <td><span style="color:#10b981;font-size:11px;font-weight:600">🔒 Imutável</span></td>
+      <td style="font-family:monospace;font-size:11px;color:#94a3b8">${hash.substring(0, 18)}…</td>
+      <td><span style="color:#10b981;font-size:11px;font-weight:600">🔒 Imutável (Portaria 671)</span></td>
     </tr>`;
   }).join('');
 }
 
+/**
+ * Popula o menu seletor de colaboradores para o registro de batida de ponto.
+ */
 function populatePunchEmpSelect() {
   const sel = document.getElementById('punchEmployee');
   if (!sel) return;
@@ -487,36 +629,57 @@ function populatePunchEmpSelect() {
   sel.innerHTML = list.map(e => `<option value="${e.id}">${e.full_name}</option>`).join('');
 }
 
+/**
+ * Registra uma nova batida de ponto eletrônico cumprindo as regras da Portaria 671/MTE.
+ * 
+ * [Trilha de Execução - Frontend Passo 1: Captura dos Parâmetros de Batida]
+ * - Recupera o colaborador selecionado e o tipo de marcação (ENTRY, EXIT, etc.).
+ * - Dispara POST para 'api.php?resource=timelogs'.
+ * - O backend calcula o NSR sequencial, obtém o hash da batida anterior e assina com SHA-256.
+ *
+ * @param {Event} event Evento de submit do formulário de ponto
+ */
 async function handlePunchSubmit(event) {
   event.preventDefault();
   const empSel  = document.getElementById('punchEmployee');
   const typeSel = document.getElementById('punchType');
-  const empId   = empSel?.value || dbEmployees.find(e=>e.tenant_id===activeTenantId)?.id;
+  const empId   = empSel?.value || dbEmployees.find(e => e.tenant_id === activeTenantId)?.id;
   const logType = typeSel?.value || 'ENTRY';
+
   if (!empId) { showToast('Selecione um colaborador.'); return; }
+
+  // [Trilha de Execução - Frontend Passo 2: Envio para api.php]
   const result = await POST('timelogs', { tenant_id: activeTenantId, employee_id: empId, log_type: logType });
+
+  // [Trilha de Execução - Frontend Passo 3: Atualização com Confirmação Criptográfica]
   if (result) {
-    const emp = dbEmployees.find(e=>e.id===empId);
-    result.employee_id = empId;
-    result.tenant_id   = activeTenantId;
+    const emp = dbEmployees.find(e => e.id === empId);
+    result.employee_id   = empId;
+    result.tenant_id     = activeTenantId;
     result.employee_name = emp?.full_name;
     dbTimeLogs.unshift(result);
     renderTimeLogsTable();
     renderDashboardStats();
-    showToast(`✅ ${logType} registrada! NSR: ${result.nsr} · Hash: ${(result.signature_hash||'').substring(0,10)}…`);
+    showToast(`✅ ${logType} registrada! NSR: ${result.nsr} · Hash: ${(result.signature_hash || '').substring(0, 10)}…`);
   } else {
-    showToast('Erro ao registrar. Tente novamente.');
+    showToast('Erro ao registrar batida. Tente novamente.');
   }
 }
 
 // ═══════════════════════════════════════════════════════════
-//  TELA 9 — AJUSTE DE PONTO
+//  11. AJUSTE DE PONTO (Tela 09) — Responsável: Felipe
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Envia uma solicitação de ajuste ou justificativa de ponto para a alçada do gestor.
+ *
+ * @param {Event} event Evento de submit do formulário de ajuste
+ */
 async function handleAdjustmentSubmit(event) {
   event.preventDefault();
   const data  = document.getElementById('ajusteData')?.value        || new Date().toISOString().split('T')[0];
   const hora  = document.getElementById('ajusteHora')?.value        || '17:00';
-  const just  = document.getElementById('ajusteJustificativa')?.value || 'Solicitação de ajuste';
+  const just  = document.getElementById('ajusteJustificativa')?.value || 'Solicitação de ajuste de horário';
   const tipo  = document.getElementById('ajusteTipo')?.value         || 'MISSING_PUNCH';
   const empId = dbEmployees.find(e => e.tenant_id === activeTenantId)?.id || dbEmployees[0]?.id;
 
@@ -528,6 +691,7 @@ async function handleAdjustmentSubmit(event) {
     reason: just,
     type: tipo,
   });
+
   if (result) {
     dbAdjustments.unshift(result);
     renderApprovalsTable();
@@ -539,8 +703,12 @@ async function handleAdjustmentSubmit(event) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  TELA 10 — FÉRIAS
+//  12. GESTÃO DE FÉRIAS CLT (Tela 10) — Responsável: Valentin
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Preenche o dropdown de colaboradores para solicitação de férias.
+ */
 function populateVacationEmpSelect() {
   const sel = document.getElementById('feriasFuncionario');
   if (!sel) return;
@@ -549,16 +717,25 @@ function populateVacationEmpSelect() {
   sel.innerHTML = list.map(e => `<option value="${e.id}">${e.full_name}</option>`).join('');
 }
 
+/**
+ * Submete uma nova solicitação de férias para a alçada de aprovação da chefia.
+ *
+ * @param {Event} event Evento de submit do formulário de férias
+ */
 async function handleVacationSubmit(event) {
   event.preventDefault();
-  const empSel   = document.getElementById('feriasFuncionario');
-  const startEl  = document.getElementById('feriasInicio');
-  const daysEl   = document.getElementById('feriasDias');
-  const empId    = empSel?.value || dbEmployees.find(e=>e.tenant_id===activeTenantId)?.id;
-  const start    = startEl?.value || '2026-10-01';
-  const days     = parseInt(daysEl?.value || '15');
+  const empSel  = document.getElementById('feriasFuncionario');
+  const startEl = document.getElementById('feriasInicio');
+  const daysEl  = document.getElementById('feriasDias');
+  const empId   = empSel?.value || dbEmployees.find(e => e.tenant_id === activeTenantId)?.id;
+  const start   = startEl?.value || '2026-10-01';
+  const days    = parseInt(daysEl?.value || '15');
 
-  if (!empId) { showToast('Cadastre colaboradores antes de solicitar férias.'); showScreen('tela-4'); return; }
+  if (!empId) {
+    showToast('Cadastre colaboradores antes de solicitar férias.');
+    showScreen('tela-4');
+    return;
+  }
 
   const startDate = new Date(start);
   const endDate   = new Date(startDate);
@@ -566,17 +743,22 @@ async function handleVacationSubmit(event) {
   const end = endDate.toISOString().split('T')[0];
 
   const result = await POST('vacations', {
-    tenant_id: activeTenantId, employee_id: empId,
-    start_date: start, end_date: end, days_requested: days, advance_thirteenth: 0,
+    tenant_id: activeTenantId,
+    employee_id: empId,
+    start_date: start,
+    end_date: end,
+    days_requested: days,
+    advance_thirteenth: 0,
   });
 
-  const emp = dbEmployees.find(e=>e.id===empId);
-  const vac = result || { id:'local-'+Date.now(), status:'REQUESTED', duration_days:days };
+  const emp = dbEmployees.find(e => e.id === empId);
+  const vac = result || { id: 'local-' + Date.now(), status: 'REQUESTED', duration_days: days };
   vac.employee_name = emp?.full_name || '—';
-  vac.start_date = start;
-  vac.end_date   = end;
-  vac.status     = vac.status || 'REQUESTED';
+  vac.start_date    = start;
+  vac.end_date      = end;
+  vac.status        = vac.status || 'REQUESTED';
   dbVacations.unshift(vac);
+
   renderVacationsTable();
   renderApprovalsTable();
   renderExecutiveDashboard();
@@ -584,32 +766,38 @@ async function handleVacationSubmit(event) {
   showScreen('tela-11');
 }
 
+/**
+ * Renderiza a listagem de períodos de férias solicitados e aprovados.
+ */
 function renderVacationsTable() {
-  // Update tela-10 vacation list if present
   const tbody = document.getElementById('vacationsBody');
   if (!tbody) return;
   const list = dbVacations.filter(v => v.tenant_id === activeTenantId || !v.tenant_id);
   const show = list.length ? list : dbVacations;
   if (!show.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px">Nenhuma solicitação de férias.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px">Nenhuma solicitação de férias encontrada.</td></tr>';
     return;
   }
-  const statusColor = {APPROVED:'#10b981',REJECTED:'#ef4444',REQUESTED:'#f59e0b'};
+  const statusColor = { APPROVED: '#10b981', REJECTED: '#ef4444', REQUESTED: '#f59e0b' };
   tbody.innerHTML = show.map(v => `<tr>
-    <td><strong>${v.employee_name||'—'}</strong></td>
-    <td>${v.start_date||'—'} → ${v.end_date||'—'}</td>
-    <td><strong>${v.duration_days||v.days_requested||'—'}</strong> dias</td>
-    <td><span style="color:${statusColor[v.status]||'#94a3b8'};font-weight:600">${v.status||'—'}</span></td>
-    <td>${v.status==='REQUESTED'?`
+    <td><strong>${v.employee_name || '—'}</strong></td>
+    <td>${v.start_date || '—'} → ${v.end_date || '—'}</td>
+    <td><strong>${v.duration_days || v.days_requested || '—'}</strong> dias</td>
+    <td><span style="color:${statusColor[v.status] || '#94a3b8'};font-weight:600">${v.status || '—'}</span></td>
+    <td>${v.status === 'REQUESTED' ? `
       <button class="btn btn-sm btn-success" onclick="approveVacation('${v.id}')"><i class="fa-solid fa-check"></i></button>
-      <button class="btn btn-sm btn-danger"  onclick="rejectVacation('${v.id}')"><i class="fa-solid fa-x"></i></button>
-    `:'—'}</td>
+      <button class="btn btn-sm btn-danger"  onclick="rejectVacation('${v.id}')"><i class="fa-solid fa-xmark"></i></button>
+    ` : '—'}</td>
   </tr>`).join('');
 }
 
 // ═══════════════════════════════════════════════════════════
-//  TELA 11 — APROVAÇÕES
+//  13. CENTRAL DE APROVAÇÕES DO GESTOR (Tela 11) — Responsável: Valentin / Felipe
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Renderiza a fila unificada de solicitações pendentes de aprovação gerencial (Férias e Ajustes de Ponto).
+ */
 function renderApprovalsTable() {
   const tbody = document.getElementById('approvalsTableBody');
   if (!tbody) return;
@@ -618,14 +806,14 @@ function renderApprovalsTable() {
   const pendAdjs = dbAdjustments.filter(a => a.status === 'PENDING' || a.status === 'REQUESTED');
 
   if (!pendVacs.length && !pendAdjs.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px">✅ Nenhuma solicitação pendente.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px">✅ Nenhuma solicitação pendente no momento.</td></tr>';
     return;
   }
 
   const vacRows = pendVacs.map(v => `<tr id="appr-vac-${v.id}">
-    <td><strong>${v.employee_name||'—'}</strong></td>
+    <td><strong>${v.employee_name || '—'}</strong></td>
     <td>🏖️ Férias</td>
-    <td>${v.start_date||'—'} → ${v.end_date||'—'} (${v.duration_days||v.days_requested||0} dias)</td>
+    <td>${v.start_date || '—'} → ${v.end_date || '—'} (${v.duration_days || v.days_requested || 0} dias)</td>
     <td><span class="badge status-warning">PENDENTE</span></td>
     <td>
       <button class="btn btn-sm btn-success" onclick="approveVacation('${v.id}')"><i class="fa-solid fa-check"></i> Aprovar</button>
@@ -634,9 +822,9 @@ function renderApprovalsTable() {
   </tr>`).join('');
 
   const adjRows = pendAdjs.map(a => `<tr id="appr-adj-${a.id}">
-    <td><strong>${a.employee_name || dbEmployees.find(e=>e.id===a.employee_id)?.full_name || '—'}</strong></td>
+    <td><strong>${a.employee_name || dbEmployees.find(e => e.id === a.employee_id)?.full_name || '—'}</strong></td>
     <td>🕐 Ajuste de Ponto</td>
-    <td>${a.requested_date||'—'} — ${a.requested_time||''} — ${(a.reason||'').substring(0,40)}…</td>
+    <td>${a.requested_date || '—'} — ${a.requested_time || ''} — ${(a.reason || '').substring(0, 40)}…</td>
     <td><span class="badge status-warning">PENDENTE</span></td>
     <td>
       <button class="btn btn-sm btn-success" onclick="approveAdjustment('${a.id}')"><i class="fa-solid fa-check"></i> Aprovar</button>
@@ -647,6 +835,11 @@ function renderApprovalsTable() {
   tbody.innerHTML = vacRows + adjRows;
 }
 
+/**
+ * Aprova férias no backend via PUT, disparando a dedução atômica do saldo do colaborador.
+ *
+ * @param {string} id ID da solicitação de férias
+ */
 async function approveVacation(id) {
   await PUT('vacations', id, { status: 'APPROVED' });
   const v = dbVacations.find(v => v.id === id);
@@ -655,19 +848,32 @@ async function approveVacation(id) {
   renderVacationsTable();
   renderExecutiveDashboard();
   const row = document.getElementById(`appr-vac-${id}`);
-  if (row) { row.style.opacity = '0.4'; row.querySelector('td:last-child').innerHTML = '<span style="color:#10b981;font-weight:700">✔ Aprovado</span>'; }
-  showToast('✅ Férias APROVADAS e registradas!');
+  if (row) {
+    row.style.opacity = '0.4';
+    row.querySelector('td:last-child').innerHTML = '<span style="color:#10b981;font-weight:700">✔ Aprovado</span>';
+  }
+  showToast('✅ Férias APROVADAS e saldo debitado com sucesso!');
 }
 
+/**
+ * Rejeita solicitação de férias no backend.
+ *
+ * @param {string} id ID da solicitação de férias
+ */
 async function rejectVacation(id) {
   await PUT('vacations', id, { status: 'REJECTED' });
   const v = dbVacations.find(v => v.id === id);
   if (v) v.status = 'REJECTED';
   renderApprovalsTable();
   renderVacationsTable();
-  showToast('Férias recusadas.');
+  showToast('Férias recusadas pelo gestor.');
 }
 
+/**
+ * Aprova ajuste de ponto, creditando ou debitando o saldo no banco relacional.
+ *
+ * @param {string} id ID do ajuste de ponto
+ */
 async function approveAdjustment(id) {
   await PUT('adjustments', id, { status: 'APPROVED' });
   const a = dbAdjustments.find(a => a.id === id);
@@ -676,6 +882,11 @@ async function approveAdjustment(id) {
   showToast('✅ Ajuste de ponto APROVADO!');
 }
 
+/**
+ * Recusa ajuste de ponto no backend.
+ *
+ * @param {string} id ID do ajuste de ponto
+ */
 async function rejectAdjustment(id) {
   await PUT('adjustments', id, { status: 'REJECTED' });
   const a = dbAdjustments.find(a => a.id === id);
@@ -684,23 +895,27 @@ async function rejectAdjustment(id) {
   showToast('Ajuste de ponto recusado.');
 }
 
-// Mantido para botões hard-coded no HTML
 function approveItem(btn) {
   const row = btn.closest('tr');
   if (row) row.style.opacity = '0.4';
   btn.parentNode.innerHTML = '<span class="status-pill status-success"><i class="fa-solid fa-check"></i> Aprovado</span>';
   showToast('✅ Aprovado com sucesso!');
 }
+
 function rejectItem(btn) {
   const row = btn.closest('tr');
   if (row) row.style.opacity = '0.4';
-  btn.parentNode.innerHTML = '<span class="status-pill status-warning"><i class="fa-solid fa-x"></i> Recusado</span>';
+  btn.parentNode.innerHTML = '<span class="status-pill status-warning"><i class="fa-solid fa-xmark"></i> Recusado</span>';
   showToast('Recusado pelo gestor.');
 }
 
 // ═══════════════════════════════════════════════════════════
-//  TELA 12 — BENEFÍCIOS
+//  14. GESTÃO DE BENEFÍCIOS (Tela 12) — Responsável: Valentin
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Renderiza os cards de benefícios corporativos ativos (Vale-Refeição, Plano de Saúde, Transporte).
+ */
 function renderBenefitsCards() {
   const list = dbBenefits.filter(b => b.tenant_id === activeTenantId);
   if (!list.length) return;
@@ -709,7 +924,7 @@ function renderBenefitsCards() {
   const ben3 = document.getElementById('ben3Desc');
   if (ben1 && list[0]) {
     const val = list[0].value_cents
-      ? `R$ ${(list[0].value_cents/100).toLocaleString('pt-BR',{minimumFractionDigits:2})}/mês (${list[0].provider})`
+      ? `R$ ${(list[0].value_cents / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/mês (${list[0].provider})`
       : '—';
     ben1.textContent = val;
   }
@@ -719,8 +934,12 @@ function renderBenefitsCards() {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  TELA 7 — ORGANOGRAMA
+//  15. ORGANOGRAMA INTERATIVO (Tela 07) — Responsável: Andryus
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Renderiza o organograma hierárquico da empresa associando cada nó à foto e cargo do colaborador.
+ */
 function renderOrgChart() {
   const container = document.querySelector('#tela-7 .org-chart');
   if (!container) return;
@@ -735,7 +954,6 @@ function renderOrgChart() {
     'emp-ana':     'assets/persona_recrutador_1786669002453.jpg',
   };
 
-  // Only inject names into existing nodes if they exist
   const nodes = container.querySelectorAll('.org-node');
   nodes.forEach((node, i) => {
     const emp = tenantEmps[i];
@@ -749,16 +967,19 @@ function renderOrgChart() {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
-//  SELECTS AUXILIARES
-// ═══════════════════════════════════════════════════════════
 function populateTenantDropdowns() {
-  // Nothing needed — tenants are switched via UI buttons/select
+  // Controle via seletor global do header
 }
 
 // ═══════════════════════════════════════════════════════════
-//  LOGIN
+//  16. AUTENTICAÇÃO E LOGIN (Tela 01) — Responsável: Fernando
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Simula a autenticação de login do usuário e redireciona para o painel correspondente.
+ *
+ * @param {Event} e Evento de submit do formulário de login
+ */
 function handleLoginSim(e) {
   e.preventDefault();
   const user = document.getElementById('loginUser')?.value || '';
@@ -769,8 +990,12 @@ function handleLoginSim(e) {
 }
 
 // ═══════════════════════════════════════════════════════════
-//  UTILS
+//  17. UTILITÁRIOS VISUAIS & NOTIFICAÇÕES TOAST
 // ═══════════════════════════════════════════════════════════
+
+/**
+ * Alterna as abas de personas na tela de apresentação do projeto.
+ */
 function switchPersonaTab(personaId, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.persona-tab-content').forEach(c => c.classList.remove('active'));
@@ -779,17 +1004,27 @@ function switchPersonaTab(personaId, btn) {
   if (target) target.classList.add('active');
 }
 
+/**
+ * Alterna entre o tema escuro e claro da aplicação.
+ */
 function toggleTheme() {
   document.documentElement.classList.toggle('light');
-  showToast('🌙 Tema alterado.');
+  showToast('🌙 Tema de interface alternado.');
 }
 
+/**
+ * Simula visualização de notificações de conformidade da equipe.
+ */
 function showNotifications() {
   showToast('🔔 Carlos Eduardo aprovou o ajuste de ponto de Lucas Silva.');
 }
 
+/**
+ * Notificação flutuante não-bloqueante (Toast) para feedback das operações de banco.
+ *
+ * @param {string} msg Mensagem descritiva a ser exibida
+ */
 function showToast(msg) {
-  // Remove existing toast
   document.querySelectorAll('.hrtech-toast').forEach(t => t.remove());
   const toast = document.createElement('div');
   toast.className = 'hrtech-toast';
@@ -808,7 +1043,7 @@ function showToast(msg) {
   setTimeout(() => toast.remove(), 3800);
 }
 
-// Inject keyframe once
+// Injeção da animação de entrada do toast
 const style = document.createElement('style');
 style.textContent = `@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}`;
 document.head.appendChild(style);

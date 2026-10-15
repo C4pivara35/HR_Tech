@@ -8,7 +8,7 @@ namespace HrTech\Contracts;
  * Interface AuditableInterface
  *
  * Contrato para entidades sujeitas a registro imutável de auditoria e conformidade.
- */
+ */ 
 interface AuditableInterface
 {
     /**
