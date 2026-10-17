@@ -136,10 +136,8 @@ Para facilitar a navegação e a avaliação acadêmica, todos os requisitos dos
 ### 3. Entregas de Métricas da Disciplina (UCP & APF)
 
 #### 📊 Análise de Pontos de Caso de Uso (UCP & AUCP)
-- `HRTech_Core_UCP_Completo_3_Abas.xlsx`: Planilha mestra consolidada com 3 abas contendo o cálculo de UUCP (170 UUCW + 8 UAW = 178 UUCP), os 13 Fatores Técnicos TCF (1,105) e os 8 Fatores Ambientais ECF (0,755).
-- `Calculo_Final_UCP_AUCP_HRTech_Core.xlsx`: Memória de cálculo detalhada resultando no total de **148,501 AUCP** e esforço estimado de **2.970 horas**.
+- `HRTech_Core_UCP_Completo_3_Abas.xlsx`: Planilha mestra consolidada com 3 abas contendo o cálculo de UUCP (170 UUCW + 8 UAW = 178 UUCP), os 13 Fatores Técnicos TCF (1,105) e os 8 Fatores Ambientais ECF (0,755), resultando em **148,501 AUCP** e esforço estimado de **2.970 horas**.
 - `HRTech_Core_Entrega_Completa_UCP.docx` & `entrega_completa_ucp_hrtech.md`: Relatórios técnicos formais com a matriz de rastreabilidade completa dos 17 Casos de Uso (UC01 a UC17).
-- `Avaliacao_TCF_UCP_HRTech_Core.xlsx`, `.pdf` e `avaliacao_tcf_ucp.html`: Avaliações dos fatores técnicos.
 
 #### 🧮 Análise de Pontos de Função (APF — 132 PFs para 5 Alunos)
 - `Estimativa_APF_5_Membros_ALIs_AIEs_HRTech.docx` & `estimativa_apf_5_membros_hrtech.md`:
@@ -160,16 +158,15 @@ Para facilitar a navegação e a avaliação acadêmica, todos os requisitos dos
 - `Entrega_Projeto_Equipe_Padroes_LPS_HRTech.docx`: Versão formatada em Word (.docx) com tipografia limpa, tabelas e caixas de destaque para entrega ao professor.
 - `relatorio_abnt.html`: Relatório técnico completo formatado segundo as normas ABNT.
 - `HRTech_Core_Modelo_Logico.drawio.svg`: Diagrama vetorial completo do modelo relacional de dados.
-- `HRTech_Core_Documento_Projeto-1.docx`, `.docx.md` e `.docx.pdf`: Especificação de requisitos original do projeto.
 
 ---
 
-### 5. Protótipo Web Interativo (Frontend SPA)
+### 5. Aplicação Web MVC Funcional & Protótipo Interativo
 
-- **Localização:** Raiz do projeto (`index.html`, `styles.css`, `app.js`, `assets/`, `screenshots/`).
-- **Recursos:**
+- **Aplicação MVC PHP (`app/`, `api.php`, `index.php`):** Sistema web completo integrado ao SQLite, com Console SQL em tempo real, seletor Multi-Tenant (Tech, Indústria, Financeiro) e Feature Toggles da LPS.
+- **Protótipo SPA (`index.html`, `styles.css`, `app.js`, `assets/`, `screenshots/`):**
   - 17 telas funcionais navegáveis em modo escuro (dark theme).
-  - Seletor de Tenant em tempo real (Tech vs. Indústria vs. FinCorp Seguros) alternando dinamicamente visibilidade de telas, campos adaptativos e validações.
+  - Seletor de Tenant em tempo real alternando dinamicamente visibilidade de telas, campos adaptativos e validações.
   - Demonstração dos artefatos de Design Thinking (6 Personas detalhadas, Mapa de Empatia e Storyboard em 14 etapas).
 
 ---
@@ -177,8 +174,7 @@ Para facilitar a navegação e a avaliação acadêmica, todos os requisitos dos
 ## 🚀 Como Executar o Projeto Passo a Passo
 
 ### Pré-requisitos de Ambiente
-- **PHP:** Versão >= 8.3 com extensão `pdo_sqlite` habilitada (`php -v`, `php -m | grep pdo_sqlite`).
-- **Python:** Versão >= 3.8 (utilizado para subir o servidor web local do protótipo e gerar relatórios).
+- **PHP:** Versão >= 8.1 com extensão `pdo_sqlite` habilitada (`php -v`, `php -m | grep pdo_sqlite`).
 - **Navegador Web Moderno:** Chrome, Firefox, Edge ou Safari.
 
 ---
@@ -193,37 +189,26 @@ php hrtech_backend_patterns/run_demo.php
 
 ---
 
-### 2. Executar as Suítes de Testes Automatizados
+### 2. Empacotar o Componente para Reuso (`.phar` e `.zip`)
 
-O repositório inclui verificações formais unitárias, integradas e testes de desafio adversarial (com mais de 1.000 asserções de integridade):
+Gera os artefatos distribuíveis em `hrtech_backend_patterns/dist/`:
 
 ```bash
-# Execução das suítes de verificação dos Milestones (100% de aprovação)
-php hrtech_backend_patterns/tests/m1_verify.php
-php hrtech_backend_patterns/tests/m2_verify.php
-php hrtech_backend_patterns/tests/m3_verify.php
-php hrtech_backend_patterns/tests/m4_verify.php
-
-# Execução das suítes adversariais e de estresse
-php hrtech_backend_patterns/tests/m4_adversarial_cruds.php
-php hrtech_backend_patterns/tests/m4_adversarial_lps.php
-php hrtech_backend_patterns/tests/m1_adversarial_challenge.php
-php hrtech_backend_patterns/tests/m1_stress_challenge.php
+php -d phar.readonly=0 hrtech_backend_patterns/build_package.php
 ```
 
 ---
 
-### 3. Acessar o Protótipo Web Interativo (Frontend)
+### 3. Acessar a Aplicação Web MVC e Protótipo Interativo
 
-Para explorar as 17 telas interativas e testar o switcher de clientes LPS:
+Inicie o servidor PHP embutido na raiz do projeto:
 
 ```bash
-# Inicie o servidor local na raiz do projeto:
-python3 -m http.server 8085
+php -S localhost:8000
 ```
 
 Abra no navegador:  
-👉 **[http://localhost:8085](http://localhost:8085)**
+👉 **[http://localhost:8000](http://localhost:8000)** (Aplicação MVC Funcional) ou **[http://localhost:8000/index.html](http://localhost:8000/index.html)** (Protótipo SPA)
 
 ---
 

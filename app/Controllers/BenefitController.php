@@ -57,4 +57,18 @@ class BenefitController {
         header("Location: index.php?route=benefits");
         exit;
     }
+
+    public function delete(): void {
+        $id = $_GET['id'] ?? '';
+        if (!empty($id)) {
+            $stmt = $this->pdo->prepare("DELETE FROM benefits WHERE id = ?");
+            $stmt->execute([$id]);
+
+            logQuery("DELETE FROM benefits WHERE id = '$id'", [$id], "CRUD 8: Benefit Delete");
+
+            $_SESSION['flash_message'] = "Benefício excluído do catálogo com sucesso!";
+        }
+        header("Location: index.php?route=benefits");
+        exit;
+    }
 }

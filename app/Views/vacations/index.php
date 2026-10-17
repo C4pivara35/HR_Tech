@@ -47,11 +47,14 @@
             <td style="text-align: right;">
               <?php if ($vac['status'] !== 'APPROVED'): ?>
                 <a href="index.php?route=vacations&action=approve&id=<?= $vac['id'] ?>" class="btn btn-success" style="font-size: 11px; padding: 4px 8px;">
-                  <i class="fa-solid fa-check"></i> Aprovar Férias
+                  <i class="fa-solid fa-check"></i> Aprovar
                 </a>
               <?php else: ?>
-                <span style="color: var(--text-muted); font-size: 12px;">Processado</span>
+                <span style="color: var(--text-muted); font-size: 12px; margin-right: 6px;">Processado</span>
               <?php endif; ?>
+              <a href="index.php?route=vacations&action=delete&id=<?= $vac['id'] ?>" class="btn btn-danger" style="font-size: 11px; padding: 4px 8px; margin-left: 4px;" onclick="return confirm('Deseja realmente excluir esta solicitação de férias?');">
+                <i class="fa-solid fa-trash"></i> Excluir
+              </a>
             </td>
           </tr>
         <?php endforeach; ?>

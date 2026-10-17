@@ -77,7 +77,35 @@ function err(string $msg, int $code = 400): never {
     respond(['error' => $msg], $code);
 }
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+function logApiQuery(string $sql, array $params = [], string $pattern = '', string $pathway = ''): void {
+    if (!isset($_SESSION['sql_logs']) || !is_array($_SESSION['sql_logs'])) {
+        $_SESSION['sql_logs'] = [];
+    }
+    $_SESSION['sql_logs'][] = [
+        'time' => date('H:i:s'),
+        'sql' => $sql,
+        'params' => $params,
+        'pattern' => $pattern,
+        'pathway' => $pathway
+    ];
+    if (count($_SESSION['sql_logs']) > 50) {
+        array_shift($_SESSION['sql_logs']);
+    }
+}
+
 try {
+    // Registra a trilha de execução da chamada REST no Console ao Vivo
+    logApiQuery(
+        "API REST: $method /api.php?resource=$resource" . ($id ? "&id=$id" : ""), 
+        !empty($body) ? array_keys($body) : [], 
+        "API REST (app.js ➔ api.php)", 
+        "Frontend SPA (app.js / Fetch API) ➔ API REST (api.php?resource=$resource) ➔ Prepared Statement PDO ➔ SQLite: hrtech_db.sqlite"
+    );
+
     // [Trilha de Execução - Passo 5: Despacho Polimórfico para os Controladores de Recursos]
     match ($resource) {
         'employees'   => handleEmployees($pdo, $method, $id, $body, $now),
@@ -85,6 +113,7 @@ try {
         'timelogs'    => handleTimeLogs($pdo, $method, $id, $body, $now),
         'vacations'   => handleVacations($pdo, $method, $id, $body, $now),
         'benefits'    => handleBenefits($pdo, $method, $id, $body, $now),
+        'policies'    => handlePolicies($pdo, $method, $id, $body, $now),
         'adjustments' => handleAdjustments($pdo, $method, $id, $body, $now),
         'stats'       => handleStats($pdo),
         default       => err('Resource não encontrado na API', 404),
@@ -506,6 +535,99 @@ function handleBenefits(PDO $pdo, string $method, ?string $id, array $body, stri
                 (float)($body['copayment_pct'] ?? 0),
             ]);
             respond(['id' => $newId, 'name' => $body['provider'], 'value_cents' => $valCents], 201);
+
+        case 'PUT':
+            if (!$id) err('ID do benefício é obrigatório');
+            $valCents = (int)(((float)($body['monthly_value'] ?? 0)) * 100);
+            $pdo->prepare("UPDATE benefits SET name = ?, provider = ?, value_cents = ?, employee_cost_share_percentage = ? WHERE id = ?")
+                ->execute([
+                    $body['name'] ?? $body['provider'],
+                    $body['provider'] ?? '',
+                    $valCents,
+                    (float)($body['copayment_pct'] ?? 0),
+                    $id
+                ]);
+            respond(['success' => true]);
+
+        case 'DELETE':
+            if (!$id) err('ID do benefício é obrigatório');
+            $pdo->prepare("DELETE FROM benefits WHERE id = ?")->execute([$id]);
+            respond(['success' => true]);
+
+        default:
+            err('Método HTTP não permitido para este recurso', 405);
+    }
+}
+
+// -----------------------------------------------------------------------------
+// CONTROLADOR: APÓLICES DE SEGURO FINCORP (CRUD 10) — Responsável: Nicholas
+// -----------------------------------------------------------------------------
+/**
+ * Gerencia a emissão, consulta, cancelamento e exclusão de apólices corporativas do Portal do Corretor.
+ *
+ * @param PDO $pdo Instância da conexão relacional ativa
+ * @param string $method Verbo HTTP (GET, POST, PUT, DELETE)
+ * @param string|null $id Identificador da apólice
+ * @param array $body Dados da apólice
+ * @param string $now Data/hora oficial
+ * @return never
+ */
+function handlePolicies(PDO $pdo, string $method, ?string $id, array $body, string $now): never {
+    switch ($method) {
+        case 'GET':
+            $rows = $pdo->query(
+                "SELECT p.*, e.full_name as employee_name, t.corporate_name as tenant_name
+                 FROM insurance_policies p
+                 LEFT JOIN employees e ON p.employee_id = e.id
+                 LEFT JOIN tenants t ON p.tenant_id = t.id
+                 ORDER BY p.start_date DESC"
+            )->fetchAll();
+            foreach ($rows as &$row) {
+                $row['insured_capital'] = round(($row['insured_capital_cents'] ?? 0) / 100, 2);
+                $row['monthly_premium'] = round(($row['monthly_premium_cents'] ?? 0) / 100, 2);
+            }
+            respond($rows);
+
+        case 'POST':
+            if (empty($body['employee_id'])) err('Colaborador é obrigatório');
+            if (empty($body['policy_number'])) err('Número da apólice é obrigatório');
+            $newId = uniqid('pol-', true);
+            $capitalCents = (int)(((float)($body['insured_capital'] ?? 100000)) * 100);
+            $premiumCents = (int)(((float)($body['monthly_premium'] ?? 100)) * 100);
+
+            $pdo->prepare(
+                "INSERT INTO insurance_policies
+                    (id, tenant_id, policy_number, broker_code, insurer_name, employee_id,
+                     insured_capital_cents, monthly_premium_cents, status, start_date, end_date, coverage_details)
+                 VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+            )->execute([
+                $newId,
+                $body['tenant_id'] ?? 'tenant-fin',
+                $body['policy_number'],
+                $body['broker_code'] ?? 'CORR-FINCORP-01',
+                $body['insurer_name'] ?? 'FinCorp Seguros S.A.',
+                $body['employee_id'],
+                $capitalCents,
+                $premiumCents,
+                $body['status'] ?? 'ACTIVE',
+                $body['start_date'] ?? date('Y-m-d'),
+                $body['end_date'] ?? date('Y-m-d', strtotime('+1 year')),
+                json_encode($body['coverage_details'] ?? ['morte_acidental' => true, 'invalidez' => true])
+            ]);
+            respond(['id' => $newId, 'status' => 'ACTIVE', 'policy_number' => $body['policy_number']], 201);
+
+        case 'PUT':
+            if (!$id) err('ID da apólice é obrigatório');
+            $status = strtoupper($body['status'] ?? 'ACTIVE');
+            $reason = $body['cancellation_reason'] ?? 'Cancelamento administrativo';
+            $pdo->prepare("UPDATE insurance_policies SET status = ?, cancellation_reason = ?, cancelled_at = ? WHERE id = ?")
+                ->execute([$status, $reason, $status === 'CANCELLED' ? $now : null, $id]);
+            respond(['success' => true, 'status' => $status]);
+
+        case 'DELETE':
+            if (!$id) err('ID da apólice é obrigatório');
+            $pdo->prepare("DELETE FROM insurance_policies WHERE id = ?")->execute([$id]);
+            respond(['success' => true]);
 
         default:
             err('Método HTTP não permitido para este recurso', 405);

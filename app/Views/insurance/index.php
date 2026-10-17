@@ -23,11 +23,12 @@
         <th>Prêmio Mensal</th>
         <th>Vigência</th>
         <th>Status</th>
+        <th style="text-align: right;">Ações</th>
       </tr>
     </thead>
     <tbody>
       <?php if (empty($policies)): ?>
-        <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Nenhuma apólice cadastrada para esta empresa.</td></tr>
+        <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Nenhuma apólice cadastrada para esta empresa.</td></tr>
       <?php else: ?>
         <?php foreach ($policies as $pol): ?>
           <tr>
@@ -39,6 +40,11 @@
               <?= date('d/m/Y', strtotime($pol['start_date'])) ?> até <span style="color: #fbbf24;"><?= date('d/m/Y', strtotime($pol['end_date'])) ?></span>
             </td>
             <td><span class="badge badge-success">VIGENTE</span></td>
+            <td style="text-align: right;">
+              <a href="index.php?route=insurance&action=delete&id=<?= $pol['id'] ?>" class="btn btn-danger" style="font-size: 11px; padding: 4px 8px;" onclick="return confirm('Deseja realmente excluir esta apólice de seguro?');">
+                <i class="fa-solid fa-trash"></i> Excluir
+              </a>
+            </td>
           </tr>
         <?php endforeach; ?>
       <?php endif; ?>

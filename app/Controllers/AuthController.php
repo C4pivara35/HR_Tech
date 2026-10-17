@@ -19,7 +19,7 @@ class AuthController {
         
         logQuery("SESSION UPDATE active_role = '$role'", [], "Singleton TenantContextManager");
 
-        $redirect = $_SERVER['HTTP_REFERER'] ?? 'index.php?route=dashboard';
+        $redirect = 'index.php?route=dashboard';
         header("Location: $redirect");
         exit;
     }

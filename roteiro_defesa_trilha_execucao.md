@@ -272,16 +272,13 @@ flowchart LR
 ## 🚀 Resumo de Comandos Rápidos para o Dia da Defesa
 
 ```bash
-# 1. Executar a suíte completa de 160 testes (100% de sucesso):
-php hrtech_backend_patterns/tests/m4_verify.php
-
-# 2. Executar a demonstração completa via Terminal CLI:
+# 1. Executar a demonstração completa via Terminal CLI:
 php hrtech_backend_patterns/run_demo.php
 
-# 3. Gerar os pacotes de distribuição para reuso (.phar e .zip):
+# 2. Gerar os pacotes de distribuição para reuso (.phar e .zip):
 php -d phar.readonly=0 hrtech_backend_patterns/build_package.php
 
-# 4. Iniciar a interface Web:
-python -m http.server 8085
-# Acessar: http://localhost:8085
+# 3. Iniciar a interface Web MVC & Protótipo:
+php -S localhost:8000
+# Acessar: http://localhost:8000
 ```

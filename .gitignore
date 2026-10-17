@@ -57,8 +57,14 @@ Thumbs.db
 *.sublime-workspace
 
 # ------------------------------------------------------------------------------
-# 5. Logs & Temporary Execution Files
+# 5. Logs, Composer Vendor & Temporary Archives
 # ------------------------------------------------------------------------------
 *.log
 npm-debug.log*
 yarn-debug.log*
+vendor/
+**/vendor/
+*.tar
+hrtech-core-patterns-*.zip
+hrtech_backend_patterns/dist/hrtech-core-patterns-*.zip
+

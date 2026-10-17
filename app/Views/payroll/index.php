@@ -40,28 +40,43 @@
     <thead>
       <tr>
         <th>Colaborador</th>
-        <th>Modalidade Contratual</th>
-        <th>Salário Bruto</th>
-        <th>Descontos Legais (INSS/IRRF)</th>
+        <th>Contrato</th>
+        <th>Salário Base</th>
+        <th>Horas Extras (Strategy)</th>
+        <th>Salário Bruto Total</th>
+        <th>Descontos (INSS/IRRF)</th>
         <th>Salário Líquido</th>
         <th>Estratégia Aplicada (Pattern)</th>
       </tr>
     </thead>
     <tbody>
       <?php if (empty($payrolls)): ?>
-        <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Nenhum colaborador para calcular folha.</td></tr>
+        <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Nenhum colaborador para calcular folha.</td></tr>
       <?php else: ?>
         <?php foreach ($payrolls as $pay): ?>
           <tr>
             <td>
               <strong style="color: #fff;"><?= htmlspecialchars($pay['name']) ?></strong>
-              <div style="font-size: 11px; color: var(--text-muted);"><?= htmlspecialchars($pay['cpf']) ?></div>
+              <div style="font-size: 11px; color: var(--text-muted);">
+                <?= htmlspecialchars($pay['cpf']) ?> 
+                <?php if ($pay['bank_hours'] > 0): ?>
+                  | <span style="color: #38bdf8;"><i class="fa-solid fa-piggy-bank"></i> Banco: <?= round($pay['bank_hours'] / 60, 1) ?>h</span>
+                <?php endif; ?>
+              </div>
             </td>
             <td><span class="badge badge-info"><?= htmlspecialchars($pay['type']) ?></span></td>
             <td>R$ <?= number_format($pay['base'], 2, ',', '.') ?></td>
+            <td>
+              <?php if ($pay['overtime'] > 0): ?>
+                <strong style="color: #fbbf24;">+ R$ <?= number_format($pay['overtime'], 2, ',', '.') ?></strong>
+              <?php else: ?>
+                <span style="color: var(--text-muted);">R$ 0,00</span>
+              <?php endif; ?>
+            </td>
+            <td><strong style="color: #fff;">R$ <?= number_format($pay['gross'], 2, ',', '.') ?></strong></td>
             <td><span style="color: #f87171;">- R$ <?= number_format($pay['deductions'], 2, ',', '.') ?></span></td>
-            <td><strong style="color: #34d399;">R$ <?= number_format($pay['net'], 2, ',', '.') ?></strong></td>
-            <td><code style="color: #fbbf24; font-size: 11px;"><?= htmlspecialchars($pay['strategy']) ?></code></td>
+            <td><strong style="color: #34d399; font-size: 15px;">R$ <?= number_format($pay['net'], 2, ',', '.') ?></strong></td>
+            <td><code style="color: #a78bfa; font-size: 11px;"><?= htmlspecialchars($pay['strategy']) ?></code></td>
           </tr>
         <?php endforeach; ?>
       <?php endif; ?>

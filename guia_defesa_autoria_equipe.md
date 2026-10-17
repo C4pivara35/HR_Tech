@@ -44,14 +44,14 @@ O professor pode abrir a arguição fazendo perguntas conceituais para qualquer 
   ```bash
   php hrtech_backend_patterns/run_demo.php
   ```
-* **Testes Automatizados (Zero erros):**
+* **Empacotamento do Componente para Reuso:**
   ```bash
-  php hrtech_backend_patterns/tests/m4_verify.php
+  php -d phar.readonly=0 hrtech_backend_patterns/build_package.php
   ```
-* **Interface Web (Protótipo interativo):**
+* **Interface Web MVC & Protótipo Interativo:**
   ```bash
-  python -m http.server 8085
-  # Abrir http://localhost:8085 no navegador
+  php -S localhost:8000
+  # Abrir http://localhost:8000 no navegador
   ```
 
 ---
@@ -205,7 +205,7 @@ O professor pode abrir a arguição fazendo perguntas conceituais para qualquer 
 ├─────────────────┼────────────────────────────────────────────────────────────────────────┤
 │ 3. Execução     │ Todos devem praticar abrir o terminal e rodar:                         │
 │                 │ `php hrtech_backend_patterns/run_demo.php`                             │
-│                 │ `php hrtech_backend_patterns/tests/m4_verify.php`                      │
+│                 │ `php -d phar.readonly=0 hrtech_backend_patterns/build_package.php`     │
 ├─────────────────┼────────────────────────────────────────────────────────────────────────┤
 │ 4. Item 03      │ Gravar o vídeo curto (3 a 5 min) no formato não listado no YouTube     │
 │                 │ demonstrando a compactação de código focada em reuso.                  │

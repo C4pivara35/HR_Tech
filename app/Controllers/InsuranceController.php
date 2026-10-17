@@ -5,6 +5,25 @@ namespace App\Controllers;
 
 use PDO;
 
+/**
+ * ==============================================================================
+ * InsuranceController — Gestão de Apólices de Seguro FinCorp
+ * ==============================================================================
+ * Responsabilidade: Nicholas (CRUD 10)
+ *
+ * Conceitos de Domínio & Gestão de Riscos:
+ * 1. Apólices Coletivas Corporativas:
+ *    - Gestão de apólices de Seguro de Vida em Grupo, Invalidez Permanente e D&O
+ *      (Directors & Officers / Responsabilidade Civil de Gestores).
+ *
+ * 2. Precisão Financeira em Centavos:
+ *    - Capital Segurado (`coverage_cents`) e Prêmio Mensal (`premium_cents`) são
+ *      armazenados em centavos inteiros conforme o padrão DDD do Value Object Money.
+ *
+ * 3. Ciclo de Vida da Apólice:
+ *    - Emissão de contrato com número de apólice único, vigência anual e cancelamento formal.
+ * ==============================================================================
+ */
 class InsuranceController {
     private PDO $pdo;
 
@@ -13,8 +32,8 @@ class InsuranceController {
     }
 
     public function index(): void {
-        $activeRole = $_SESSION['active_role'] ?? 'tenant-tech';
-        $activeTenantId = ($activeRole === 'admin') ? 'tenant-tech' : $activeRole;
+        $activeRole = $_SESSION['active_role'] ?? 'tenant-fin';
+        $activeTenantId = ($activeRole === 'admin') ? 'tenant-fin' : $activeRole;
 
         $stmt = $this->pdo->prepare(
             "SELECT ip.*, t.corporate_name as tenant_name
@@ -34,8 +53,8 @@ class InsuranceController {
     }
 
     public function issue(): void {
-        $activeRole = $_SESSION['active_role'] ?? 'tenant-tech';
-        $activeTenantId = ($activeRole === 'admin') ? 'tenant-tech' : $activeRole;
+        $activeRole = $_SESSION['active_role'] ?? 'tenant-fin';
+        $activeTenantId = ($activeRole === 'admin') ? 'tenant-fin' : $activeRole;
 
         $type  = $_POST['policy_type'] ?? 'D_AND_O';
         $cov   = (float)($_POST['coverage_amount'] ?? 1000000);
@@ -62,6 +81,20 @@ class InsuranceController {
         logQuery("INSERT INTO insurance_policies (FINCorp Policy type=$type)", [$id], "CRUD 10: InsurancePolicy Portal FinCorp");
 
         $_SESSION['flash_message'] = "Apólice corporativa FinCorp emitida com sucesso!";
+        header("Location: index.php?route=insurance");
+        exit;
+    }
+
+    public function delete(): void {
+        $id = $_GET['id'] ?? '';
+        if (!empty($id)) {
+            $stmt = $this->pdo->prepare("DELETE FROM insurance_policies WHERE id = ?");
+            $stmt->execute([$id]);
+
+            logQuery("DELETE FROM insurance_policies WHERE id = '$id'", [$id], "CRUD 10: InsurancePolicy Delete");
+
+            $_SESSION['flash_message'] = "Apólice de seguro excluída com sucesso!";
+        }
         header("Location: index.php?route=insurance");
         exit;
     }

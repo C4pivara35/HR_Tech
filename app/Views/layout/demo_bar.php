@@ -30,16 +30,17 @@ $activeRole = $_SESSION['active_role'] ?? 'tenant-tech';
     <a href="index.php?route=switch_tenant&role=tenant-fin" style="text-decoration: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; <?= $activeRole === 'tenant-fin' ? 'background: #10b981; color: #fff; box-shadow: 0 0 10px rgba(16,185,129,0.5);' : 'background: rgba(255,255,255,0.1); color: #e0e7ff;' ?>">
       <i class="fa-solid fa-piggy-bank"></i> 🏦 FinCorp (Financeiro)
     </a>
+
+    <a href="index.php?route=switch_tenant&role=tenant-all" style="text-decoration: none; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; <?= $activeRole === 'tenant-all' ? 'background: #8b5cf6; color: #fff; box-shadow: 0 0 10px rgba(139,92,246,0.6);' : 'background: rgba(255,255,255,0.1); color: #e0e7ff;' ?>">
+      <i class="fa-solid fa-layer-group"></i> 🌐 OmniCorp (Full Features)
+    </a>
   </div>
 
   <!-- Academic Tools -->
   <div style="display: flex; align-items: center; gap: 8px;">
-    <button onclick="togglePatternModal()" style="background: rgba(99,102,241,0.2); border: 1px solid #818cf8; color: #a5b4fc; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
-      <i class="fa-solid fa-microscope"></i> 🔬 Padrões GoF da Tela
+    <button onclick="togglePatternModal()" style="background: rgba(99,102,241,0.2); border: 1px solid #818cf8; color: #a5b4fc; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+      <i class="fa-solid fa-microscope"></i> 🔬 Inspecionar Padrões GoF &amp; Métricas
     </button>
-    <a href="../index.html" style="background: rgba(255,255,255,0.1); color: #94a3b8; text-decoration: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-      <i class="fa-solid fa-arrow-left"></i> Voltar ao Protótipo HTML
-    </a>
   </div>
 
 </div>

@@ -390,36 +390,12 @@ php run_demo.php
 
 ---
 
-### 4.2 Execução das Suítes de Testes Automatizados
+### 4.2 Empacotamento para Reuso (Artefato Distribuível)
 
-A equipe desenvolveu testes automatizados rigorosos, garantindo cobertura total dos requisitos de arquitetura, integridade e segurança.
-
-#### 1. Testes Regressivos Oficiais (868 Asserções — 100% de Aprovação)
+O componente central `hrtech/core-patterns` é formalizado via `composer.json` e empacotado em artefatos `.phar` e `.zip` para distribuição e reuso:
 
 ```bash
-# Executar a partir da pasta 'hrtech_backend_patterns':
-
-# Milestone 1: Value Objects, Enums e Contratos (132 asserções)
-php tests/m1_verify.php
-
-# Milestone 2: 12 Entidades de Domínio e Isolamento Multi-Tenant (376 asserções)
-php tests/m2_verify.php
-
-# Milestone 3: 2 Singletons, 3 Template Methods e 3 Strategies (200 asserções)
-php tests/m3_verify.php
-
-# Milestone 4: Banco SQLite, 10 CRUDs dos 5 Alunos e Motor LPS (160 asserções)
-php tests/m4_verify.php
-```
-
-#### 2. Testes de Estresse e Adversariais (676 Asserções Adicionais)
-
-```bash
-# Teste de Estresse dos 10 CRUDs: SQL Injection, Foreign Keys e Concorrência (416 asserções)
-php tests/m4_adversarial_cruds.php
-
-# Teste Adversarial da LPS: Fuzzing de 10.000 iterações e reversão de regras (260 asserções)
-php tests/m4_adversarial_lps.php
+php -d phar.readonly=0 hrtech_backend_patterns/build_package.php
 ```
 
 ---

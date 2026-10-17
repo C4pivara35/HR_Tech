@@ -23,13 +23,14 @@
         <th>Departamento / Cargo</th>
         <th>Tipo Contrato</th>
         <th>Salário Base</th>
+        <th>Banco de Horas</th>
         <th>Admissão</th>
         <th style="text-align: right;">Ações</th>
       </tr>
     </thead>
     <tbody>
       <?php if (empty($employees)): ?>
-        <tr><td colspan="8" style="text-align: center; color: var(--text-muted);">Nenhum colaborador encontrado para esta empresa.</td></tr>
+        <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">Nenhum colaborador encontrado para esta empresa.</td></tr>
       <?php else: ?>
         <?php foreach ($employees as $emp): ?>
           <tr>
@@ -44,6 +45,11 @@
             </td>
             <td><span class="badge badge-info"><?= htmlspecialchars($emp['employment_type']) ?></span></td>
             <td><strong style="color: #34d399;">R$ <?= number_format($emp['base_salary_cents'] / 100, 2, ',', '.') ?></strong></td>
+            <td>
+              <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-weight: 700;">
+                <i class="fa-solid fa-piggy-bank"></i> <?= round(((int)($emp['bank_hours_balance'] ?? 0)) / 60, 1) ?>h
+              </span>
+            </td>
             <td><?= date('d/m/Y', strtotime($emp['admission_date'])) ?></td>
             <td style="text-align: right;">
               <a href="index.php?route=employees&action=delete&id=<?= $emp['id'] ?>" onclick="return confirm('Deseja realmente desativar este colaborador?')" class="btn btn-danger" style="font-size: 11px; padding: 4px 8px;">

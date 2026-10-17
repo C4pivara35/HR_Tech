@@ -6,6 +6,29 @@ namespace App\Controllers;
 use PDO;
 use HrTech\Lps\FeatureToggleManager;
 
+/**
+ * ==============================================================================
+ * AdminController — Administração Master, Multi-Tenancy & Linha de Produção (LPS)
+ * ==============================================================================
+ * Responsabilidades:
+ * - Fernando: CRUD 1 (Tenants / Empresas) e Isolamento Multi-Tenant
+ * - Nicholas: Linha de Produção de Software (LPS) e Matriz de Feature Toggles
+ *
+ * Conceitos de Arquitetura & Engenharia de Reuso:
+ * 1. Arquitetura Multi-Tenant com Banco Compartilhado (Shared Database, Separate Schemas/IDs):
+ *    - Cada registro de dados possui chave estrangeira `tenant_id`.
+ *    - A troca de contexto no switch de empresa restringe a visualização em tempo de execução.
+ *
+ * 2. Linha de Produção de Software (LPS - Software Product Line):
+ *    - O sistema adapta suas funcionalidades para múltiplos perfis de mercado:
+ *      * TechStart (Tecnologia): OKRs, Banco de Horas flexível, EPIs dispensados.
+ *      * Metalúrgica Sul (Indústria): NR-06/07 obrigatórios (EPI/ASO), Horas Extras pagas na folha, Avaliação 360°.
+ *      * FinCorp Seguros (Financeiro): Biometria, KPIs e Portal exclusivo de Apólices.
+ *
+ * 3. Feature Toggle Manager:
+ *    - Liga/desliga funcionalidades dinamicamente por empresa através da tabela `feature_toggles`.
+ * ==============================================================================
+ */
 class AdminController {
     private PDO $pdo;
 
@@ -42,19 +65,24 @@ class AdminController {
     }
 
     public function index(): void {
-        if (($_SESSION['active_role'] ?? '') !== 'admin') {
-            $_SESSION['flash_error'] = "Acesso restrito ao Administrador Global.";
-            header("Location: index.php?route=dashboard");
-            exit;
-        }
+        $_SESSION['active_role'] = 'admin'; // Ativa contexto de administrador global
 
         $ftManager = FeatureToggleManager::getInstance();
 
-        $tenants = [
-            'tenant-tech' => 'TechStart Inovações Ltda (Tecnologia)',
-            'tenant-ind'  => 'Metalúrgica Sul S.A. (Indústria)',
-            'tenant-fin'  => 'FinCorp Seguros e Investimentos (Financeiro)'
-        ];
+        // Busca todas as empresas cadastradas no banco relacional SQLite (CRUD 1 - Fernando)
+        $stmt = $this->pdo->query(
+            "SELECT t.*, 
+                    (SELECT COUNT(*) FROM employees e WHERE e.tenant_id = t.id AND e.is_active = 1) as employee_count
+             FROM tenants t
+             ORDER BY t.created_at ASC"
+        );
+        $allTenants = $stmt->fetchAll();
+
+        // Mapeia tenants para a matriz de feature toggles
+        $tenants = [];
+        foreach ($allTenants as $t) {
+            $tenants[$t['id']] = $t['corporate_name'] . ' (' . strtoupper($t['segment']) . ')';
+        }
 
         $featuresCatalog = [
             'bank_of_hours'             => 'Banco de Horas compensatório (Art. 59 §2 CLT)',
@@ -70,11 +98,94 @@ class AdminController {
             'fincorp_life_policy'       => 'Apólice de Seguro de Vida em Grupo FinCorp',
         ];
 
-        logQuery("LPS FeatureToggleManager::getInstance() catalog resolution", [], "Singleton FeatureToggleManager");
+        logQuery("SELECT FROM tenants (all active tenants count=" . count($allTenants) . ")", [], "CRUD 1: Tenant Management (Fernando)");
 
         require_once ROOT_DIR . '/app/Views/layout/header.php';
         require_once ROOT_DIR . '/app/Views/admin/index.php';
         require_once ROOT_DIR . '/app/Views/layout/footer.php';
+    }
+
+    public function createTenant(): void {
+        $corpName  = trim($_POST['corporate_name'] ?? '');
+        $tradeName = trim($_POST['trading_name'] ?? $corpName);
+        $cnpjRaw   = preg_replace('/\D/', '', $_POST['cnpj'] ?? '');
+        $segment   = $_POST['segment'] ?? 'tech';
+
+        if (empty($corpName) || empty($cnpjRaw)) {
+            $_SESSION['flash_error'] = "Preencha a Razão Social e o CNPJ da empresa!";
+            header("Location: index.php?route=admin");
+            exit;
+        }
+
+        $id = 'tenant-' . strtolower(preg_replace('/[^a-zA-Z0-9]/', '', substr($tradeName, 0, 8))) . '-' . rand(100, 999);
+        $now = date('Y-m-d\TH:i:sP');
+        $licenses = json_encode(['time_tracking', 'payroll', 'benefits', 'insurance']);
+
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO tenants (id, cnpj, corporate_name, trading_name, segment, is_active, module_licenses, created_at)
+             VALUES (?, ?, ?, ?, ?, 1, ?, ?)"
+        );
+        $stmt->execute([$id, $cnpjRaw, $corpName, $tradeName, $segment, $licenses, $now]);
+
+        // Configura perfil de variabilidade LPS padrão
+        $_SESSION['feature_overrides'][$id] = match($segment) {
+            'industry', 'industria' => [
+                'bank_of_hours' => false,
+                'overtime_payout' => true,
+                'risk_ppe_required' => true,
+                'flexible_benefits' => false,
+                'chartered_transport' => true,
+                'okr_evaluation' => false,
+                'fincorp_life_policy' => false,
+                'd_and_o_insurance' => false,
+                'strict_lgpd_audit' => false,
+            ],
+            'financial', 'financeiro' => [
+                'bank_of_hours' => false,
+                'overtime_payout' => true,
+                'risk_ppe_required' => false,
+                'flexible_benefits' => false,
+                'biometric_punch_mandatory' => true,
+                'executive_health_plan' => true,
+                'aggressive_bonus' => true,
+                'strict_lgpd_audit' => true,
+                'fincorp_life_policy' => true,
+                'd_and_o_insurance' => true,
+                'okr_evaluation' => false,
+            ],
+            default => [
+                'bank_of_hours' => true,
+                'overtime_payout' => false,
+                'risk_ppe_required' => false,
+                'flexible_benefits' => true,
+                'okr_evaluation' => true,
+                'd_and_o_insurance' => false,
+                'fincorp_life_policy' => false,
+                'strict_lgpd_audit' => false,
+            ]
+        };
+
+        logQuery("INSERT INTO tenants (id=$id, corp=$corpName, cnpj=$cnpjRaw)", [$id], "CRUD 1: TenantService::createTenant (Fernando)");
+
+        $_SESSION['flash_message'] = "Empresa '$corpName' criada com sucesso no sistema multi-tenant!";
+        header("Location: index.php?route=admin");
+        exit;
+    }
+
+    public function deleteTenant(): void {
+        $id = $_GET['id'] ?? '';
+        if (!empty($id)) {
+            $stmt = $this->pdo->prepare("DELETE FROM tenants WHERE id = ?");
+            $stmt->execute([$id]);
+
+            unset($_SESSION['feature_overrides'][$id]);
+
+            logQuery("DELETE FROM tenants WHERE id = '$id'", [$id], "CRUD 1: TenantService::deleteTenant (Fernando)");
+
+            $_SESSION['flash_message'] = "Empresa removida com sucesso do banco de dados!";
+        }
+        header("Location: index.php?route=admin");
+        exit;
     }
 
     public function toggleFeature(): void {

@@ -22,11 +22,12 @@
         <th>Provedor</th>
         <th>Valor Benefício</th>
         <th>Coparticipação / Desconto (Strategy)</th>
+        <th style="text-align: right;">Ações</th>
       </tr>
     </thead>
     <tbody>
       <?php if (empty($benefits)): ?>
-        <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Nenhum benefício disponível nesta empresa.</td></tr>
+        <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Nenhum benefício disponível nesta empresa.</td></tr>
       <?php else: ?>
         <?php foreach ($benefits as $ben): ?>
           <tr>
@@ -38,6 +39,11 @@
               <strong style="color: #f472b6;">
                 <?= ($ben['employee_cost_share_percentage'] ?? 0) > 0 ? $ben['employee_cost_share_percentage'] . '% sobre o salário' : 'Isento / Copag Zero' ?>
               </strong>
+            </td>
+            <td style="text-align: right;">
+              <a href="index.php?route=benefits&action=delete&id=<?= $ben['id'] ?>" class="btn btn-danger" style="font-size: 11px; padding: 4px 8px;" onclick="return confirm('Deseja realmente excluir este benefício do catálogo?');">
+                <i class="fa-solid fa-trash"></i> Excluir
+              </a>
             </td>
           </tr>
         <?php endforeach; ?>

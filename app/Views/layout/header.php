@@ -5,6 +5,7 @@ $tenantName = match($activeRole) {
     'tenant-tech' => '💻 TechStart Inovações Ltda (Tecnologia)',
     'tenant-ind' => '🏭 Metalúrgica Sul S.A. (Indústria)',
     'tenant-fin' => '🏦 FinCorp Seguros e Investimentos (Financeiro)',
+    'tenant-all' => '🌐 OmniCorp Global S.A. (Full Features — 100% dos Recursos Ativos)',
     default => 'HRTech Core'
 };
 ?>
@@ -52,7 +53,7 @@ $tenantName = match($activeRole) {
 
     .main-content {
       flex: 1;
-      padding: 24px 32px;
+      padding: 24px 32px 90px 32px;
       overflow-y: auto;
       background: radial-gradient(circle at top right, rgba(99,102,241,0.05) 0%, transparent 40%);
     }
@@ -190,6 +191,12 @@ $tenantName = match($activeRole) {
       box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
     }
   </style>
+  <script>
+    function toggleModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active');
+    }
+  </script>
 </head>
 <body>
 

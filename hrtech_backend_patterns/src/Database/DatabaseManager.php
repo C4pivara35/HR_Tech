@@ -405,6 +405,23 @@ class DatabaseManager implements SingletonInterface
                 FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE
             );",
 
+            // 13. Overtime Entries Table (Padrão Strategy: 50%, 100% e Banco de Horas)
+            "CREATE TABLE IF NOT EXISTS overtime_entries (
+                id TEXT PRIMARY KEY NOT NULL,
+                tenant_id TEXT NOT NULL,
+                employee_id TEXT NOT NULL,
+                date TEXT NOT NULL,
+                hours REAL NOT NULL,
+                type TEXT NOT NULL,
+                hourly_rate REAL NOT NULL,
+                amount REAL NOT NULL,
+                strategy_used TEXT NOT NULL,
+                description TEXT,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE,
+                FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+            );",
+
             // Índices de alta performance para isolamento multi-tenant e velocidade de consulta
             "CREATE INDEX IF NOT EXISTS idx_users_tenant ON users (tenant_id, username);",
             "CREATE INDEX IF NOT EXISTS idx_employees_tenant_cpf ON employees (tenant_id, cpf);",

@@ -1084,9 +1084,23 @@
             </div>
 
             <div class="card">
-                  </div>
-                  <span class="status-pill status-success">Aprovado</span>
-                </div>
+              <h4><i class="fa-solid fa-list-check"></i> Histórico &amp; Gerenciamento de Solicitações (CRUD 7)</h4>
+              <p class="text-sm" style="color:var(--text-muted);margin-bottom:12px;">Visualize, aprove ou exclua solicitações de férias registradas no banco relacional.</p>
+              <div style="overflow-x:auto;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Colaborador</th>
+                      <th>Período</th>
+                      <th>Dias</th>
+                      <th>Status</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="vacationsBody" style="font-size:13px">
+                    <!-- Preenchido dinamicamente via app.js -->
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

@@ -28,11 +28,12 @@
         <th>CA (Certificado de Aprovação)</th>
         <th>Data Emissão / Validade</th>
         <th>Status de Aptidão Clínica</th>
+        <th style="text-align: right;">Ações</th>
       </tr>
     </thead>
     <tbody>
       <?php if (empty($safetyRecords)): ?>
-        <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Nenhum registro de EPI ou ASO cadastrado.</td></tr>
+        <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">Nenhum registro de EPI ou ASO cadastrado.</td></tr>
       <?php else: ?>
         <?php foreach ($safetyRecords as $sec): ?>
           <tr>
@@ -59,6 +60,11 @@
               <?php else: ?>
                 <span class="badge badge-danger"><i class="fa-solid fa-user-xmark"></i> INAPTO / ALOCAÇÃO BLOQUEADA</span>
               <?php endif; ?>
+            </td>
+            <td style="text-align: right;">
+              <a href="index.php?route=safety&action=delete&id=<?= $sec['id'] ?>" class="btn btn-danger" style="font-size: 11px; padding: 4px 8px;" onclick="return confirm('Deseja realmente excluir este registro de EPI/ASO?');">
+                <i class="fa-solid fa-trash"></i> Excluir
+              </a>
             </td>
           </tr>
         <?php endforeach; ?>
