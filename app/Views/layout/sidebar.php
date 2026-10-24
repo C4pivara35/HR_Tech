@@ -83,6 +83,11 @@ $showCompliance = $isAdmin || $isAll || ($isFin && $ftManager->isFeatureEnabled(
     <span>Colaboradores</span>
   </a>
 
+  <a href="index.php?route=organogram" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; <?= $currentRoute === 'organogram' ? 'background: var(--primary); color: #fff;' : 'color: var(--text-muted);' ?>">
+    <i class="fa-solid fa-sitemap" style="width: 20px; color: #a78bfa;"></i>
+    <span>Organograma</span>
+  </a>
+
   <a href="index.php?route=timelogs" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; <?= $currentRoute === 'timelogs' ? 'background: var(--primary); color: #fff;' : 'color: var(--text-muted);' ?>">
     <i class="fa-solid fa-clock-rotate-left" style="width: 20px;"></i>
     <span>Ponto & Portaria 671</span>
@@ -91,6 +96,11 @@ $showCompliance = $isAdmin || $isAll || ($isFin && $ftManager->isFeatureEnabled(
   <a href="index.php?route=vacations" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; <?= $currentRoute === 'vacations' ? 'background: var(--primary); color: #fff;' : 'color: var(--text-muted);' ?>">
     <i class="fa-solid fa-umbrella-beach" style="width: 20px;"></i>
     <span>Solicitações de Férias</span>
+  </a>
+
+  <a href="index.php?route=approvals" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; <?= $currentRoute === 'approvals' ? 'background: var(--primary); color: #fff;' : 'color: var(--text-muted);' ?>">
+    <i class="fa-solid fa-clipboard-check" style="width: 20px; color: #34d399;"></i>
+    <span>Aprovações Gestor</span>
   </a>
 
   <!-- Tech Modules -->
@@ -142,6 +152,16 @@ $showCompliance = $isAdmin || $isAll || ($isFin && $ftManager->isFeatureEnabled(
         <?= $isAdmin ? 'FINANCEIRO' : ($isAll ? 'FULL' : 'EXCLUSIVO') ?>
       </span>
     </a>
+
+    <a href="index.php?route=pix" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; <?= $currentRoute === 'pix' ? 'background: var(--primary); color: #fff;' : 'color: var(--text-muted);' ?>">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <i class="fa-brands fa-pix" style="width: 20px; color: #06b6d4;"></i>
+        <span>PIX BACEN Gateway</span>
+      </div>
+      <span style="font-size: 9px; padding: 2px 6px; border-radius: 4px; background: rgba(6,182,212,0.2); color: #06b6d4; font-weight: 700;">
+        <?= $isAdmin ? 'FINANCEIRO' : ($isAll ? 'FULL' : 'EXCLUSIVO') ?>
+      </span>
+    </a>
   <?php endif; ?>
 
   <?php if ($showCompliance): ?>
@@ -165,6 +185,11 @@ $showCompliance = $isAdmin || $isAll || ($isFin && $ftManager->isFeatureEnabled(
   <a href="index.php?route=reports" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; <?= $currentRoute === 'reports' ? 'background: var(--primary); color: #fff;' : 'color: var(--text-muted);' ?>">
     <i class="fa-solid fa-file-invoice" style="width: 20px;"></i>
     <span>Central de Relatórios</span>
+  </a>
+
+  <a href="index.php?route=external_simulators" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.2s; <?= $currentRoute === 'external_simulators' ? 'background: var(--primary); color: #fff;' : 'color: var(--text-muted);' ?>">
+    <i class="fa-solid fa-network-wired" style="width: 20px; color: #ec4899;"></i>
+    <span>Simuladores AIE (10 APIs)</span>
   </a>
 
   <!-- LPS Status Footer -->

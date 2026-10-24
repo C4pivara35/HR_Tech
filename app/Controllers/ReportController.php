@@ -18,9 +18,9 @@ class ReportController {
 
         logQuery("ReportGeneratorTemplate::getInstance() -> fetchAllData()", [$activeTenantId], "Template Method ReportGenerator");
 
-        require_once ROOT_DIR . '/app/Views/layout/header.php';
-        require_once ROOT_DIR . '/app/Views/reports/index.php';
-        require_once ROOT_DIR . '/app/Views/layout/footer.php';
+        require ROOT_DIR . '/app/Views/layout/header.php';
+        require ROOT_DIR . '/app/Views/reports/index.php';
+        require ROOT_DIR . '/app/Views/layout/footer.php';
     }
 
     public function export(): void {

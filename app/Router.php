@@ -57,15 +57,19 @@ class Router {
         require_once __DIR__ . '/Controllers/AuthController.php';
         require_once __DIR__ . '/Controllers/AdminController.php';
         require_once __DIR__ . '/Controllers/EmployeeController.php';
+        require_once __DIR__ . '/Controllers/OrganogramController.php';
         require_once __DIR__ . '/Controllers/TimeLogController.php';
+        require_once __DIR__ . '/Controllers/ApprovalController.php';
         require_once __DIR__ . '/Controllers/VacationController.php';
         require_once __DIR__ . '/Controllers/BenefitController.php';
         require_once __DIR__ . '/Controllers/SafetyController.php';
         require_once __DIR__ . '/Controllers/InsuranceController.php';
+        require_once __DIR__ . '/Controllers/PixController.php';
         require_once __DIR__ . '/Controllers/PayrollController.php';
         require_once __DIR__ . '/Controllers/ReportController.php';
         require_once __DIR__ . '/Controllers/OkrController.php';
         require_once __DIR__ . '/Controllers/ComplianceController.php';
+        require_once __DIR__ . '/Controllers/ExternalSimulatorsController.php';
 
         switch ($route) {
             case 'clear_console':
@@ -113,6 +117,23 @@ class Router {
                     $controller->store();
                 } elseif ($action === 'delete') {
                     $controller->delete();
+                } elseif ($action === 'new') {
+                    $controller->newEmployee();
+                } elseif ($action === 'detail' || $action === 'xml_s2200') {
+                    $controller->detail();
+                } elseif ($action === 'validate_cpf') {
+                    $controller->validateCpf();
+                } else {
+                    $controller->index();
+                }
+                break;
+
+            case 'organogram':
+                $controller = new Controllers\OrganogramController($this->pdo);
+                if ($action === 'create_department') {
+                    $controller->createDepartment();
+                } elseif ($action === 'create_role') {
+                    $controller->createRole();
                 } else {
                     $controller->index();
                 }
@@ -122,6 +143,10 @@ class Router {
                 $controller = new Controllers\TimeLogController($this->pdo);
                 if ($action === 'punch') {
                     $controller->punch();
+                } elseif ($action === 'bank_hours' || $action === 'bank') {
+                    $controller->bankHours();
+                } elseif ($action === 'request_adjustment_view' || ($action === 'request_adjustment' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET')) {
+                    $controller->requestAdjustmentView();
                 } elseif ($action === 'request_adjustment') {
                     $controller->requestAdjustment();
                 } elseif ($action === 'approve_adjustment') {
@@ -134,6 +159,23 @@ class Router {
                     $controller->recordOvertime();
                 } elseif ($action === 'delete_overtime') {
                     $controller->deleteOvertime();
+                } elseif ($action === 'import_rep') {
+                    $controller->importRep();
+                } else {
+                    $controller->index();
+                }
+                break;
+
+            case 'approvals':
+                $controller = new Controllers\ApprovalController($this->pdo);
+                if ($action === 'approve_vacation') {
+                    $controller->approveVacation();
+                } elseif ($action === 'reject_vacation') {
+                    $controller->rejectVacation();
+                } elseif ($action === 'approve_timelog') {
+                    $controller->approveTimelog();
+                } elseif ($action === 'reject_timelog') {
+                    $controller->rejectTimelog();
                 } else {
                     $controller->index();
                 }
@@ -147,6 +189,8 @@ class Router {
                     $controller->approve();
                 } elseif ($action === 'delete') {
                     $controller->delete();
+                } elseif ($action === 'receipt') {
+                    $controller->receipt();
                 } else {
                     $controller->index();
                 }
@@ -156,6 +200,8 @@ class Router {
                 $controller = new Controllers\BenefitController($this->pdo);
                 if ($action === 'store') {
                     $controller->store();
+                } elseif ($action === 'assign') {
+                    $controller->assign();
                 } elseif ($action === 'delete') {
                     $controller->delete();
                 } else {
@@ -165,9 +211,9 @@ class Router {
 
             case 'safety':
                 $controller = new Controllers\SafetyController($this->pdo);
-                if ($action === 'deliver_equipment') {
+                if ($action === 'deliver_equipment' || $action === 'deliver_epi') {
                     $controller->deliverEquipment();
-                } elseif ($action === 'record_exam') {
+                } elseif ($action === 'record_exam' || $action === 'record_aso') {
                     $controller->recordExam();
                 } elseif ($action === 'delete') {
                     $controller->delete();
@@ -182,6 +228,19 @@ class Router {
                     $controller->issue();
                 } elseif ($action === 'delete') {
                     $controller->delete();
+                } elseif ($action === 'pix') {
+                    (new Controllers\PixController($this->pdo))->index();
+                } else {
+                    $controller->index();
+                }
+                break;
+
+            case 'pix':
+                $controller = new Controllers\PixController($this->pdo);
+                if ($action === 'generate') {
+                    $controller->generate();
+                } elseif ($action === 'simulate_settlement') {
+                    $controller->simulateSettlement();
                 } else {
                     $controller->index();
                 }
@@ -215,6 +274,19 @@ class Router {
                 $controller = new Controllers\ComplianceController($this->pdo);
                 if ($action === 'record_log') {
                     $controller->recordLog();
+                } elseif ($action === 'verify_chain' || $action === 'verify') {
+                    $controller->verifyChain();
+                } elseif ($action === 'export' || $action === 'export_audit_trail') {
+                    $controller->export();
+                } else {
+                    $controller->index();
+                }
+                break;
+
+            case 'external_simulators':
+                $controller = new Controllers\ExternalSimulatorsController($this->pdo);
+                if ($action === 'test_service' || $action === 'test') {
+                    $controller->testService();
                 } else {
                     $controller->index();
                 }

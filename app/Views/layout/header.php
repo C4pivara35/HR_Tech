@@ -190,6 +190,147 @@ $tenantName = match($activeRole) {
       border-radius: 16px; width: 90%; max-width: 650px; padding: 28px;
       box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
     }
+
+    /* APF M2 Components Styling */
+    .ce-input-card {
+      background: linear-gradient(180deg, rgba(6, 182, 212, 0.04) 0%, rgba(30, 41, 59, 1) 100%);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .ce-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: rgba(6, 182, 212, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .se-derived-card {
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.05) 0%, rgba(30, 41, 59, 1) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      border-radius: 12px;
+      padding: 22px 26px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.08);
+    }
+    .se-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .se-formula {
+      background: #0f172a;
+      border: 1px dashed rgba(245, 158, 11, 0.5);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #fde68a;
+      margin: 12px 0;
+    }
+    .aie-panel {
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.04) 0%, rgba(30, 41, 59, 1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .aie-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: rgba(99, 102, 241, 0.2);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .code-viewer {
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #93c5fd;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    /* Catraca Semáforo */
+    .turnstile-box {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: #0f172a;
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px 28px;
+    }
+    .turnstile-light {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 900;
+      box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    }
+    .turnstile-light.green {
+      background: #10b981;
+      color: #fff;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.7);
+    }
+    .turnstile-light.red {
+      background: #ef4444;
+      color: #fff;
+      box-shadow: 0 0 35px rgba(239, 68, 68, 0.7);
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.97); box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+      50% { transform: scale(1.03); box-shadow: 0 0 40px rgba(239, 68, 68, 0.9); }
+      100% { transform: scale(0.97); box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); }
+    }
+    /* Tree Organogram */
+    .tree-node {
+      background: #1e293b;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: all 0.2s;
+    }
+    .tree-node:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    }
   </style>
   <script>
     function toggleModal(id) {

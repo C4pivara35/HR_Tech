@@ -241,6 +241,7 @@ class DatabaseManager implements SingletonInterface
             "CREATE TABLE IF NOT EXISTS employees (
                 id TEXT PRIMARY KEY NOT NULL,
                 tenant_id TEXT NOT NULL,
+                matricula TEXT,
                 cpf TEXT NOT NULL,
                 full_name TEXT NOT NULL,
                 email TEXT NOT NULL,
@@ -324,6 +325,8 @@ class DatabaseManager implements SingletonInterface
                 abono_pecuniario INTEGER NOT NULL DEFAULT 0,
                 advance_thirteenth_salary INTEGER NOT NULL DEFAULT 0,
                 abono_days INTEGER NOT NULL DEFAULT 0,
+                periodo_aquisitivo_inicio TEXT,
+                periodo_aquisitivo_fim TEXT,
                 status TEXT NOT NULL DEFAULT 'REQUESTED',
                 approver_id TEXT,
                 approved_at TEXT,
@@ -417,9 +420,68 @@ class DatabaseManager implements SingletonInterface
                 amount REAL NOT NULL,
                 strategy_used TEXT NOT NULL,
                 description TEXT,
+                expiration_date TEXT,
+                status_fechamento TEXT NOT NULL DEFAULT 'PENDING',
                 created_at TEXT NOT NULL,
                 FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE,
                 FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+            );",
+
+            // 14. Employee Benefits Mapping Table (Valentin: EE_VINCULAR_BENEFICIO)
+            "CREATE TABLE IF NOT EXISTS employee_benefits (
+                id TEXT PRIMARY KEY NOT NULL,
+                tenant_id TEXT NOT NULL,
+                employee_id TEXT NOT NULL,
+                benefit_id TEXT NOT NULL,
+                enrolled_at TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'ACTIVE',
+                custom_cost_share REAL,
+                created_at TEXT,
+                FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE,
+                FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE,
+                FOREIGN KEY (benefit_id) REFERENCES benefits(id) ON DELETE CASCADE
+            );",
+
+            // 15. REP Imports Table (Felipe: AIE_RELOGIO_REP_671 Portaria 671 MTE)
+            "CREATE TABLE IF NOT EXISTS rep_imports (
+                id TEXT PRIMARY KEY NOT NULL,
+                tenant_id TEXT NOT NULL,
+                filename TEXT NOT NULL,
+                records_count INTEGER NOT NULL DEFAULT 0,
+                imported_at TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'COMPLETED',
+                log_details TEXT,
+                FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE
+            );",
+
+            // 16. External Integrations Table (Audit Trail for 10 AIE External Services)
+            "CREATE TABLE IF NOT EXISTS external_integrations (
+                id TEXT PRIMARY KEY NOT NULL,
+                tenant_id TEXT NOT NULL,
+                service_name TEXT NOT NULL,
+                endpoint_url TEXT NOT NULL,
+                request_payload TEXT NOT NULL,
+                response_payload TEXT NOT NULL,
+                status TEXT NOT NULL,
+                duration_ms INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE
+            );",
+
+            // 17. PIX Transactions Table (Fernando: AIE_PIX_BACEN_GATEWAY)
+            "CREATE TABLE IF NOT EXISTS pix_transactions (
+                id TEXT PRIMARY KEY NOT NULL,
+                tenant_id TEXT NOT NULL,
+                policy_id TEXT,
+                txid TEXT NOT NULL UNIQUE,
+                e2eid TEXT,
+                amount_cents INTEGER NOT NULL,
+                qr_code TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'PENDING',
+                created_at TEXT NOT NULL,
+                paid_at TEXT,
+                FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE,
+                FOREIGN KEY (policy_id) REFERENCES insurance_policies(id) ON DELETE SET NULL
             );",
 
             // Índices de alta performance para isolamento multi-tenant e velocidade de consulta
@@ -433,11 +495,43 @@ class DatabaseManager implements SingletonInterface
             "CREATE INDEX IF NOT EXISTS idx_departments_tenant ON departments (tenant_id, code);",
             "CREATE INDEX IF NOT EXISTS idx_roles_tenant ON roles (tenant_id, hierarchy_level);",
             "CREATE INDEX IF NOT EXISTS idx_time_adjustment_requests_tenant_emp ON time_adjustment_requests (tenant_id, employee_id, status);",
-            "CREATE INDEX IF NOT EXISTS idx_benefits_tenant ON benefits (tenant_id, type);"
+            "CREATE INDEX IF NOT EXISTS idx_benefits_tenant ON benefits (tenant_id, type);",
+            "CREATE INDEX IF NOT EXISTS idx_employee_benefits_emp ON employee_benefits (tenant_id, employee_id, benefit_id);",
+            "CREATE INDEX IF NOT EXISTS idx_rep_imports_tenant ON rep_imports (tenant_id, imported_at);",
+            "CREATE INDEX IF NOT EXISTS idx_external_integrations_srv ON external_integrations (tenant_id, service_name, created_at);",
+            "CREATE INDEX IF NOT EXISTS idx_pix_transactions_txid ON pix_transactions (tenant_id, txid);"
         ];
 
         foreach ($schema as $sql) {
             $this->pdo->exec($sql);
+        }
+
+        // Schema migrations defensivas para bases preexistentes
+        $this->ensureColumn('employees', 'matricula', 'TEXT');
+        $this->ensureColumn('vacation_requests', 'periodo_aquisitivo_inicio', 'TEXT');
+        $this->ensureColumn('vacation_requests', 'periodo_aquisitivo_fim', 'TEXT');
+        $this->ensureColumn('overtime_entries', 'expiration_date', 'TEXT');
+        $this->ensureColumn('overtime_entries', 'status_fechamento', "TEXT NOT NULL DEFAULT 'PENDING'");
+        $this->ensureColumn('external_integrations', 'duration_ms', "INTEGER NOT NULL DEFAULT 0");
+        $this->ensureColumn('employee_benefits', 'custom_cost_share', "REAL");
+        $this->ensureColumn('employee_benefits', 'created_at', "TEXT");
+        $this->ensureColumn('pix_transactions', 'paid_at', "TEXT");
+        $this->ensureColumn('rep_imports', 'log_details', "TEXT");
+    }
+
+    /**
+     * Garante que uma coluna exista em uma tabela SQLite preexistente.
+     */
+    private function ensureColumn(string $table, string $column, string $definition): void
+    {
+        try {
+            $cols = $this->pdo->query("PRAGMA table_info({$table})")->fetchAll(\PDO::FETCH_ASSOC);
+            $colNames = array_column($cols, 'name');
+            if (!in_array($column, $colNames, true)) {
+                $this->pdo->exec("ALTER TABLE {$table} ADD COLUMN {$column} {$definition}");
+            }
+        } catch (\Throwable $e) {
+            // Tabela pode não existir ou erro transitório
         }
     }
 
@@ -455,6 +549,11 @@ class DatabaseManager implements SingletonInterface
     public function resetDatabase(): void
     {
         $tables = [
+            'pix_transactions',
+            'external_integrations',
+            'rep_imports',
+            'employee_benefits',
+            'overtime_entries',
             'audit_logs',
             'insurance_policies',
             'equipment_aso',

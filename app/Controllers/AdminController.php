@@ -57,11 +57,32 @@ class AdminController {
         $benStmt->execute([$activeTenantId]);
         $benefitCount = $benStmt->fetchColumn();
 
-        logQuery("SELECT stats FOR tenant_id = ?", [$activeTenantId], "DatabaseManager SQLite");
+        // SE_REL_TURNO_CONTRATO — Apuração matemática de rotatividade de pessoal
+        require_once __DIR__ . '/EmployeeController.php';
+        $empController = new EmployeeController($this->pdo);
+        $turnover = $empController->calculateTurnover($activeTenantId);
 
-        require_once ROOT_DIR . '/app/Views/layout/header.php';
-        require_once ROOT_DIR . '/app/Views/dashboard/index.php';
-        require_once ROOT_DIR . '/app/Views/layout/footer.php';
+        // Folha total estimada do mês
+        $salStmt = $this->pdo->prepare("SELECT SUM(base_salary_cents) FROM employees WHERE tenant_id = ? AND is_active = 1");
+        $salStmt->execute([$activeTenantId]);
+        $monthlyPayrollCents = (int)($salStmt->fetchColumn() ?: 0);
+        $monthlyPayrollGross = $monthlyPayrollCents / 100.0;
+
+        // Distribuição de colaboradores por tipo de contratação
+        $typeStmt = $this->pdo->prepare(
+            "SELECT employment_type, COUNT(*) as count 
+             FROM employees 
+             WHERE tenant_id = ? AND is_active = 1 
+             GROUP BY employment_type"
+        );
+        $typeStmt->execute([$activeTenantId]);
+        $typeDistribution = $typeStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        logQuery("SELECT stats & turnover FOR tenant_id = ? [SE_REL_TURNO_CONTRATO]", [$activeTenantId], "SE_REL_TURNO_CONTRATO");
+
+        require ROOT_DIR . '/app/Views/layout/header.php';
+        require ROOT_DIR . '/app/Views/dashboard/index.php';
+        require ROOT_DIR . '/app/Views/layout/footer.php';
     }
 
     public function index(): void {
@@ -100,9 +121,9 @@ class AdminController {
 
         logQuery("SELECT FROM tenants (all active tenants count=" . count($allTenants) . ")", [], "CRUD 1: Tenant Management (Fernando)");
 
-        require_once ROOT_DIR . '/app/Views/layout/header.php';
-        require_once ROOT_DIR . '/app/Views/admin/index.php';
-        require_once ROOT_DIR . '/app/Views/layout/footer.php';
+        require ROOT_DIR . '/app/Views/layout/header.php';
+        require ROOT_DIR . '/app/Views/admin/index.php';
+        require ROOT_DIR . '/app/Views/layout/footer.php';
     }
 
     public function createTenant(): void {

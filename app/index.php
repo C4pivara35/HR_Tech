@@ -12,6 +12,7 @@ use HrTech\Autoloader;
 
 $loader = new Autoloader();
 $loader->addNamespace('HrTech', BACKEND_BASE . '/src');
+$loader->addNamespace('App', ROOT_DIR . '/app');
 $loader->register();
 
 use HrTech\Database\DatabaseManager;

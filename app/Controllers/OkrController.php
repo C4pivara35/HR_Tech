@@ -61,9 +61,9 @@ class OkrController {
 
         logQuery("OkrStrategy::calculateBonus(score=$performanceMultiplier%)", [$activeTenantId], "Strategy GoF: OkrStrategy");
 
-        require_once ROOT_DIR . '/app/Views/layout/header.php';
-        require_once ROOT_DIR . '/app/Views/okrs/index.php';
-        require_once ROOT_DIR . '/app/Views/layout/footer.php';
+        require ROOT_DIR . '/app/Views/layout/header.php';
+        require ROOT_DIR . '/app/Views/okrs/index.php';
+        require ROOT_DIR . '/app/Views/layout/footer.php';
     }
 
     public function store(): void {
