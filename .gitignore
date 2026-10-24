@@ -69,16 +69,10 @@ hrtech-core-patterns-*.zip
 hrtech_backend_patterns/dist/hrtech-core-patterns-*.zip
 
 # ------------------------------------------------------------------------------
-# 6. Relatórios de Entrega & Documentos APF
+# 6. Relatórios Finais Gerados (DOCX e PDF)
 # ------------------------------------------------------------------------------
-Entrega_APF_*
 *.docx
 *.pdf
-
-# ------------------------------------------------------------------------------
-# 7. Capturas de Tela e Imagens PNG
-# ------------------------------------------------------------------------------
-screenshots/
-*.png
 preview*
+
 
